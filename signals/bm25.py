@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 from rank_bm25 import BM25Okapi
+from config import TOP_K
 
 
 def simple_tokenize(text):
@@ -83,4 +84,17 @@ def compute_bm25_scores(df):
                 "bm25_score": float(norm_scores[idx])
             })
 
-    return pd.DataFrame(results)
+    scores_df = pd.DataFrame(results)
+
+    if scores_df.empty:
+        return scores_df
+
+    # Truncate to Top-K BM25 candidates per query for downstream reranking.
+    scores_df = (
+        scores_df
+        .sort_values(by=["query_id", "bm25_score"], ascending=[True, False])
+        .groupby("query_id", group_keys=False)
+        .head(TOP_K)
+    )
+
+    return scores_df
