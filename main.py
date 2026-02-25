@@ -1,6 +1,7 @@
+import json
 import pandas as pd
 from config import EXAMPLES_PATH, PRODUCTS_PATH, USE_SMALL_VERSION, USE_SPLIT
-from signals.bm25 import compute_bm25_scores
+# from signals.bm25 import compute_bm25_scores
 from signals.two_tower import compute_two_tower_scores
 from evaluation.metrics import ndcg_at_k
 
@@ -58,8 +59,8 @@ def main():
     # ----------------------
     # 5. Compute signals
     # ----------------------
-    bm25_df = compute_bm25_scores(df)
-    df = df.merge(bm25_df, on=["query_id", "item_id"])
+    # bm25_df = compute_bm25_scores(df)
+    # df = df.merge(bm25_df, on=["query_id", "item_id"])
 
     two_tower_df = compute_two_tower_scores(df)
     df = df.merge(two_tower_df, on=["query_id", "item_id"], how="left")
@@ -68,13 +69,12 @@ def main():
     # ----------------------
     # 6. Hybrid score
     # ----------------------
-    BM25_WEIGHT = 0.4
-    TWO_TOWER_WEIGHT = 0.6
-
-    df["hybrid_score"] = (
-        BM25_WEIGHT * df["bm25_score"] +
-        TWO_TOWER_WEIGHT * df["two_tower_score"]
-    )
+    # BM25_WEIGHT = 0.4
+    # TWO_TOWER_WEIGHT = 0.6
+    # df["hybrid_score"] = (
+    #     BM25_WEIGHT * df["bm25_score"] +
+    #     TWO_TOWER_WEIGHT * df["two_tower_score"]
+    # )
 
     # ----------------------
     # 7. Convert ESCI label to numeric relevance
@@ -85,9 +85,16 @@ def main():
     # ----------------------
     # 8. Evaluate
     # ----------------------
-    evaluate_signal(df, "bm25_score")
-    evaluate_signal(df, "two_tower_score")
-    evaluate_signal(df, "hybrid_score")
+    results = {
+        "two_tower_score": evaluate_signal(df, "two_tower_score"),
+    }
+
+    # evaluate_signal(df, "bm25_score")
+    # evaluate_signal(df, "hybrid_score")
+
+    with open("results.json", "w") as f:
+        json.dump(results, f, indent=2)
+    print("Results saved to results.json")
 
 
 if __name__ == "__main__":
