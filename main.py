@@ -27,6 +27,10 @@ def main():
     if USE_SMALL_VERSION:
         df_examples = df_examples[df_examples["small_version"] == 1]
 
+    # # comment these two out when running the actual testing or training
+    # sample_queries = df_examples["query_id"].unique()[:5]
+    # df_examples = df_examples[df_examples["query_id"].isin(sample_queries)]
+
     df_examples = df_examples[df_examples["split"] == USE_SPLIT]
 
     # ----------------------
