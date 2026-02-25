@@ -24,7 +24,7 @@ def main():
     # 2. Filter
     # ----------------------
     if USE_SMALL_VERSION:
-        df_examples = df_examples[df_examples["small_version"] == True]
+        df_examples = df_examples[df_examples["small_version"] == 1]
 
     df_examples = df_examples[df_examples["split"] == USE_SPLIT]
 
