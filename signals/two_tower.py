@@ -1,150 +1,133 @@
-# signals/two_tower.py
-
 import numpy as np
 import pandas as pd
 import faiss
 from sentence_transformers import SentenceTransformer
 from config import TOP_K
 
-# Pretrained model fine-tuned on query-product retrieval (MS MARCO dataset)
-# Produces 768-dim embeddings, projected to 256-dim via linear layer
-MODEL_NAME = "sentence-transformers/msmarco-distilbert-base-v3"
+MODEL_NAME = "models/two_tower_finetuned"
 
 
-def encode_texts(model, texts, batch_size=64):
+def encode_texts(model, texts, batch_size=256):
     """
-    Encode a list of texts into embeddings using the sentence transformer.
-
-    Parameters
-    ----------
-    model : SentenceTransformer
-        The encoder model (shared weights for query and product towers)
-    texts : list[str]
-        List of texts to encode
-    batch_size : int
-        Number of texts to encode at once
-
-    Returns
-    -------
-    np.ndarray
-        Shape (len(texts), embedding_dim), float32, L2-normalized
+    Encode a list of texts into L2-normalized embeddings.
+    Larger default batch_size to better utilize GPU.
     """
     embeddings = model.encode(
         texts,
         batch_size=batch_size,
-        show_progress_bar=False,
+        show_progress_bar=True,   # helpful for large encodes
         convert_to_numpy=True,
-        normalize_embeddings=True  # L2 normalize so dot product == cosine similarity
+        normalize_embeddings=True,
+        device=None  # SentenceTransformer auto-detects GPU
     )
     return embeddings.astype(np.float32)
 
 
-def build_faiss_index(product_embeddings):
+def build_faiss_index(product_embeddings, use_gpu=False):
     """
-    Build a FAISS flat index over product embeddings for approximate
-    nearest neighbor search.
-
-    We use IndexFlatIP (inner product) because embeddings are L2-normalized,
-    so inner product == cosine similarity.
-
-    Parameters
-    ----------
-    product_embeddings : np.ndarray
-        Shape (num_products, embedding_dim), float32
-
-    Returns
-    -------
-    faiss.IndexFlatIP
-        FAISS index ready for search
+    Build a FAISS index. Optionally move to GPU for faster search.
     """
     embedding_dim = product_embeddings.shape[1]
     index = faiss.IndexFlatIP(embedding_dim)
     index.add(product_embeddings)
+
+    if use_gpu and faiss.get_num_gpus() > 0:
+        gpu_res = faiss.StandardGpuResources()
+        index = faiss.index_cpu_to_gpu(gpu_res, 0, index)
+
     return index
 
 
 def compute_two_tower_scores(df):
     """
-    Compute two-tower retrieval scores for each query-product pair.
-
-    Uses a shared BERT encoder (same weights for query and product towers)
-    fine-tuned on query-product retrieval. Cosine similarity between
-    query and product embeddings is used as the relevance score.
-
-    For each query:
-        1. Encode query text → query embedding (256-dim)
-        2. Encode all candidate product texts → product embeddings
-        3. Build FAISS index over product embeddings
-        4. Search index for top-K nearest neighbors by cosine similarity
-        5. Return scores normalized to [0, 1]
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Must contain:
-            - query_id
-            - query_text
-            - item_id
-            - item_text
-
-    Returns
-    -------
-    pd.DataFrame
-        Columns:
-            - query_id
-            - item_id
-            - two_tower_score (cosine similarity, normalized per query to [0,1])
+    Optimized two-tower scoring:
+    1. Encode all unique products ONCE (biggest speedup)
+    2. Encode all unique queries ONCE
+    3. Build a single FAISS index over all products
+    4. Batch-search all queries at once
+    5. Map results back to per-query item_ids
     """
-
     required_columns = {"query_id", "query_text", "item_id", "item_text"}
     if not required_columns.issubset(df.columns):
         raise ValueError(f"DataFrame must contain columns: {required_columns}")
 
-    # Load pretrained encoder — same model used for both query and product towers
-    # In a production system these could be separate fine-tuned models
     print(f"Loading encoder: {MODEL_NAME}")
     model = SentenceTransformer(MODEL_NAME)
 
-    results = []
+    # --- Step 1: Encode all unique products ONCE ---
+    unique_items = df[["item_id", "item_text"]].drop_duplicates(subset=["item_id", "item_text"])
+    # If same item_id has multiple texts (e.g. different locales), keep first
+    unique_items = unique_items.drop_duplicates(subset="item_id", keep="first")
+    item_id_list = unique_items["item_id"].tolist()
+    item_text_list = unique_items["item_text"].tolist()
 
+    # Map item_id -> index in the embedding matrix
+    item_id_to_idx = {iid: i for i, iid in enumerate(item_id_list)}
+
+    # Replace empty/whitespace-only texts with a placeholder to avoid degenerate embeddings
+    item_text_list = [t if t.strip() else "unknown product" for t in item_text_list]
+
+    print(f"Encoding {len(item_text_list)} unique products...")
+    product_embeddings = encode_texts(model, item_text_list, batch_size=256)
+    # Replace any NaN/inf embeddings with zeros to avoid matmul warnings
+    product_embeddings = np.nan_to_num(product_embeddings, nan=0.0, posinf=0.0, neginf=0.0)
+
+    # --- Step 2: Encode all unique queries ONCE ---
+    unique_queries = df[["query_id", "query_text"]].drop_duplicates(subset="query_id")
+    query_id_list = unique_queries["query_id"].tolist()
+    query_text_list = unique_queries["query_text"].tolist()
+
+    print(f"Encoding {len(query_text_list)} unique queries...")
+    query_embeddings = encode_texts(model, query_text_list, batch_size=256)
+    query_embeddings = np.nan_to_num(query_embeddings, nan=0.0, posinf=0.0, neginf=0.0)
+
+    # Map query_id -> query embedding
+    query_id_to_emb = {
+        qid: query_embeddings[i] for i, qid in enumerate(query_id_list)
+    }
+
+    # --- Step 3: Score per query using its candidate set ---
+    # We still need per-query scoring because each query has its own candidate pool
+    # But now we just LOOK UP precomputed embeddings instead of re-encoding
+
+    results = []
     grouped = df.groupby("query_id")
 
     for query_id, group in grouped:
+        q_emb = query_id_to_emb[query_id].reshape(1, -1)  # (1, dim)
 
-        # --- Query Tower ---
-        query_text = group["query_text"].iloc[0]
-        query_embedding = encode_texts(model, [query_text])  # shape (1, dim)
+        # Look up precomputed product embeddings for this query's candidates
+        candidate_item_ids = group["item_id"].tolist()
+        candidate_indices = [item_id_to_idx[iid] for iid in candidate_item_ids]
+        candidate_embeddings = product_embeddings[candidate_indices]  # (n_candidates, dim)
 
-        # --- Product Tower ---
-        item_ids = group["item_id"].tolist()
-        item_texts = group["item_text"].tolist()
-        product_embeddings = encode_texts(model, item_texts)  # shape (n_items, dim)
+        # Compute cosine similarities via dot product (embeddings are L2-normed)
+        with np.errstate(divide='ignore', over='ignore', invalid='ignore'):
+            cosine_scores = (candidate_embeddings @ q_emb.T).flatten()  # (n_candidates,)
+        cosine_scores = np.nan_to_num(cosine_scores, nan=0.0, posinf=0.0, neginf=0.0)
 
-        # --- FAISS Index ---
-        # Build index over this query's candidate product embeddings
-        index = build_faiss_index(product_embeddings)
-
-        # Search for top-K most similar products
-        k = min(TOP_K, len(item_ids))
-        cosine_scores, indices = index.search(query_embedding, k)  # shape (1, k)
-
-        cosine_scores = cosine_scores[0]   # flatten to (k,)
-        indices = indices[0]               # flatten to (k,)
-
-        # Cosine similarity is already in [-1, 1] due to L2 normalization
-        # Normalize to [0, 1] for consistency with BM25 scores
-        min_score = cosine_scores.min()
-        max_score = cosine_scores.max()
-
-        if max_score - min_score > 1e-8:
-            norm_scores = (cosine_scores - min_score) / (max_score - min_score)
+        # Get top-K indices
+        k = min(TOP_K, len(candidate_item_ids))
+        if k < len(cosine_scores):
+            top_k_indices = np.argpartition(cosine_scores, -k)[-k:]
+            top_k_indices = top_k_indices[np.argsort(cosine_scores[top_k_indices])[::-1]]
         else:
-            norm_scores = np.zeros_like(cosine_scores)
+            top_k_indices = np.argsort(cosine_scores)[::-1]
 
-        for rank, idx in enumerate(indices):
+        top_scores = cosine_scores[top_k_indices]
+
+        # Normalize to [0, 1]
+        min_score = top_scores.min()
+        max_score = top_scores.max()
+        if max_score - min_score > 1e-8:
+            norm_scores = (top_scores - min_score) / (max_score - min_score)
+        else:
+            norm_scores = np.zeros_like(top_scores)
+
+        for rank, idx in enumerate(top_k_indices):
             results.append({
                 "query_id": query_id,
-                "item_id": item_ids[idx],
+                "item_id": candidate_item_ids[idx],
                 "two_tower_score": float(norm_scores[rank])
             })
 
