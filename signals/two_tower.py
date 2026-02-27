@@ -1,3 +1,4 @@
+import torch
 import numpy as np
 import pandas as pd
 import faiss
@@ -18,7 +19,7 @@ def encode_texts(model, texts, batch_size=256):
         show_progress_bar=True,   # helpful for large encodes
         convert_to_numpy=True,
         normalize_embeddings=True,
-        device="cuda"  # SentenceTransformer auto-detects GPU
+        device=None # SentenceTransformer auto-detects GPU
     )
     return embeddings.astype(np.float32)
 
@@ -50,9 +51,18 @@ def compute_two_tower_scores(df):
     required_columns = {"query_id", "query_text", "item_id", "item_text"}
     if not required_columns.issubset(df.columns):
         raise ValueError(f"DataFrame must contain columns: {required_columns}")
+    
+    # --- Hardware Detection ---
+    if torch.cuda.is_available():
+        device = "cuda"
+        device_name = torch.cuda.get_device_name(0)
+        print(f"Hardware detected: {device_name} (CUDA)")
+    else:
+        device = "cpu"
+        print("Hardware detected: CPU (CUDA is unavailable)")
 
     print(f"Loading encoder: {MODEL_NAME}")
-    model = SentenceTransformer(MODEL_NAME)
+    model = SentenceTransformer(MODEL_NAME, device=device)
 
     # --- Step 1: Encode all unique products ONCE ---
     unique_items = df[["item_id", "item_text"]].drop_duplicates(subset=["item_id", "item_text"])
@@ -106,29 +116,29 @@ def compute_two_tower_scores(df):
             cosine_scores = (candidate_embeddings @ q_emb.T).flatten()  # (n_candidates,)
         cosine_scores = np.nan_to_num(cosine_scores, nan=0.0, posinf=0.0, neginf=0.0)
 
-        # Get top-K indices
-        k = min(TOP_K, len(candidate_item_ids))
-        if k < len(cosine_scores):
-            top_k_indices = np.argpartition(cosine_scores, -k)[-k:]
-            top_k_indices = top_k_indices[np.argsort(cosine_scores[top_k_indices])[::-1]]
-        else:
-            top_k_indices = np.argsort(cosine_scores)[::-1]
-
-        top_scores = cosine_scores[top_k_indices]
-
-        # Normalize to [0, 1]
-        min_score = top_scores.min()
-        max_score = top_scores.max()
+        # 1. NORMALIZE FIRST (across all candidates for this query)
+        min_score = cosine_scores.min()
+        max_score = cosine_scores.max()
         if max_score - min_score > 1e-8:
-            norm_scores = (top_scores - min_score) / (max_score - min_score)
+            norm_scores = (cosine_scores - min_score) / (max_score - min_score)
         else:
-            norm_scores = np.zeros_like(top_scores)
+            norm_scores = np.zeros_like(cosine_scores)
 
-        for rank, idx in enumerate(top_k_indices):
+        # 2. THEN GET TOP-K INDICES
+        k = min(TOP_K, len(candidate_item_ids))
+        if k < len(norm_scores):
+            top_k_indices = np.argpartition(norm_scores, -k)[-k:]
+            # Sort the top k partition in descending order
+            top_k_indices = top_k_indices[np.argsort(norm_scores[top_k_indices])[::-1]]
+        else:
+            top_k_indices = np.argsort(norm_scores)[::-1]
+
+        # 3. APPEND RESULTS
+        for idx in top_k_indices:
             results.append({
                 "query_id": query_id,
                 "item_id": candidate_item_ids[idx],
-                "two_tower_score": float(norm_scores[rank])
+                "two_tower_score": float(norm_scores[idx])
             })
 
     scores_df = pd.DataFrame(results)
