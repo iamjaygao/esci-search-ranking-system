@@ -60,20 +60,43 @@ def extract_esci_features(examples_path, products_path, bm25_csv_path, semantic_
 
     # Initialize the stemmer
     stemmer = PorterStemmer()
-
-    # --- Feature Engineering ---
-    def calc_overlap(row):
-        q_words = set(stemmer.stem(str(w)) for w in str(row['query']).lower().split())
-        t_words = set(stemmer.stem(str(w)) for w in str(row['product_title']).lower().split())
-        if len(q_words) == 0: return 0.0
-        return len(q_words.intersection(t_words)) / len(q_words)
     
     print("Calculating stemming-based word overlap features...")
-    df['word_overlap'] = df.apply(calc_overlap, axis=1)
+
+    # 1. Extract unique strings to avoid redundant processing
+    unique_queries = df['query'].astype(str).unique()
+    unique_titles = df['product_title'].astype(str).unique()
+    
+    print(f"  -> Stemming {len(unique_queries)} unique queries...")
+    query_stem_map = {
+        q: set(stemmer.stem(w) for w in q.lower().split()) 
+        for q in unique_queries
+    }
+    
+    print(f"  -> Stemming {len(unique_titles)} unique titles...")
+    title_stem_map = {
+        t: set(stemmer.stem(w) for w in t.lower().split()) 
+        for t in unique_titles
+    }
+
+    # 2. Fast lookup function
+    def fast_overlap(q, t):
+        q_set = query_stem_map.get(q, set())
+        t_set = title_stem_map.get(t, set())
+        if not q_set: 
+            return 0.0
+        return len(q_set.intersection(t_set)) / len(q_set)
+
+    # 3. Apply using zip (which is vastly faster than pandas .apply for multiple columns)
+    print("  -> Mapping intersections to dataframe...")
+    df['word_overlap'] = [
+        fast_overlap(str(q), str(t)) 
+        for q, t in zip(df['query'], df['product_title'])
+    ]
     df['query_length'] = df['query'].astype(str).apply(lambda x: len(x.split()))
     df['title_length'] = df['product_title'].astype(str).apply(lambda x: len(x.split()))
     df['has_brand'] = df['product_brand'].notna().astype(float)
-    df['bullet_count'] = df['product_bullet_point'].astype(str).apply(lambda x: len(x.split('\n')) if x != 'None' else 0)
+    df['bullet_count'] = df['product_bullet_point'].fillna("").astype(str).apply(lambda x: len(x.split('\n')) if x.strip() and x.strip() != 'None' else 0)
     
     prod_counts = df.groupby('product_id')['query_id'].transform('count')
     df['log_product_freq'] = np.log1p(prod_counts)
@@ -119,6 +142,12 @@ class PairwiseESCIDataset(Dataset):
             for i in range(len(items)):
                 for j in range(i + 1, len(items)):
                     if items[i]['target_score'] > items[j]['target_score']:
+                        # Downsample the "easy" unjudged negatives
+                        if items[j]['target_score'] == 0.0:
+                            # Only keep 10% of pairs that involve an unjudged item
+                            if np.random.rand() > 0.10:
+                                continue 
+                                
                         self.pairs.append({
                             'pos_idx': items[i]['feature_idx'],
                             'neg_idx': items[j]['feature_idx']
@@ -183,7 +212,8 @@ def train_model():
         print("Saved training stats for later evaluation.")
     
     model = DeepESCIReranker(input_dim=len(feature_columns))
-    criterion = nn.MarginRankingLoss(margin=0.1)
+    # increased margin from 0.1 to 1.0 to force strong separation
+    criterion = nn.MarginRankingLoss(margin=1.0)
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
     
