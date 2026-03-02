@@ -3,6 +3,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 import os
+import json
+from nltk.stem import PorterStemmer
+from config import EXAMPLES_PATH, PRODUCTS_PATH
 
 # ==========================================
 # 1. The Exact Same Model Architecture
@@ -12,7 +15,6 @@ class DeepESCIReranker(nn.Module):
     def __init__(self, input_dim):
         super(DeepESCIReranker, self).__init__()
         
-        # We removed Dropout to stop starving the network of the semantic score
         self.mlp = nn.Sequential(
             nn.Linear(input_dim, 64),
             nn.BatchNorm1d(64), 
@@ -26,16 +28,7 @@ class DeepESCIReranker(nn.Module):
         )
 
     def forward(self, x):
-        # RESIDUAL CONNECTION:
-        # Assuming semantic_score is at index 1 of your feature tensor.
-        # We extract it and add it directly to the MLP's output.
-        # This tells the network: "Start with the Two-Tower score, then modify it."
-        base_semantic_score = x[:, 1].unsqueeze(1) 
-        
-        adjustment = self.mlp(x)
-        
-        # Combine them and apply Sigmoid to bind between 0 and 1
-        final_raw_score = base_semantic_score + adjustment
+        final_raw_score = self.mlp(x)
         return torch.sigmoid(final_raw_score)
 
 # ==========================================
@@ -45,15 +38,13 @@ def extract_test_features(examples_path, products_path, bm25_csv_path, semantic_
     print("Loading raw ESCI Parquet files...")
     df_ex = pd.read_parquet(examples_path)
     df_pr = pd.read_parquet(products_path)
+
+    # 1. Get ONLY the test queries
+    df_ex['query_id'] = df_ex['query_id'].astype(str)
+    df_ex['product_id'] = df_ex['product_id'].astype(str)
+    df_pr['product_id'] = df_pr['product_id'].astype(str)
     
-    print("Merging ESCI datasets...")
-    df = pd.merge(df_ex, df_pr, how='inner', on=['product_id', 'product_locale'])
-    
-    # CRITICAL: We only want the TEST split now
-    df = df[df['split'] == 'test'].copy()
-    
-    df['query_id'] = df['query_id'].astype(str)
-    df['product_id'] = df['product_id'].astype(str)
+    df_test_queries = df_ex[df_ex['split'] == 'test'][['query_id', 'query']].drop_duplicates()
 
     print("Loading retrieval scores...")
     df_bm25 = pd.read_csv(bm25_csv_path)
@@ -64,18 +55,31 @@ def extract_test_features(examples_path, products_path, bm25_csv_path, semantic_
     df_sem.columns = ['query_id', 'product_id', 'semantic_score']
     df_sem['query_id'], df_sem['product_id'] = df_sem['query_id'].astype(str), df_sem['product_id'].astype(str)
 
-    df = pd.merge(df, df_bm25, how='left', on=['query_id', 'product_id'])
-    df = pd.merge(df, df_sem, how='left', on=['query_id', 'product_id'])
+    # 2. Outer join candidates (This keeps all items retrieved by the pipeline!)
+    candidates = pd.merge(df_bm25, df_sem, on=['query_id', 'product_id'], how='outer')
+    
+    # Filter to test queries
+    df = pd.merge(candidates, df_test_queries, on='query_id', how='inner')
+
+    # 3. Inner join with products to get features
+    df = pd.merge(df, df_pr, on='product_id', how='inner')
+
+    # 4. Left join with ground truth ESCI labels
+    df_labels = df_ex[['query_id', 'product_id', 'esci_label']].drop_duplicates()
+    df = pd.merge(df, df_labels, on=['query_id', 'product_id'], how='left')
 
     df['bm25_score'] = df['bm25_score'].fillna(0.0)
     df['semantic_score'] = df['semantic_score'].fillna(-1.0)
     
     print(f"Extracting features for {len(df)} TEST rows...")
     
-    # Calculate features
+    # Initialize the stemmer outside the function to save computation time
+    stemmer = PorterStemmer()
+
     def calc_overlap(row):
-        q_words = set(str(row['query']).lower().split())
-        t_words = set(str(row['product_title']).lower().split())
+        # Stem both the query and the title words before finding the intersection
+        q_words = set(stemmer.stem(str(w)) for w in str(row['query']).lower().split())
+        t_words = set(stemmer.stem(str(w)) for w in str(row['product_title']).lower().split())
         if len(q_words) == 0: return 0.0
         return len(q_words.intersection(t_words)) / len(q_words)
     
@@ -90,7 +94,7 @@ def extract_test_features(examples_path, products_path, bm25_csv_path, semantic_
     brand_counts = df.groupby('product_brand')['product_id'].transform('count')
     df['log_brand_freq'] = np.log1p(brand_counts.fillna(0))
     
-    # Official KDD Cup Gain mapping for NDCG (E=1.0, S=0.1, C=0.01, I=0.0)
+    # Unjudged retrieved items are treated as 0.0 gain (Hard Negatives during eval)
     label_map = {'E': 1.0, 'S': 0.1, 'C': 0.01, 'I': 0.0}
     df['ground_truth_gain'] = df['esci_label'].map(label_map).fillna(0.0)
     
@@ -126,18 +130,26 @@ def ndcg_at_k(relevance_scores, k=10):
 # 4. Main Evaluation Loop
 # ==========================================
 def evaluate_model(model_weights_path="best_esci_reranker.pth"):
-    examples_file = "esci-data/shopping_queries_dataset/shopping_queries_dataset_examples.parquet"
-    products_file = "esci-data/shopping_queries_dataset/shopping_queries_dataset_products.parquet"
-    bm25_csv_path = "bm25_scores.csv" 
-    semantic_csv_path = "two_tower_scores.csv"
+    examples_file = EXAMPLES_PATH
+    products_file = PRODUCTS_PATH
+    bm25_csv_path = "output/bm25_scores_test.csv" 
+    semantic_csv_path = "output/two_tower_scores_test.csv"
     
     df_test, feature_cols = extract_test_features(examples_file, products_file, bm25_csv_path, semantic_csv_path)
+
+    # Load the exact normalization stats from training
+    print("Loading training normalization stats...")
+    try:
+        with open("output/normalization_stats.json", "r") as f:
+            stats = json.load(f)
+        train_mean = np.array(stats["mean"])
+        train_std = np.array(stats["std"])
+    except FileNotFoundError:
+        print("[!] ERROR: normalization_stats.json not found. Run training first.")
+        return
     
-    # Normalize the features 
-    # (Note: In strict production, you use the Train Set's Mean/Std here, 
-    # but for local testing, normalizing the test set against itself works fine).
     features_raw = df_test[feature_cols].values
-    features_normalized = (features_raw - features_raw.mean(axis=0)) / (features_raw.std(axis=0) + 1e-8)
+    features_normalized = (features_raw - train_mean) / train_std
     
     # Load Model
     print(f"Loading trained weights from {model_weights_path}...")
