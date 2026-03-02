@@ -5,7 +5,10 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import itertools
+import json
 from sklearn.model_selection import train_test_split
+from nltk.stem import PorterStemmer
+from config import EXAMPLES_PATH, PRODUCTS_PATH
 
 # ==========================================
 # 1. Feature Extraction Pipeline
@@ -54,10 +57,14 @@ def extract_esci_features(examples_path, products_path, bm25_csv_path, semantic_
     # Any candidate that lacks a ground truth label is assumed irrelevant (0.0)
     df['target_score'] = df['esci_label'].map(label_map).fillna(0.0)
 
+    # Initialize the stemmer outside the function to save computation time
+    stemmer = PorterStemmer()
+
     # --- Feature Engineering ---
     def calc_overlap(row):
-        q_words = set(str(row['query']).lower().split())
-        t_words = set(str(row['product_title']).lower().split())
+        # Stem both the query and the title words before finding the intersection
+        q_words = set(stemmer.stem(str(w)) for w in str(row['query']).lower().split())
+        t_words = set(stemmer.stem(str(w)) for w in str(row['product_title']).lower().split())
         if len(q_words) == 0: return 0.0
         return len(q_words.intersection(t_words)) / len(q_words)
     
@@ -101,16 +108,7 @@ class DeepESCIReranker(nn.Module):
         )
 
     def forward(self, x):
-        # RESIDUAL CONNECTION:
-        # Assuming semantic_score is at index 1 of your feature tensor.
-        # We extract it and add it directly to the MLP's output.
-        # This tells the network: "Start with the Two-Tower score, then modify it."
-        base_semantic_score = x[:, 1].unsqueeze(1) 
-        
-        adjustment = self.mlp(x)
-        
-        # Combine them and apply Sigmoid to bind between 0 and 1
-        final_raw_score = base_semantic_score + adjustment
+        final_raw_score = self.mlp(x)
         return torch.sigmoid(final_raw_score)
 
 # ==========================================
@@ -173,10 +171,10 @@ class PairwiseESCIDataset(Dataset):
         return x_pos, x_neg, y
 
 def train_model():
-    examples_file = "esci-data/shopping_queries_dataset/shopping_queries_dataset_examples.parquet"
-    products_file = "esci-data/shopping_queries_dataset/shopping_queries_dataset_products.parquet"
-    bm25_csv_path = "bm25_scores.csv" 
-    semantic_csv_path = "two_tower_scores.csv"
+    examples_file = EXAMPLES_PATH
+    products_file = PRODUCTS_PATH
+    bm25_csv_path = "output/bm25_scores_train.csv" 
+    semantic_csv_path = "output/two_tower_scores_train.csv"
     
     # 1. Load and Extract Features
     df_all, feature_columns = extract_esci_features(examples_file, products_file, bm25_csv_path, semantic_csv_path)
@@ -197,6 +195,15 @@ def train_model():
     
     train_loader = DataLoader(train_dataset, batch_size=1024, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=1024, shuffle=False)
+
+    # Save the normalization stats to be used during evaluation
+    normalization_stats = {
+        "mean": train_dataset.mean.tolist(),
+        "std": train_dataset.std.tolist()
+    }
+    with open("output/normalization_stats.json", "w") as f:
+        json.dump(normalization_stats, f)
+        print("Saved normalization stats to normalization_stats.json")
     
     # 4. Setup Model, Loss, Optimizer
     model = DeepESCIReranker(input_dim=input_size)
