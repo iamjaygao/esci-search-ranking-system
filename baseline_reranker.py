@@ -193,7 +193,7 @@ def train_model():
     
     # Split into Train and Validation
     print("\nSplitting queries into Train (85%) and Validation (15%)...")
-    unique_queries = df_all['query_id'].unique()
+    unique_queries = df_all['query_id'].unique().toList()
     train_queries, val_queries = train_test_split(unique_queries, test_size=0.15, random_state=42)
     
     df_train = df_all[df_all['query_id'].isin(train_queries)].copy()
@@ -253,7 +253,7 @@ def train_model():
         if avg_val_loss < best_val_loss:
             best_val_loss = avg_val_loss
             patience_counter = 0
-            torch.save(model.state_dict(), "best_esci_reranker.pth")
+            torch.save(model.state_dict(), "output/best_esci_reranker.pth")
             print("  --> Best weights updated.")
         else:
             patience_counter += 1
