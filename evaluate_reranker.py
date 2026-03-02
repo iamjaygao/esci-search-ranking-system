@@ -115,7 +115,7 @@ def extract_test_features(examples_path, products_path, bm25_csv_path, semantic_
 # ==========================================
 # 3. Main Evaluation Loop
 # ==========================================
-def evaluate_model(model_weights_path="best_esci_reranker.pth"):
+def evaluate_model(model_weights_path="output/best_esci_reranker.pth"):
     examples_file = EXAMPLES_PATH
     products_file = PRODUCTS_PATH
     bm25_csv_path = "output/bm25_scores_test.csv" 
@@ -163,4 +163,4 @@ def evaluate_model(model_weights_path="best_esci_reranker.pth"):
     df_test[['query', 'product_title', 'predicted_score', 'esci_label']].to_csv("output/final_reranker_test_predictions.csv", index=False)
     
 if __name__ == "__main__":
-    evaluate_model("best_esci_reranker.pth") # Make sure the file name matches
+    evaluate_model("output/best_esci_reranker.pth") # Make sure the file name matches
