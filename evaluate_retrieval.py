@@ -1,4 +1,8 @@
 import pandas as pd
+import os
+import sys
+# Add root to path so we can import metrics reliably
+sys.path.append(os.getcwd())
 from config import EXAMPLES_PATH
 from evaluation.metrics import ndcg_at_k
 
@@ -20,13 +24,8 @@ def evaluate_predictions(scores_csv_path, df_truth, score_col, k=10):
     # Fill unjudged retrieved items with 0.0 relevance (Hard Negatives)
     df_merged['relevance'] = df_merged['relevance'].fillna(0.0)
 
-    # CRITICAL STEP: Sort the dataframe by the model's predicted score 
-    # BEFORE passing it to the metrics.py function, so it calculates NDCG 
-    # based on the order the model ranked them in
-    df_sorted = df_merged.sort_values(by=["query_id", score_col], ascending=[True, False])
-
-    # Call your existing metrics.py function
-    final_ndcg = ndcg_at_k(df_sorted, k=k)
+    # metrics.py now handles the sorting and grouping internally based on the score_col
+    final_ndcg = ndcg_at_k(df_merged, score_col=score_col, k=k)
     return final_ndcg
 
 

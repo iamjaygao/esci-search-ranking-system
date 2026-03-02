@@ -3,9 +3,13 @@ import numpy as np
 import torch
 import torch.nn as nn
 import os
+import sys
 import json
 from nltk.stem import PorterStemmer
 from config import EXAMPLES_PATH, PRODUCTS_PATH
+# Add root to path so we can import metrics
+sys.path.append(os.getcwd())
+from evaluation.metrics import ndcg_at_k
 
 # ==========================================
 # 1. The Exact Same Model Architecture
@@ -96,7 +100,7 @@ def extract_test_features(examples_path, products_path, bm25_csv_path, semantic_
     
     # Unjudged retrieved items are treated as 0.0 gain (Hard Negatives during eval)
     label_map = {'E': 1.0, 'S': 0.1, 'C': 0.01, 'I': 0.0}
-    df['ground_truth_gain'] = df['esci_label'].map(label_map).fillna(0.0)
+    df['relevance'] = df['esci_label'].map(label_map).fillna(0.0)
     
     feature_cols = [
         'bm25_score', 'semantic_score', 'word_overlap', 
@@ -107,27 +111,9 @@ def extract_test_features(examples_path, products_path, bm25_csv_path, semantic_
     
     return df, feature_cols
 
-# ==========================================
-# 3. NDCG Calculation Math
-# ==========================================
-def dcg_at_k(relevance_scores, k=10):
-    """Calculates Discounted Cumulative Gain."""
-    relevance_scores = np.asfarray(relevance_scores)[:k]
-    if relevance_scores.size:
-        # standard DCG formula
-        discounts = np.log2(np.arange(2, relevance_scores.size + 2))
-        return np.sum((np.power(2, relevance_scores) - 1) / discounts)
-    return 0.0
-
-def ndcg_at_k(relevance_scores, k=10):
-    """Calculates Normalized Discounted Cumulative Gain."""
-    dcg_max = dcg_at_k(sorted(relevance_scores, reverse=True), k)
-    if not dcg_max:
-        return 0.0
-    return dcg_at_k(relevance_scores, k) / dcg_max
 
 # ==========================================
-# 4. Main Evaluation Loop
+# 3. Main Evaluation Loop
 # ==========================================
 def evaluate_model(model_weights_path="best_esci_reranker.pth"):
     examples_file = EXAMPLES_PATH
@@ -167,30 +153,14 @@ def evaluate_model(model_weights_path="best_esci_reranker.pth"):
     
     # Calculate NDCG@10 per query
     print("Calculating NDCG@10...")
-    ndcg_scores = []
-    
-    # Group the dataframe by the query, so we can rank the items within each search
-    grouped = df_test.groupby('query_id')
-    
-    for query_id, group in grouped:
-        # Sort the items by what our Neural Network predicted
-        ranked_group = group.sort_values(by='predicted_score', ascending=False)
-        
-        # Get the actual ground-truth gains of those items in the new sorted order
-        actual_gains_in_ranked_order = ranked_group['ground_truth_gain'].values
-        
-        # Calculate NDCG
-        score = ndcg_at_k(actual_gains_in_ranked_order, k=10)
-        ndcg_scores.append(score)
-        
-    final_ndcg = np.mean(ndcg_scores)
+    final_ndcg = ndcg_at_k(df_test, score_col='predicted_score', k=10)
     
     print("="*50)
     print(f"FINAL TEST NDCG@10: {final_ndcg:.4f}")
     print("="*50)
     
     # Optional: Save the ranked results to look at them manually
-    # df_test[['query', 'product_title', 'predicted_score', 'esci_label']].to_csv("final_test_predictions.csv", index=False)
+    df_test[['query', 'product_title', 'predicted_score', 'esci_label']].to_csv("output/final_reranker_test_predictions.csv", index=False)
     
 if __name__ == "__main__":
-    evaluate_model("best_esci_reranker.pth") # Make sure the file name matches what you saved!
+    evaluate_model("best_esci_reranker.pth") # Make sure the file name matches
