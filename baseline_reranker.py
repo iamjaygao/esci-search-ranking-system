@@ -193,7 +193,7 @@ def train_model():
     
     # Split into Train and Validation
     print("\nSplitting queries into Train (85%) and Validation (15%)...")
-    unique_queries = df_all['query_id'].unique().toList()
+    unique_queries = df_all['query_id'].unique().tolist()
     train_queries, val_queries = train_test_split(unique_queries, test_size=0.15, random_state=42)
     
     df_train = df_all[df_all['query_id'].isin(train_queries)].copy()
