@@ -2,6 +2,7 @@
 
 import numpy as np
 import pandas as pd
+import pickle
 from rank_bm25 import BM25Okapi
 from config import TOP_K
 
@@ -138,3 +139,18 @@ def search_bm25_global(bm25_index, item_ids, query_text, k=TOP_K):
         for i, idx in enumerate(top_k_indices)
     ]
     return pd.DataFrame(results)
+
+def save_bm25_index(bm25_index, item_ids, index_path="output/bm25_index.pkl", ids_path="output/bm25_ids.pkl"):
+    """Saves the BM25 index and IDs to disk."""
+    with open(index_path, "wb") as f:
+        pickle.dump(bm25_index, f)
+    with open(ids_path, "wb") as f:
+        pickle.dump(item_ids, f)
+
+def load_bm25_index(index_path="output/bm25_index.pkl", ids_path="output/bm25_ids.pkl"):
+    """Loads the BM25 index and IDs from disk."""
+    with open(index_path, "rb") as f:
+        bm25_index = pickle.load(f)
+    with open(ids_path, "rb") as f:
+        item_ids = pickle.load(f)
+    return bm25_index, item_ids

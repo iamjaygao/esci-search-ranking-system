@@ -1,7 +1,8 @@
 import torch
 import numpy as np
 import pandas as pd
-# import faiss
+import faiss
+import json
 from sentence_transformers import SentenceTransformer
 from config import TOP_K
 
@@ -203,3 +204,18 @@ def search_tt_global(model, faiss_index, item_ids, query_text, k=TOP_K):
         for i, idx in enumerate(top_k_indices)
     ]
     return pd.DataFrame(results)
+
+def save_tt_index(faiss_index, item_ids, index_path="output/tt_index.faiss", ids_path="output/tt_ids.json"):
+    """Saves the FAISS index and IDs to disk."""
+    faiss.write_index(faiss_index, index_path)
+    with open(ids_path, "w") as f:
+        json.dump(item_ids, f)
+
+def load_tt_index(model_name=MODEL_NAME, index_path="output/tt_index.faiss", ids_path="output/tt_ids.json"):
+    """Loads the FAISS index, IDs, and the SentenceTransformer model into memory."""
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model = SentenceTransformer(model_name, device=device)
+    faiss_index = faiss.read_index(index_path)
+    with open(ids_path, "r") as f:
+        item_ids = json.load(f)
+    return model, faiss_index, item_ids
