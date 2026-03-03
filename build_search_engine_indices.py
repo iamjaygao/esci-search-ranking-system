@@ -8,6 +8,10 @@ def main():
     os.makedirs("output", exist_ok=True)
     print("Loading product catalog...")
     df_pr = pd.read_parquet(PRODUCTS_PATH)
+
+    # Use this for testing instead
+    # df_pr = pd.read_parquet(PRODUCTS_PATH)
+
     df_pr['product_id'] = df_pr['product_id'].astype(str)
 
     print("\n--- Building BM25 Index ---")

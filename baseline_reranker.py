@@ -125,44 +125,61 @@ class PairwiseESCIDataset(Dataset):
             self.mean = mean
             self.std = std
             
-        normalized_features = (features - self.mean) / self.std
+        self.features = (features - self.mean) / self.std
+        
         df_scaled = df[['query_id', 'target_score']].copy()
         df_scaled['feature_idx'] = np.arange(len(df))
         
-        print(f"Generating pairwise combinations for {len(df_scaled)} rows...")
-        self.pairs = []
+        print(f"Vectorizing pairwise combinations for {len(df_scaled)} rows...")
         
-        # Group by query to generate valid pairs where item A > item B
+        pos_indices_list = []
+        neg_indices_list = []
+        
+        # Group by query
         for _, group in df_scaled.groupby('query_id'):
-            group = group.sort_values('target_score', ascending=False)
-            if group['target_score'].nunique() <= 1:
+            targets = group['target_score'].values
+            indices = group['feature_idx'].values
+            
+            # If all items have the same score, skip
+            if len(targets) < 2 or len(np.unique(targets)) == 1:
                 continue
                 
-            items = group.to_dict('records')
-            for i in range(len(items)):
-                for j in range(i + 1, len(items)):
-                    if items[i]['target_score'] > items[j]['target_score']:
-                        # Downsample the "easy" unjudged negatives
-                        if items[j]['target_score'] == 0.0:
-                            # Only keep 10% of pairs that involve an unjudged item
-                            if np.random.rand() > 0.10:
-                                continue 
-                                
-                        self.pairs.append({
-                            'pos_idx': items[i]['feature_idx'],
-                            'neg_idx': items[j]['feature_idx']
-                        })
+            # 1. BROADCASTING: Create a 2D boolean mask where matrix[i, j] is True if target[i] > target[j]
+            # This replaces the nested "for i... for j..." loop entirely
+            mask = targets[:, None] > targets[None, :]
+            
+            # 2. Get the row (pos) and col (neg) indices where the mask is True
+            pos_i, neg_i = np.where(mask)
+            
+            # 3. DOWNSAMPLING: Identify which negative items are unjudged (0.0)
+            neg_targets = targets[neg_i]
+            unjudged_mask = (neg_targets == 0.0)
+            
+            # Create a keep mask: Keep 100% of labeled pairs, and 10% of unjudged pairs
+            keep_mask = np.ones(len(pos_i), dtype=bool)
+            keep_mask[unjudged_mask] = np.random.rand(np.sum(unjudged_mask)) <= 0.10
+            
+            # 4. Filter the indices using the keep mask
+            pos_i = pos_i[keep_mask]
+            neg_i = neg_i[keep_mask]
+            
+            # 5. Map the local group indices back to the global dataframe indices
+            pos_indices_list.extend(indices[pos_i])
+            neg_indices_list.extend(indices[neg_i])
         
-        self.features = normalized_features
-        print(f"Total training pairs generated: {len(self.pairs)}")
+        # Store as fast NumPy arrays instead of a massive list of dictionaries
+        self.pos_indices = np.array(pos_indices_list, dtype=np.int32)
+        self.neg_indices = np.array(neg_indices_list, dtype=np.int32)
+        
+        print(f"Total training pairs generated: {len(self.pos_indices)}")
 
     def __len__(self):
-        return len(self.pairs)
+        return len(self.pos_indices)
 
     def __getitem__(self, idx):
-        pair = self.pairs[idx]
-        x_pos = torch.tensor(self.features[pair['pos_idx']], dtype=torch.float32)
-        x_neg = torch.tensor(self.features[pair['neg_idx']], dtype=torch.float32)
+        # Direct array indexing is significantly faster during the PyTorch DataLoader loop
+        x_pos = torch.tensor(self.features[self.pos_indices[idx]], dtype=torch.float32)
+        x_neg = torch.tensor(self.features[self.neg_indices[idx]], dtype=torch.float32)
         y = torch.tensor(1.0, dtype=torch.float32)
         return x_pos, x_neg, y
 
@@ -190,6 +207,12 @@ def train_model():
     semantic_csv_path = "output/two_tower_scores_train.csv"
     
     df_all, feature_columns = extract_esci_features(EXAMPLES_PATH, PRODUCTS_PATH, bm25_csv_path, semantic_csv_path)
+
+    # Detect Hardware
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"\n[Hardware] Training on: {device}")
+    if device.type == 'cuda':
+        print(f"[Hardware] GPU: {torch.cuda.get_device_name(0)}")
     
     # Split into Train and Validation
     print("\nSplitting queries into Train (85%) and Validation (15%)...")
@@ -202,8 +225,25 @@ def train_model():
     train_dataset = PairwiseESCIDataset(df_train, feature_columns)
     val_dataset = PairwiseESCIDataset(df_val, feature_columns, mean=train_dataset.mean, std=train_dataset.std)
     
-    train_loader = DataLoader(train_dataset, batch_size=1024, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=1024, shuffle=False)
+    # Use 4-8 workers depending on the CPU (4 is a safe start)
+    # pin_memory=True speeds up the transfer to the GPU
+    num_workers = 4 if os.name != 'nt' else 0 # Use 0 on Windows if you get freezing issues, otherwise try 4
+    
+    train_loader = DataLoader(
+        train_dataset, 
+        batch_size=1024, 
+        shuffle=True, 
+        num_workers=4,        # <-- MULTI-CORE 
+        pin_memory=True,      # <-- FAST GPU TRANSFER
+        persistent_workers=True 
+    )
+    val_loader = DataLoader(
+        val_dataset, 
+        batch_size=1024, 
+        shuffle=False, 
+        num_workers=4, 
+        pin_memory=True
+    )
 
     # Save normalization stats
     os.makedirs("output", exist_ok=True)
@@ -211,7 +251,8 @@ def train_model():
         json.dump({"mean": train_dataset.mean.tolist(), "std": train_dataset.std.tolist()}, f)
         print("Saved training stats for later evaluation.")
     
-    model = DeepESCIReranker(input_dim=len(feature_columns))
+    # Move Model to GPU
+    model = DeepESCIReranker(input_dim=len(feature_columns)).to(device)
     # increased margin from 0.1 to 1.0 to force strong separation
     criterion = nn.MarginRankingLoss(margin=1.0)
     optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -226,6 +267,11 @@ def train_model():
         for batch_x_pos, batch_x_neg, batch_y in train_loader:
             # FIX: Added zero_grad()
             optimizer.zero_grad()
+
+            # --- MOVE BATCH TO GPU ---
+            batch_x_pos = batch_x_pos.to(device)
+            batch_x_neg = batch_x_neg.to(device)
+            batch_y = batch_y.to(device)
             
             pos_scores = model(batch_x_pos).squeeze()
             neg_scores = model(batch_x_neg).squeeze()
@@ -241,6 +287,11 @@ def train_model():
         total_val_loss = 0.0
         with torch.no_grad():
             for batch_x_pos, batch_x_neg, batch_y in val_loader:
+                # --- MOVE BATCH TO GPU ---
+                batch_x_pos = batch_x_pos.to(device)
+                batch_x_neg = batch_x_neg.to(device)
+                batch_y = batch_y.to(device)
+
                 pos_scores = model(batch_x_pos).squeeze()
                 neg_scores = model(batch_x_neg).squeeze()
                 loss = criterion(pos_scores, neg_scores, batch_y)
