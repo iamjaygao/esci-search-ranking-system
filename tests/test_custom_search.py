@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import torch
 import torch.nn as nn
@@ -7,7 +8,9 @@ import numpy as np
 from nltk.stem import PorterStemmer
 
 # Import your custom configuration and retrieval functions
-from config import PRODUCTS_PATH, TOP_K
+# Get the absolute path to the directory one level up
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from config import PRODUCTS_PATH, TOP_K, ROOT_DIR
 from signals.bm25 import load_bm25_index, search_bm25_global
 from signals.two_tower import load_tt_index, search_tt_global
 
@@ -57,7 +60,7 @@ class SearchPipeline:
             self.mean = np.array(stats["mean"])
             self.std = np.array(stats["std"])
             
-        # Initialize model with 9 base features (change to 12 if using price/stars)
+        # Initialize model with 9 base features
         self.model = DeepESCIReranker(input_dim=len(self.mean))
         self.model.load_state_dict(torch.load(weights_path, weights_only=True))
         self.model.eval()
@@ -134,9 +137,9 @@ class SearchPipeline:
 if __name__ == "__main__":
     # Initialize the engine once
     engine = SearchPipeline(
-        products_path=PRODUCTS_PATH,
-        weights_path="output/best_esci_reranker.pth",
-        stats_path="output/normalization_stats.json"
+        products_path=f'{ROOT_DIR}/{PRODUCTS_PATH}',
+        weights_path=f"{ROOT_DIR}/output/best_esci_reranker.pth",
+        stats_path=f"{ROOT_DIR}/output/normalization_stats.json"
     )
     
     print("==================================================")
