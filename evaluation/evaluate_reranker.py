@@ -117,8 +117,8 @@ def extract_test_features(examples_path, products_path, bm25_csv_path, semantic_
 # 3. Main Evaluation Loop
 # ==========================================
 def evaluate_model(model_weights_path):
-    examples_file = EXAMPLES_PATH
-    products_file = PRODUCTS_PATH
+    examples_file = f'{ROOT_DIR}/{EXAMPLES_PATH}'
+    products_file = f'{ROOT_DIR}/{PRODUCTS_PATH}'
     bm25_csv_path = os.path.join(ROOT_DIR, "output", "bm25_scores_test.csv")
     semantic_csv_path = os.path.join(ROOT_DIR, "output", "two_tower_scores_test.csv")
     

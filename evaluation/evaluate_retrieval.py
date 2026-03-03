@@ -36,7 +36,7 @@ def evaluate_predictions(scores_csv_path, df_truth, score_col, k_ndcg=10, k_reca
 
 def main():
     print("Loading Ground Truth labels for the TEST split...")
-    df_ex = pd.read_parquet(EXAMPLES_PATH)
+    df_ex = pd.read_parquet(f'{ROOT_DIR}/{EXAMPLES_PATH}')
     
     # Isolate ONLY the test data to prevent leakage
     df_test_truth = df_ex[df_ex['split'] == 'test'].copy()
