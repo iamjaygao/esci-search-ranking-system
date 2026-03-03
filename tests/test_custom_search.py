@@ -2,39 +2,20 @@ import os
 import sys
 import json
 import torch
-import torch.nn as nn
 import pandas as pd
 import numpy as np
 from nltk.stem import PorterStemmer
 
-# Import your custom configuration and retrieval functions
-# Get the absolute path to the directory one level up
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Ensure project root is on sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config import PRODUCTS_PATH, TOP_K, ROOT_DIR
-from signals.bm25 import load_bm25_index, search_bm25_global
-from signals.two_tower import load_tt_index, search_tt_global
+from retrieval.bm25 import load_bm25_index, search_bm25_global
+from retrieval.two_tower import load_tt_index, search_tt_global
+from reranking.model import DeepESCIReranker
 
 # ==========================================
-# 1. Reranker Architecture (Must Match Exactly)
-# ==========================================
-class DeepESCIReranker(nn.Module):
-    def __init__(self, input_dim):
-        super(DeepESCIReranker, self).__init__()
-        self.mlp = nn.Sequential(
-            nn.Linear(input_dim, 64),
-            nn.BatchNorm1d(64), 
-            nn.ReLU(),
-            nn.Linear(64, 32),
-            nn.BatchNorm1d(32),
-            nn.ReLU(),
-            nn.Linear(32, 1)
-        )
-
-    def forward(self, x):
-        return torch.sigmoid(self.mlp(x))
-
-# ==========================================
-# 2. Interactive Pipeline System
+# Interactive Pipeline System
 # ==========================================
 class SearchPipeline:
     def __init__(self, products_path, weights_path, stats_path):
@@ -51,7 +32,7 @@ class SearchPipeline:
             self.bm25_index, self.bm25_ids = load_bm25_index()
             self.tt_model, self.tt_index, self.tt_ids = load_tt_index()
         except FileNotFoundError:
-            print("Indices not found! Please run `python build_search_engine_indices.py` first.")
+            print("Indices not found! Please run `python scripts/build_indices.py` first.")
             exit(1)
         
         print("3. Loading Reranker Weights and Stats...")
