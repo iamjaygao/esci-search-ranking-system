@@ -48,7 +48,7 @@ class SearchPipeline:
             self.bm25_index, self.bm25_ids = load_bm25_index()
             self.tt_model, self.tt_index, self.tt_ids = load_tt_index()
         except FileNotFoundError:
-            print("[!] Indices not found! Please run `python build_search_engine_indices.py` first.")
+            print("Indices not found! Please run `python build_search_engine_indices.py` first.")
             exit(1)
         
         print("3. Loading Reranker Weights and Stats...")
@@ -59,7 +59,7 @@ class SearchPipeline:
             
         # Initialize model with 9 base features (change to 12 if using price/stars)
         self.model = DeepESCIReranker(input_dim=len(self.mean))
-        self.model.load_state_dict(torch.load(weights_path))
+        self.model.load_state_dict(torch.load(weights_path, weights_only=True))
         self.model.eval()
         
         self.stemmer = PorterStemmer()
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     # Initialize the engine once
     engine = SearchPipeline(
         products_path=PRODUCTS_PATH,
-        weights_path="best_esci_reranker.pth",
+        weights_path="output/best_esci_reranker.pth",
         stats_path="output/normalization_stats.json"
     )
     

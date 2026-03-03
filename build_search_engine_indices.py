@@ -20,7 +20,7 @@ def main():
     save_tt_index(tt_index, tt_ids)
     print("Two-Tower Index saved!")
 
-    print("\n[✓] All indices successfully precomputed and saved to 'output/' folder.")
+    print("\nAll indices successfully precomputed and saved to 'output/' folder.")
 
 if __name__ == "__main__":
     main()
