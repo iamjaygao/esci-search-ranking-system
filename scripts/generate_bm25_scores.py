@@ -1,10 +1,11 @@
 import os
 import sys
 import pandas as pd
-from bm25 import compute_bm25_scores
 
-# Get the absolute path to the directory one level up
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Ensure project root is on sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from retrieval.bm25 import compute_bm25_scores
 from config import EXAMPLES_PATH, PRODUCTS_PATH, USE_SMALL_VERSION, ROOT_DIR
 
 def main():

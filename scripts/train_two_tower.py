@@ -1,18 +1,21 @@
-# signals/train_two_tower.py
+# scripts/train_two_tower.py
 #
 # Fine-tunes the two-tower SentenceTransformer on the ESCI train split.
 # Teaches the model to rank relevant products higher than irrelevant ones
 # by using ESCI labels as similarity scores.
 #
 # Output: models/two_tower_finetuned/
-# Usage:  python signals/train_two_tower.py
+# Usage:  python scripts/train_two_tower.py
 
 import os
+import sys
 import pandas as pd
 from torch.utils.data import DataLoader
 from sentence_transformers import SentenceTransformer, InputExample, losses
-import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Ensure project root is on sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config import EXAMPLES_PATH, PRODUCTS_PATH
 
 # ----------------------

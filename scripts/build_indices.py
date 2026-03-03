@@ -1,8 +1,13 @@
 import os
+import sys
 import pandas as pd
+
+# Ensure project root is on sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config import PRODUCTS_PATH
-from signals.bm25 import build_global_bm25_index, save_bm25_index
-from signals.two_tower import build_global_tt_index, save_tt_index
+from retrieval.bm25 import build_global_bm25_index, save_bm25_index
+from retrieval.two_tower import build_global_tt_index, save_tt_index
 
 def main():
     os.makedirs("output", exist_ok=True)
