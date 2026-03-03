@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-def load_and_split_esci_data(data_dir="./esci-data/shopping_queries_dataset"):
+def load_and_split_esci_data(data_dir="../esci-data/shopping_queries_dataset"):
     print("Loading ESCI Parquet files...")
     # 1. Load the raw files
     df_examples = pd.read_parquet(f'{data_dir}/shopping_queries_dataset_examples.parquet')
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     train_data, val_data, test_data = load_and_split_esci_data()
     
     # Save these clean splits to CSV so you don't have to run this merge every time
-    train_data.to_csv("esci_train_clean.csv", index=False)
-    val_data.to_csv("esci_val_clean.csv", index=False)
-    test_data.to_csv("esci_test_clean.csv", index=False)
+    train_data.to_csv("../output/esci_train_clean.csv", index=False)
+    val_data.to_csv("../output/esci_val_clean.csv", index=False)
+    test_data.to_csv("../output/esci_test_clean.csv", index=False)
     print("Saved clean splits to CSV!")
