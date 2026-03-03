@@ -6,7 +6,7 @@ import os
 import sys
 import json
 from nltk.stem import PorterStemmer
-from metrics import ndcg_at_k
+from metrics import ndcg_at_k, recall_at_k
 
 # Get the absolute path to the directory one level up
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -124,6 +124,14 @@ def evaluate_model(model_weights_path):
     
     df_test, feature_cols = extract_test_features(examples_file, products_file, bm25_csv_path, semantic_csv_path)
 
+    # Create the Ground Truth DataFrame for Recall
+    print("Loading Ground Truth labels for Recall baseline...")
+    df_ex = pd.read_parquet(examples_file)
+    df_truth = df_ex[df_ex['split'] == 'test'].copy()
+    df_truth['query_id'] = df_truth['query_id'].astype(str)
+    label_map = {'E': 1.0, 'S': 0.1, 'C': 0.01, 'I': 0.0}
+    df_truth['relevance'] = df_truth['esci_label'].map(label_map).fillna(0.0)
+
     # Load the exact normalization stats from training
     print("Loading training normalization stats...")
     norm_stats = os.path.join(ROOT_DIR, "output", "normalization_stats.json")
@@ -153,16 +161,18 @@ def evaluate_model(model_weights_path):
         
     df_test['predicted_score'] = predictions
     
-    # Calculate NDCG@10 per query
-    print("Calculating NDCG@10...")
+    print("Calculating Metrics...")
     final_ndcg = ndcg_at_k(df_test, score_col='predicted_score', k=10)
+    final_recall = recall_at_k(df_test, df_truth, score_col='predicted_score', k=10)
     
+    print("\n" + "="*50)
+    print(" NEURAL RERANKER EVALUATION")
     print("="*50)
-    print(f"FINAL TEST NDCG@10: {final_ndcg:.4f}")
+    print(f"Reranker   | NDCG@10: {final_ndcg:.4f} | Recall@10: {final_recall:.4f}")
     print("="*50)
     
     # Optional: Save the ranked results to look at them manually
-    df_test[['query', 'product_title', 'predicted_score', 'esci_label']].to_csv("output/final_reranker_test_predictions.csv", index=False)
+    df_test[['query', 'product_title', 'predicted_score', 'esci_label']].to_csv(os.path.join(ROOT_DIR, "output", "final_reranker_test_predictions.csv"), index=False)
     
 if __name__ == "__main__":
     reranker_model = os.path.join(ROOT_DIR, "output", "best_esci_reranker.pth")
