@@ -87,16 +87,16 @@ def run_idf_evaluation(train_csv_path, test_csv_path):
     
     # 4. Save the dictionary map for the Reranker
     # This creates a lookup table so your PyTorch dataset can grab scores instantly
-    results_df.to_csv(f'{ROOT_DIR}/output/test_queries_idf_scored.csv', index=False)
+    results_df.to_csv(f'{ROOT_DIR}/output/IDF/test_queries_idf_scored.csv', index=False)
     print("\nSaved scores to 'test_queries_scored.csv'")
     
     return results_df
 
 if __name__ == "__main__":
-    train_csv_path = f'{ROOT_DIR}/output/esci_train_clean.csv'
-    test_csv_path = f'{ROOT_DIR}/output/esci_test_clean.csv'
+    train_csv_path = f'{ROOT_DIR}/output/IDF/esci_train_clean.csv'
+    test_csv_path = f'{ROOT_DIR}/output/IDF/esci_test_clean.csv'
 
     try:
         scored_test_data = run_idf_evaluation(train_csv_path, test_csv_path)
     except FileNotFoundError:
-        print("CSV files not found. Make sure you ran 'esci_dataset_idf_setup.py' first!")
+        print("CSV files not found. Make sure you ran 'idf_setup.py' first!")
