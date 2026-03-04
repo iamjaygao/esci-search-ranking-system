@@ -3,8 +3,14 @@ import bm25s
 import numpy as np
 import pandas as pd
 import json
-from config import TOP_K, ROOT_DIR
+import os
+import sys
 from rank_bm25 import BM25Okapi
+
+# Ensure project root is on sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from config import TOP_K, ROOT_DIR
+
 
 
 def simple_tokenize(text):
