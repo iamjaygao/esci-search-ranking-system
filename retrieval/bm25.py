@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import json
 from config import TOP_K, ROOT_DIR
+from rank_bm25 import BM25Okapi
 
 
 def simple_tokenize(text):
