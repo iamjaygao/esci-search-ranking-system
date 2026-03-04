@@ -3,7 +3,12 @@ import numpy as np
 import pandas as pd
 import faiss
 import json
+import sys
+import os
 from sentence_transformers import SentenceTransformer
+
+# Ensure project root is on sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import TOP_K, ROOT_DIR
 
 MODEL_NAME = f'{ROOT_DIR}/models/two_tower_finetuned'

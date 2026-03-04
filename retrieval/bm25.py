@@ -1,4 +1,3 @@
-# signals/bm25.py
 import bm25s
 import numpy as np
 import pandas as pd
