@@ -22,6 +22,7 @@ class SearchPipeline:
         print("1. Loading Product Catalog...")
         self.df_pr = pd.read_parquet(products_path)
         self.df_pr['product_id'] = self.df_pr['product_id'].astype(str)
+        self.df_pr.set_index('product_id', inplace=True)
         
         # Optionally load ESCI-S enriched data here if you implemented it!
         # df_enriched = pd.read_parquet("esci-data/esci_s_products.parquet")
@@ -68,7 +69,7 @@ class SearchPipeline:
         candidates['semantic_score'] = candidates['semantic_score'].fillna(-1.0)
         
         # 2. Add Product Metadata
-        df = pd.merge(candidates, self.df_pr, on='product_id', how='inner')
+        df = candidates.join(self.df_pr, on='product_id', how='inner').reset_index()
         df['query'] = query_text
         
         # 3. Feature Extraction (Exact same logic as training)
