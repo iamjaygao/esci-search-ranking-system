@@ -1,10 +1,24 @@
-# Hybrid Search & Reranking
+# Search Ranking System (Amazon ESCI)
 
-Two-stage neural product search over 2.6M Amazon products. A query like *"running shoes for seniors"* retrieves and re-scores candidates in real time using a combination of keyword search, semantic embeddings, and a learned neural reranker.
+This is a team-based project building a multi-stage search ranking system on the Amazon ESCI dataset (~2.6M products with human-labeled relevance).
 
-**Team:** Gyula Planky, Jian Gao, Hyuk Jin Chung — Deep Learning course project
+The system combines lexical retrieval (BM25), semantic retrieval, and neural reranking to improve search relevance.
 
 ---
+
+## My Contributions
+
+- **Dataset & Problem Framing** — Identified and curated the Amazon ESCI dataset; framed ranking as a controlled comparison between BM25 and multi-stage retrieval systems  
+- **BM25 Retrieval Baseline** — Built BM25 using `bm25s`; established it as the control arm for all experiments; implemented normalization and top-K candidate generation  
+- **Evaluation Design** — Defined NDCG@K as the primary metric for ranking evaluation and contributed to comparing model performance across different configurations
+
+---
+
+## System Overview
+
+The following pipeline illustrates the overall system architecture developed by the team.  
+My work focuses on the retrieval baseline and evaluation components.
+
 
 ## Pipeline
 
@@ -17,7 +31,6 @@ User Query
                                             │
                                             ▼
                                    Neural Reranker
-                                   (17-feature MLP)
                                             │
                                             ▼
                                    Top results + MMR diversity
