@@ -8,9 +8,9 @@ The system combines lexical retrieval (BM25), semantic retrieval, and neural rer
 
 ## My Contributions
 
-- **Dataset & Problem Framing** — Identified and curated the Amazon ESCI dataset; framed ranking as a controlled comparison between BM25 and multi-stage retrieval systems  
-- **BM25 Retrieval Baseline** — Built BM25 using `bm25s`; established it as the control arm for all experiments; implemented normalization and top-K candidate generation  
-- **Evaluation Design** — Defined NDCG@K as the primary metric for ranking evaluation and contributed to comparing model performance across different configurations
+- Led the ranking-system evaluation track, from dataset framing and BM25 control design to NDCG@K-based comparison of lexical retrieval, dense retrieval, and neural reranking.
+- Implemented the BM25 retrieval pipeline with normalization and top-K candidate generation, serving as the experimental control for measuring reranker lift.
+- Analyzed retrieval and reranking trade-offs, identifying cases where semantic reranking improved long-tail relevance and cases where lexical matching better preserved exact query intent.
 
 ---
 
