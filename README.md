@@ -1,24 +1,30 @@
 # Search Ranking System (Amazon ESCI)
 
-This is a team-based project building a multi-stage search ranking system on the Amazon ESCI dataset (~2.6M products with human-labeled relevance).
+A multi-stage e-commerce search ranking system built on the Amazon ESCI dataset (~2.6M products), combining BM25 retrieval, dense retrieval, and neural reranking to improve long-tail relevance and query understanding.
 
-The system combines lexical retrieval (BM25), semantic retrieval, and neural reranking to improve search relevance.
+---
+
+## Key Results
+
+- Built a multi-stage e-commerce search pipeline over ~2.6M Amazon ESCI products, simulating a real-world retrieval-to-reranking workflow.
+- Improved NDCG@10 from 0.804 (BM25 baseline) to 0.845 with a neural reranker, demonstrating measurable relevance gains over lexical retrieval.
+- Evaluated lexical retrieval, dense retrieval, and neural reranking under a unified NDCG@K / Recall@K workflow to support controlled model comparison.
+- Added business-aware ranking evaluation that penalizes over-budget results and uses rating quality as a tie-break signal, connecting offline metrics with product relevance.
 
 ---
 
 ## My Contributions
 
-- Led the ranking-system evaluation track, from dataset framing and BM25 control design to NDCG@K-based comparison of lexical retrieval, dense retrieval, and neural reranking.
-- Implemented the BM25 retrieval pipeline with normalization and top-K candidate generation, serving as the experimental control for measuring reranker lift.
-- Analyzed retrieval and reranking trade-offs, identifying cases where semantic reranking improved long-tail relevance and cases where lexical matching better preserved exact query intent.
+- Drove the ranking evaluation track, including dataset framing, BM25 control design, candidate generation, and NDCG@K-based comparison across lexical retrieval, dense retrieval, and neural reranking.
+- Built the BM25 retrieval and scoring pipeline with normalization and top-K candidate generation, establishing the experimental control for measuring reranker lift over the baseline.
+- Designed evaluation analyses to explain retrieval/reranking trade-offs, including when semantic reranking improved long-tail relevance and when lexical matching better preserved exact query intent.
 
 ---
 
 ## System Overview
 
 The following pipeline illustrates the overall system architecture developed by the team.  
-My work focuses on the retrieval baseline and evaluation components.
-
+This pipeline shows how lexical retrieval, dense retrieval, and neural reranking are combined into a unified search-ranking workflow.
 
 ## Pipeline
 
