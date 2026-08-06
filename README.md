@@ -13,14 +13,6 @@ A multi-stage e-commerce search ranking system built on the Amazon ESCI dataset 
 
 ---
 
-## My Contributions
-
-- Drove the ranking evaluation track, including dataset framing, BM25 control design, candidate generation, and NDCG@K-based comparison across lexical retrieval, dense retrieval, and neural reranking.
-- Built the BM25 retrieval and scoring pipeline with normalization and top-K candidate generation, establishing the experimental control for measuring reranker lift over the baseline.
-- Designed evaluation analyses to explain retrieval/reranking trade-offs, including when semantic reranking improved long-tail relevance and when lexical matching better preserved exact query intent.
-
----
-
 ## System Overview
 
 The following pipeline illustrates the overall system architecture developed by the team.  
