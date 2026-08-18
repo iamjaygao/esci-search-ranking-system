@@ -1,15 +1,21 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Data / outputs
 data/
 outputs/
-venv/
-vevv/
-__pycache__/
-*/__pycache__/
-*.pyc
-.DS_Store
-esci-data/*
-*.pth
-*.csv
-esci-data/
-models/
 output/
+models/
+esci-data/
 
+# Model weights
+*.pth
+
+# Generated CSV files
+*.csv
