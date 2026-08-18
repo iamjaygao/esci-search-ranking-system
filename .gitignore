@@ -18,4 +18,4 @@ esci-data/
 *.pth
 
 # Generated CSV files
-*.csv
+*.csv.vscode/
