@@ -28,7 +28,7 @@ C_GRAY   = "#95A5A6"
 # ── 1. Metrics bar chart ──────────────────────────────────────────────────────
 def make_metrics_chart():
     methods = ["BM25 Baseline", "Neural Reranker"]
-    values  = [0.804, 0.845]
+    values  = [0.8188, 0.8464]
     colors  = [C_ORANGE, C_PURPLE]
 
     fig, ax = plt.subplots(figsize=(7, 5))
@@ -111,7 +111,7 @@ def make_pipeline_summary():
                 "NDCG@10  (primary metric)",
                 "Recall@K  (coverage)",
                 "Business-aware NDCG\n(penalizes over-budget results,\nstar rating as tie-breaker)",
-                "BM25 baseline  →  0.804\nNeural reranker  →  0.845\n+0.041 / ~5.1% lift",
+                "BM25 baseline  →  0.8188\nNeural reranker  →  0.8464\n+0.0276 / ~3.4% lift",
             ],
         },
     ]
