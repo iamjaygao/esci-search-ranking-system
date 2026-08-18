@@ -7,9 +7,26 @@ from torch.utils.data import Dataset
 from nltk.stem import PorterStemmer
 
 # ==========================================
+# 0. Feature registry (single source of truth for the 17-feature set)
+# ==========================================
+ALL_FEATURES = [
+    'query_length', 'query_mean_idf', 'query_max_idf', 'user_budget', 'cheap_intent',
+    'log_price', 'is_price_missing', 'stars_clean', 'log_review_count', 'is_rating_missing',
+    'bm25_score', 'semantic_score', 'word_overlap', 'is_dominant_category', 'brand_match',
+    'color_match', 'is_over_budget'
+]
+
+
+def get_active_features(excluded_features=None):
+    """Returns ALL_FEATURES minus any features named in excluded_features, preserving order."""
+    excluded = set(excluded_features or [])
+    return [f for f in ALL_FEATURES if f not in excluded]
+
+
+# ==========================================
 # 1. Advanced Feature Extraction Pipeline
 # ==========================================
-def extract_advanced_features(examples_path, products_path, bm25_csv_path, semantic_csv_path, esci_s_path):
+def extract_advanced_features(examples_path, products_path, bm25_csv_path, semantic_csv_path, esci_s_path, excluded_features=None):
     print("Loading raw Data...")
     df_ex = pd.read_parquet(examples_path)
     df_pr = pd.read_parquet(products_path)
@@ -153,12 +170,7 @@ def extract_advanced_features(examples_path, products_path, bm25_csv_path, seman
     df['query_dominant_category'] = df['query_id'].map(dominant_cats)
     df['is_dominant_category'] = (df['category'] == df['query_dominant_category']).astype(float)
 
-    feature_cols = [
-        'query_length', 'query_mean_idf', 'query_max_idf', 'user_budget', 'cheap_intent',
-        'log_price', 'is_price_missing', 'stars_clean', 'log_review_count', 'is_rating_missing',
-        'bm25_score', 'semantic_score', 'word_overlap', 'is_dominant_category', 'brand_match', 
-        'color_match', 'is_over_budget'
-    ]
+    feature_cols = get_active_features(excluded_features)
     df = df.dropna(subset=feature_cols)
     
     # Return the idf_map so the training script can save it

@@ -92,15 +92,10 @@ def extract_esci_features(examples_path, products_path, bm25_csv_path, semantic_
     df['has_brand'] = df['product_brand'].notna().astype(float)
     df['bullet_count'] = df['product_bullet_point'].fillna("").astype(str).apply(lambda x: len(x.split('\n')) if x.strip() and x.strip() != 'None' else 0)
 
-    prod_counts = df.groupby('product_id')['query_id'].transform('count')
-    df['log_product_freq'] = np.log1p(prod_counts)
-    brand_counts = df.groupby('product_brand')['product_id'].transform('count')
-    df['log_brand_freq'] = np.log1p(brand_counts.fillna(0))
-
     feature_cols = [
         'bm25_score', 'semantic_score', 'word_overlap',
         'query_length', 'title_length', 'has_brand',
-        'bullet_count', 'log_product_freq', 'log_brand_freq'
+        'bullet_count'
     ]
     df = df.dropna(subset=feature_cols)
     return df, feature_cols

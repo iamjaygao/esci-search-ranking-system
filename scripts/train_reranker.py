@@ -68,8 +68,12 @@ def train_model():
     model = DeepESCIReranker(input_dim=len(feature_columns)).to(device)
     # increased margin from 0.1 to 1.0 to force strong separation
     criterion = nn.MarginRankingLoss(margin=1.0)
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
+    # AdamW + weight_decay: MarginRankingLoss only constrains the *gap* between
+    # pos/neg scores, not their scale, so plain Adam with no weight decay lets the
+    # network trivially shrink the loss to ~0 by scaling all weights up rather than
+    # learning to rank. weight_decay keeps that degenerate solution costly.
+    optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-2)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2)
 
     epochs, patience, patience_counter, best_val_loss = 50, 6, 0, float('inf')
 

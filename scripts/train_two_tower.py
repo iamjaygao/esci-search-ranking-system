@@ -43,7 +43,14 @@ def main():
     # Filter to ONLY positive examples (Exact or Substitute)
     # MNRL expects positive pairs. It creates negatives from other pairs in the batch.
     df = df[df["esci_label"].isin(["E", "S"])]
-    df["item_text"] = df["product_title"].fillna("")
+    # Match the item_text construction used at inference time (retrieval/two_tower.py,
+    # scripts/run_pipeline.py) so the encoder isn't trained on a narrower text
+    # distribution (title-only) than what it sees in production (title+description+bullets).
+    df["item_text"] = (
+        df["product_title"].fillna("") + " " +
+        df["product_description"].fillna("") + " " +
+        df["product_bullet_point"].fillna("")
+    )
 
     print(f"Training samples (Positives only): {len(df)}")
 

@@ -71,19 +71,14 @@ def extract_test_features(examples_path, products_path, bm25_csv_path, semantic_
     df['has_brand'] = df['product_brand'].notna().astype(float)
     df['bullet_count'] = df['product_bullet_point'].fillna("").astype(str).apply(lambda x: len(x.split('\n')) if x.strip() and x.strip() != 'None' else 0)
     
-    prod_counts = df.groupby('product_id')['query_id'].transform('count')
-    df['log_product_freq'] = np.log1p(prod_counts)
-    brand_counts = df.groupby('product_brand')['product_id'].transform('count')
-    df['log_brand_freq'] = np.log1p(brand_counts.fillna(0))
-    
     # Unjudged retrieved items are treated as 0.0 gain (Hard Negatives during eval)
     label_map = {'E': 1.0, 'S': 0.1, 'C': 0.01, 'I': 0.0}
     df['relevance'] = df['esci_label'].map(label_map).fillna(0.0)
-    
+
     feature_cols = [
-        'bm25_score', 'semantic_score', 'word_overlap', 
-        'query_length', 'title_length', 'has_brand', 
-        'bullet_count', 'log_product_freq', 'log_brand_freq'
+        'bm25_score', 'semantic_score', 'word_overlap',
+        'query_length', 'title_length', 'has_brand',
+        'bullet_count'
     ]
     df = df.dropna(subset=feature_cols)
     
