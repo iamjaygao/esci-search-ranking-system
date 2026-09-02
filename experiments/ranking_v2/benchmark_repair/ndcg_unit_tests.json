@@ -1,0 +1,168 @@
+{
+  "passed": 23,
+  "total": 23,
+  "all_pass": true,
+  "assertions": [
+    {
+      "test": "gain(E)",
+      "expected": 1.0,
+      "got": 1.0,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "gain(S)",
+      "expected": 0.07177346253629313,
+      "got": 0.07177346253629313,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "gain(C)",
+      "expected": 0.006955550056718884,
+      "got": 0.006955550056718884,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "gain(I)",
+      "expected": 0.0,
+      "got": 0.0,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "perfect ordering -> 1.0",
+      "expected": 1.0,
+      "got": 1.0,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "worst ordering -> 1/log2(3)",
+      "expected": 0.6309297535714575,
+      "got": 0.6309297535714575,
+      "pass": true,
+      "detail": "= 0.6309298"
+    },
+    {
+      "test": "S-above-E NDCG",
+      "expected": 0.6722605601420547,
+      "got": 0.6722605601420547,
+      "pass": true,
+      "detail": "= 0.6722605601"
+    },
+    {
+      "test": "E ranked last of 10",
+      "expected": 0.473896788757814,
+      "got": 0.473896788757814,
+      "pass": true,
+      "detail": "= 0.4738967888"
+    },
+    {
+      "test": "E demoted by one slot",
+      "expected": 0.7268822123199351,
+      "got": 0.7268822123199352,
+      "pass": true,
+      "detail": "= 0.7268822123"
+    },
+    {
+      "test": "demoting E by 1 slot costs more than 25% of the score",
+      "expected": true,
+      "got": true,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "S:E gain ratio",
+      "expected": 0.07177346253629313,
+      "got": 0.07177346253629313,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "short list, perfect order -> 1.0",
+      "expected": 1.0,
+      "got": 1.0,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "short list, all scored",
+      "expected": 1,
+      "got": 1,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "two irrelevant at the top",
+      "expected": 0.6410457898283652,
+      "got": 0.6410457898283654,
+      "pass": true,
+      "detail": "= 0.6410457898"
+    },
+    {
+      "test": "scored queries",
+      "expected": 1,
+      "got": 1,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "excluded queries",
+      "expected": 1,
+      "got": 1,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "mean is 1.0 not 0.5",
+      "expected": 1.0,
+      "got": 1.0,
+      "pass": true,
+      "detail": "q2 dropped rather than counted as zero"
+    },
+    {
+      "test": "unweighted mean of 1.0 and 0.0",
+      "expected": 0.5,
+      "got": 0.5,
+      "pass": true,
+      "detail": "q2's single E falls outside k=10 -> 0.0"
+    },
+    {
+      "test": "order-independent (fwd vs rev)",
+      "expected": 0.6379285213652572,
+      "got": 0.6379285213652572,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "order-independent (fwd vs shuffled)",
+      "expected": 0.6379285213652572,
+      "got": 0.6379285213652572,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "tie order is ascending product_id",
+      "expected": 0.6379285213652572,
+      "got": 0.6379285213652572,
+      "pass": true,
+      "detail": "= 0.6379285214"
+    },
+    {
+      "test": "pessimistic tie-break is <= deterministic",
+      "expected": true,
+      "got": true,
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "dcg parity vs evaluation/metrics.dcg",
+      "expected": 2.3174243885827455,
+      "got": 2.3174243885827455,
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

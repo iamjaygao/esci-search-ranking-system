@@ -1,0 +1,536 @@
+{
+  "total_checks": 62,
+  "passed": 61,
+  "failed_build_induced": 0,
+  "failed_upstream_inherited": 1,
+  "build_is_valid": true,
+  "status_legend": {
+    "PASS": "assertion holds",
+    "FAIL": "defect introduced by this build -- gates the benchmark",
+    "FAIL_UPSTREAM": "defect inherited from the ESCI source data that constraint 3 (do not change the split) forbids fixing here; documented and quantified, never silently repaired"
+  },
+  "checks": [
+    {
+      "check": "train+dev rows == ESCI train judged pairs",
+      "status": "PASS",
+      "expected": 1983272,
+      "actual": 1983272,
+      "note": ""
+    },
+    {
+      "check": "test rows == ESCI test judged pairs",
+      "status": "PASS",
+      "expected": 638016,
+      "actual": 638016,
+      "note": ""
+    },
+    {
+      "check": "no split exceeds its judged-pair count",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": "join_output_rows > expected_rows would fail here"
+    },
+    {
+      "check": "test pool is smaller than the V1 inflated pool",
+      "status": "PASS",
+      "expected": "< 682233",
+      "actual": 638016,
+      "note": "V1 had 44217 duplicated rows (6.93%)"
+    },
+    {
+      "check": "[train] example_id unique",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": ""
+    },
+    {
+      "check": "[train] (query_id, product_id, product_locale) unique",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[dev] example_id unique",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": ""
+    },
+    {
+      "check": "[dev] (query_id, product_id, product_locale) unique",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[test] example_id unique",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": ""
+    },
+    {
+      "check": "[test] (query_id, product_id, product_locale) unique",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "example_id unique ACROSS all three splits",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": ""
+    },
+    {
+      "check": "[train] no conflicting labels for one logical example",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[train] relevance column matches the official mapping",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[train] lgb_label is a 1:1 encoding of esci_label",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": ""
+    },
+    {
+      "check": "[dev] no conflicting labels for one logical example",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[dev] relevance column matches the official mapping",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[dev] lgb_label is a 1:1 encoding of esci_label",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": ""
+    },
+    {
+      "check": "[test] no conflicting labels for one logical example",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[test] relevance column matches the official mapping",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[test] lgb_label is a 1:1 encoding of esci_label",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": ""
+    },
+    {
+      "check": "train/dev query overlap",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "train/test query overlap",
+      "status": "FAIL_UPSTREAM",
+      "expected": 0,
+      "actual": 1,
+      "note": "query_ids ['79706'] -- inherited from ESCI source, not introduced by this build"
+    },
+    {
+      "check": "dev/test query overlap",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "train+dev queries == ESCI train queries",
+      "status": "PASS",
+      "expected": 99684,
+      "actual": 99684,
+      "note": "the original split is preserved, only the internal 85/15 is now persisted"
+    },
+    {
+      "check": "test queries == ESCI test queries",
+      "status": "PASS",
+      "expected": 30969,
+      "actual": 30969,
+      "note": ""
+    },
+    {
+      "check": "dev split matches the V1 trainers' internal split (84731/14953)",
+      "status": "PASS",
+      "expected": "84731/14953",
+      "actual": "84731/14953",
+      "note": ""
+    },
+    {
+      "check": "cross-split query_ids beyond the known upstream one",
+      "status": "PASS",
+      "expected": "subset of {'79706'}",
+      "actual": [
+        "79706"
+      ],
+      "note": "ESCI assigns 79706 to both splits at source. No example_id is duplicated (each row lives in exactly one split); the leak is a shared query STRING, affecting 1 of 30,969 test queries (0.003%)."
+    },
+    {
+      "check": "cross-split query shares no product between train and test",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": "3 train/dev rows vs 31 test rows for query_id(s) ['79706']"
+    },
+    {
+      "check": "[train] all 17 features present",
+      "status": "PASS",
+      "expected": [],
+      "actual": [],
+      "note": ""
+    },
+    {
+      "check": "[train] no NaN in features",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[train] no Inf in features",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[train] no NaN in bm25_score",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[train] no NaN in semantic_score",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[train] no NaN in relevance",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[train] no NaN in lgb_label",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[dev] all 17 features present",
+      "status": "PASS",
+      "expected": [],
+      "actual": [],
+      "note": ""
+    },
+    {
+      "check": "[dev] no NaN in features",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[dev] no Inf in features",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[dev] no NaN in bm25_score",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[dev] no NaN in semantic_score",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[dev] no NaN in relevance",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[dev] no NaN in lgb_label",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[test] all 17 features present",
+      "status": "PASS",
+      "expected": [],
+      "actual": [],
+      "note": ""
+    },
+    {
+      "check": "[test] no NaN in features",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[test] no Inf in features",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[test] no NaN in bm25_score",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[test] no NaN in semantic_score",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[test] no NaN in relevance",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "[test] no NaN in lgb_label",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "note": ""
+    },
+    {
+      "check": "feature list identical to reranking.advanced_features.ALL_FEATURES",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": "no feature added, removed or reordered"
+    },
+    {
+      "check": "[train] group sizes sum to row count",
+      "status": "PASS",
+      "expected": 1684002,
+      "actual": 1684002,
+      "note": ""
+    },
+    {
+      "check": "[train] every query has >= 1 candidate",
+      "status": "PASS",
+      "expected": ">=1",
+      "actual": 3,
+      "note": ""
+    },
+    {
+      "check": "[train] rows are contiguous by query_id",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": ""
+    },
+    {
+      "check": "[train] queries with no relevant candidate (excluded by the scorer)",
+      "status": "PASS",
+      "expected": null,
+      "actual": 0,
+      "note": "informational"
+    },
+    {
+      "check": "[dev] group sizes sum to row count",
+      "status": "PASS",
+      "expected": 299270,
+      "actual": 299270,
+      "note": ""
+    },
+    {
+      "check": "[dev] every query has >= 1 candidate",
+      "status": "PASS",
+      "expected": ">=1",
+      "actual": 8,
+      "note": ""
+    },
+    {
+      "check": "[dev] rows are contiguous by query_id",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": ""
+    },
+    {
+      "check": "[dev] queries with no relevant candidate (excluded by the scorer)",
+      "status": "PASS",
+      "expected": null,
+      "actual": 0,
+      "note": "informational"
+    },
+    {
+      "check": "[test] group sizes sum to row count",
+      "status": "PASS",
+      "expected": 638016,
+      "actual": 638016,
+      "note": ""
+    },
+    {
+      "check": "[test] every query has >= 1 candidate",
+      "status": "PASS",
+      "expected": ">=1",
+      "actual": 8,
+      "note": ""
+    },
+    {
+      "check": "[test] rows are contiguous by query_id",
+      "status": "PASS",
+      "expected": true,
+      "actual": true,
+      "note": ""
+    },
+    {
+      "check": "[test] queries with no relevant candidate (excluded by the scorer)",
+      "status": "PASS",
+      "expected": null,
+      "actual": 0,
+      "note": "informational"
+    }
+  ],
+  "distributions": {
+    "train": {
+      "rows": 1684002,
+      "queries": 84731,
+      "candidates_per_query": {
+        "mean": 19.87468577026118,
+        "std": 9.178811322103599,
+        "min": 3,
+        "p5": 15.0,
+        "p25": 16.0,
+        "median": 16.0,
+        "p75": 16.0,
+        "p95": 40.0,
+        "max": 198
+      },
+      "label_pct": {
+        "E": 66.2012,
+        "S": 21.2661,
+        "C": 2.7578,
+        "I": 9.7748
+      },
+      "locale_queries": {
+        "us": 63707,
+        "jp": 11375,
+        "es": 9649
+      },
+      "queries_lt_10_candidates": 539,
+      "degenerate_queries_single_relevance": 22113
+    },
+    "dev": {
+      "rows": 299270,
+      "queries": 14953,
+      "candidates_per_query": {
+        "mean": 20.014044004547582,
+        "std": 9.386052610022862,
+        "min": 8,
+        "p5": 15.0,
+        "p25": 16.0,
+        "median": 16.0,
+        "p75": 16.0,
+        "p95": 40.0,
+        "max": 167
+      },
+      "label_pct": {
+        "E": 66.8176,
+        "S": 20.9958,
+        "C": 2.7915,
+        "I": 9.3952
+      },
+      "locale_queries": {
+        "us": 11181,
+        "jp": 2085,
+        "es": 1687
+      },
+      "queries_lt_10_candidates": 88,
+      "degenerate_queries_single_relevance": 3848
+    },
+    "test": {
+      "rows": 638016,
+      "queries": 30969,
+      "candidates_per_query": {
+        "mean": 20.601763053375958,
+        "std": 9.72513545480746,
+        "min": 8,
+        "p5": 15.0,
+        "p25": 16.0,
+        "median": 16.0,
+        "p75": 16.0,
+        "p95": 40.0,
+        "max": 126
+      },
+      "label_pct": {
+        "E": 61.6541,
+        "S": 24.0365,
+        "C": 3.2689,
+        "I": 11.0405
+      },
+      "locale_queries": {
+        "us": 22458,
+        "jp": 4667,
+        "es": 3844
+      },
+      "queries_lt_10_candidates": 175,
+      "degenerate_queries_single_relevance": 6523
+    }
+  }
+}

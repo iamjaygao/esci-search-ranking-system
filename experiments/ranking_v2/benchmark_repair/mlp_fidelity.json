@@ -1,0 +1,115 @@
+{
+  "matched_rows": 638016,
+  "clean_pool_rows": 638016,
+  "per_feature": {
+    "query_length": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "query_mean_idf": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "query_max_idf": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "user_budget": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "cheap_intent": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "log_price": {
+      "rows_changed": 221395,
+      "pct_changed": 34.7005,
+      "max_abs_diff": 9.363992472743405,
+      "mean_abs_diff": 0.04292455236055463
+    },
+    "is_price_missing": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "stars_clean": {
+      "rows_changed": 817,
+      "pct_changed": 0.1281,
+      "max_abs_diff": 1.0,
+      "mean_abs_diff": 0.00023243931186678687
+    },
+    "log_review_count": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "is_rating_missing": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "bm25_score": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "semantic_score": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "word_overlap": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "is_dominant_category": {
+      "rows_changed": 13420,
+      "pct_changed": 2.1034,
+      "max_abs_diff": 1.0,
+      "mean_abs_diff": 0.02103395526131006
+    },
+    "brand_match": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "color_match": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    },
+    "is_over_budget": {
+      "rows_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    }
+  },
+  "mlp_score_abs_diff": {
+    "rows_changed": 229525,
+    "pct_changed": 35.9748,
+    "max": 1.0820043087005615,
+    "mean": 0.008735341019928455
+  },
+  "interpretation": "The frozen MLP's inputs move only where within-frame imputation medians or the top-20-BM25 dominant-category vote changed as a result of removing the 44,217 duplicate rows. Features that do not depend on within-frame aggregates (bm25_score, semantic_score, word_overlap, query_*, brand_match, color_match) must be bit-identical."
+}

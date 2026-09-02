@@ -1,0 +1,85 @@
+{
+  "checkpoint_exists": true,
+  "checkpoint_loads": true,
+  "label_gain_is_official_linear": true,
+  "label_gain_found": [
+    0.0,
+    0.01,
+    0.1,
+    1.0
+  ],
+  "label_gain_required": [
+    0.0,
+    0.01,
+    0.1,
+    1.0
+  ],
+  "integer_label_map_matches": true,
+  "uses_17_features": true,
+  "feature_list": [
+    "query_length",
+    "query_mean_idf",
+    "query_max_idf",
+    "user_budget",
+    "cheap_intent",
+    "log_price",
+    "is_price_missing",
+    "stars_clean",
+    "log_review_count",
+    "is_rating_missing",
+    "bm25_score",
+    "semantic_score",
+    "word_overlap",
+    "is_dominant_category",
+    "brand_match",
+    "color_match",
+    "is_over_budget"
+  ],
+  "feature_list_matches_frozen_pool": true,
+  "hyperparameters": {
+    "objective": "lambdarank",
+    "metric": "ndcg",
+    "n_estimators": 1000,
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "min_child_samples": 20,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "reg_lambda": 1.0,
+    "random_state": 42,
+    "n_jobs": -1
+  },
+  "hyperparameters_source": "scripts/train_lambdamart.py (copied verbatim, nothing tuned)",
+  "hyperparameters_identical_across_all_three_variants": true,
+  "trained_on_clean_pool": true,
+  "train_queries": 84731,
+  "dev_queries": 14953,
+  "split_matches_v1_internal_85_15": true,
+  "only_difference_vs_siblings_is_label_gain": {
+    "v1gain_cleanpool": [
+      0.0,
+      1.0,
+      3.0,
+      7.0
+    ],
+    "exact_cleanpool": [
+      0.0,
+      0.006955550056718884,
+      0.07177346253629313,
+      1.0
+    ],
+    "linear_cleanpool": [
+      0.0,
+      0.01,
+      0.1,
+      1.0
+    ],
+    "note": "all three were fit by one script in one run with identical data, identical features and identical hyperparameters; label_gain is the only argument that varied"
+  },
+  "best_iteration": 183,
+  "num_trees": 183,
+  "early_stopping_triggered": true,
+  "lightgbm_internal_dev_ndcg_at_10": 0.8848694632942087,
+  "decision": "REUSE -- all configuration requirements verified, no retraining",
+  "alignment_significance": "LightGBM uses label_gain[label] directly as the DCG numerator, so with label_gain=[0,0.01,0.10,1.0] its internal lambdarank objective is now EXACTLY the official KDD metric. In Phase 1 this variant looked 3.04e-3 misaligned only because it was being judged against the legacy exponential scorer. Under the official metric it is the aligned model and the exact_cleanpool variant is the misaligned one."
+}
