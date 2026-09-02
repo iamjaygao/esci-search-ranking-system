@@ -1,0 +1,54 @@
+{
+  "base_model": "sentence-transformers/msmarco-distilbert-base-v3",
+  "loss": "MultipleNegativesRankingLoss",
+  "batch_size": 64,
+  "epochs": 3,
+  "lr": 2e-05,
+  "warmup_ratio": 0.1,
+  "lr_scheduler_type": "linear",
+  "seed": 42,
+  "positive_label_definition": {
+    "labels": [
+      "E",
+      "S"
+    ],
+    "locale": "us",
+    "small_version": 1,
+    "split": "train"
+  },
+  "dev_evaluator": {
+    "n_eval_queries": 300,
+    "dev_corpus_size": 20000,
+    "relevant_labels": [
+      "E",
+      "S"
+    ],
+    "precision_recall_at_k": [
+      10,
+      50,
+      100
+    ],
+    "manifest": {
+      "seed": 42,
+      "n_eval_queries_requested": 300,
+      "n_eval_queries_used": 300,
+      "dev_corpus_size_requested": 20000,
+      "dev_corpus_size_actual": 20000,
+      "n_core_labeled_products": 6067,
+      "n_filler_products": 13933,
+      "relevant_labels": [
+        "E",
+        "S"
+      ]
+    }
+  },
+  "metric_for_best_model": "dev_cosine_recall@100",
+  "greater_is_better": true,
+  "git_commit_note": "see experiments/two_tower_v2/baseline/baseline_config.json for git_commit at time of V0 audit",
+  "_resolved": {
+    "n_train_pairs": 297112,
+    "steps_per_epoch": 4642,
+    "total_training_steps": 13926,
+    "warmup_steps_resolved": 1392
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "v0_two_tower_recall100": 0.4598025602625171,
+  "v1_two_tower_recall100": 0.4648517261983678,
+  "v0_rrf_recall100": 0.5193754534230637,
+  "v1_rrf_recall100": 0.5301140487660922,
+  "v1_checkpoint": "/Users/jaygao/WORKSPACE/projects/esci-search-ranking-system/experiments/two_tower_v2/phase1_correct_training/full_run/checkpoints/checkpoint-9286",
+  "build_time_sec": 14036.264766931534,
+  "search_time_sec": 3.2565970420837402,
+  "eval_query_sample": {
+    "size": 5000,
+    "seed": 42,
+    "locale": "us"
+  }
+}

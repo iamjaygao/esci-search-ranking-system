@@ -1,0 +1,59 @@
+{
+  "_provenance": "Recorded from repo state at git commit 9b173e95307b6af4335d46518f703265a9608d57, by reading scripts/train_two_tower.py, retrieval/two_tower.py, and output/full_retrieval/*. Not re-run, not re-derived.",
+  "training": {
+    "entry_point": "scripts/train_two_tower.py",
+    "base_model": "sentence-transformers/msmarco-distilbert-base-v3",
+    "framework": "sentence-transformers 5.2.3",
+    "loss": "MultipleNegativesRankingLoss",
+    "batch_size": 64,
+    "epochs": 1,
+    "drop_last": true,
+    "optimizer": "AdamW (sentence-transformers fit() default, torch.optim.adamw.AdamW)",
+    "lr": 2e-05,
+    "scheduler": "WarmupLinear (sentence-transformers fit() default, never overridden in train_two_tower.py)",
+    "warmup_steps": 10000,
+    "warmup_steps_source": "sentence-transformers SentenceTransformer.fit() default; NOT explicitly passed by scripts/train_two_tower.py",
+    "seed": null,
+    "seed_note": "No torch/numpy/random seed is set anywhere in scripts/train_two_tower.py. Confirmed by grep -- no seed/manual_seed/random_state token found in the file.",
+    "evaluator": null,
+    "evaluator_note": "fit() called with no evaluator argument; save_best_model=True (fit() default) has no effect without an evaluator.",
+    "positive_label_definition": {
+      "labels": ["E", "S"],
+      "locale": "us",
+      "small_version": 1,
+      "split": "train"
+    },
+    "num_training_pairs": 329447,
+    "num_training_steps_per_epoch": 5147,
+    "num_training_steps_total": 5147,
+    "training_steps_note": "num_training_pairs // batch_size (drop_last=True), single epoch. 5147 < warmup_steps(10000) -> LR schedule never leaves the warmup ramp for the entire training run; final-step LR multiplier = 5147/10000 = 0.5147, i.e. ~1.03e-5 instead of the target 2e-5, and no decay phase is ever reached.",
+    "max_seq_length": 510,
+    "item_text_construction": "product_title + ' ' + product_description + ' ' + product_bullet_point (NaN filled as empty string), concatenated with no field prefixes/separators",
+    "embedding_dimension": 768,
+    "git_commit": "9b173e95307b6af4335d46518f703265a9608d57"
+  },
+  "serving": {
+    "faiss_index_type": "faiss.IndexFlatIP (exact brute-force inner-product search)",
+    "embedding_normalization": "normalize_embeddings=True on both item and query encode calls (retrieval/two_tower.py: encode_texts() and search_tt_global()) -- confirmed CONSISTENT between item/query paths; IndexFlatIP over L2-normalized vectors is mathematically equivalent to cosine similarity.",
+    "full_catalog_size_us_locale": 1215854,
+    "index_build_script": "scripts/build_full_catalog_indices.py",
+    "index_artifact": "output/full_retrieval/tt_index_us.faiss"
+  },
+  "evaluation": {
+    "pipeline": "full-catalog retrieval Recall@K (output/full_retrieval/*, scripts/evaluate_full_retrieval.py)",
+    "eval_query_sample_size": 5000,
+    "eval_query_sample_seed": 42,
+    "eval_query_locale": "us",
+    "eval_query_ids_source": "output/full_retrieval/eval_query_ids.json",
+    "relevant_broad_labels": ["E", "S", "C"],
+    "relevant_exact_labels": ["E"],
+    "recall_at_k_definition": "macro-average (unweighted mean) of per-query recall = |relevant items ranked <= k| / |relevant set|, over queries with a non-empty relevant set for the given label key. Reused verbatim from scripts/evaluate_full_retrieval.py:recall_at_k().",
+    "rrf_k": 60,
+    "note": "This is the FULL-CATALOG RETRIEVAL pipeline (BM25/Two-Tower/RRF, Recall@K). It is a SEPARATE experimental setting from the FIXED-CANDIDATE reranking pipeline (MLP/LambdaMART, NDCG@K) audited previously in experiments/audit/. This project does not merge the two, and this experiment stays entirely within the full-catalog retrieval setting except where Phase 11 (semantic_score ablation) explicitly operates in the fixed-candidate setting, clearly labeled as such."
+  },
+  "hardware": {
+    "cuda_available": false,
+    "mps_available": true,
+    "cpu_count": 16
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "num_queries": 20888,
+  "num_pairs": 329447,
+  "mean_positives_per_query": 15.772070088088855,
+  "median_positives_per_query": 15.0,
+  "p95_positives_per_query": 37.0,
+  "max_positives_per_query": 130,
+  "queries_with_multiple_positives": 20704,
+  "queries_with_multiple_positives_pct": 99.11911145155113,
+  "observed_same_query_batch_collision_rate": {
+    "batch_size": 64,
+    "n_shuffles_tested": 5,
+    "mean_rate": 0.001892485914124733,
+    "per_trial_rates": [
+      0.0019277006022925976,
+      0.001888235865552749,
+      0.0018912716145327376,
+      0.001903414610452691,
+      0.001851806877792889
+    ],
+    "definition": "fraction of (query,product) pairs in full batches that share a query_id with an earlier pair in the same batch, averaged over independent random shuffles"
+  },
+  "semantic_false_negative_risk": {
+    "definition": "for each training-positive (query,product) pair, whether that SAME product is also ESCI-labeled E/S/C for at least one DIFFERENT query. If that other query's own pair lands in the same random batch, this product -- correct for the other query too -- is still only usable as an in-batch NEGATIVE for it under plain MNRL.",
+    "n_pairs_with_cross_query_relevant_product": 74265,
+    "pct_of_training_pairs": 22.542320919601636,
+    "mean_other_relevant_queries_per_product": 0.48232340862111356
+  }
+}

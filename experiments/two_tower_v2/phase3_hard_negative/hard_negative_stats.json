@@ -1,0 +1,17 @@
+{
+  "sample_note": "Mined a fixed random sample of 2000 / 18800 train queries (seed=42), not the full train set, for tractable runtime.",
+  "num_queries": 2000,
+  "target_hard_negatives_per_query": 4,
+  "bm25_topk_searched": 100,
+  "avg_hard_negatives": 0.553,
+  "median_hard_negatives": 0.0,
+  "queries_with_zero_hard_negatives": 1492,
+  "fallback_rate": 0.9385,
+  "fallback_definition": "fraction of queries for which fewer than 4 'I'-labeled products were found within the BM25 top-100",
+  "rank_distribution_of_mined_hard_negatives": {
+    "mean_rank": 27.806509945750452,
+    "median_rank": 19.0,
+    "p90_rank": 72.0
+  },
+  "positive_definition_reminder": "positive = E/S (unchanged from V0/V1). hard_negative = I only. 'C' is neither positive nor negative in this mining step."
+}

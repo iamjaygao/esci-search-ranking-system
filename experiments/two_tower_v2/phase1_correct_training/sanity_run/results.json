@@ -1,0 +1,63 @@
+{
+  "config": {
+    "base_model": "sentence-transformers/msmarco-distilbert-base-v3",
+    "loss": "MultipleNegativesRankingLoss",
+    "batch_size": 64,
+    "epochs": 1,
+    "lr": 2e-05,
+    "warmup_ratio": 0.1,
+    "lr_scheduler_type": "linear",
+    "seed": 42,
+    "positive_label_definition": {
+      "labels": [
+        "E",
+        "S"
+      ],
+      "locale": "us",
+      "small_version": 1,
+      "split": "train"
+    },
+    "dev_evaluator": {
+      "n_eval_queries": 20,
+      "dev_corpus_size": 2000,
+      "relevant_labels": [
+        "E",
+        "S"
+      ],
+      "precision_recall_at_k": [
+        10,
+        50,
+        100
+      ],
+      "manifest": {
+        "seed": 42,
+        "n_eval_queries_requested": 20,
+        "n_eval_queries_used": 20,
+        "dev_corpus_size_requested": 2000,
+        "dev_corpus_size_actual": 2000,
+        "n_core_labeled_products": 430,
+        "n_filler_products": 1570,
+        "relevant_labels": [
+          "E",
+          "S"
+        ]
+      }
+    },
+    "metric_for_best_model": "dev_cosine_recall@100",
+    "greater_is_better": true,
+    "git_commit_note": "see experiments/two_tower_v2/baseline/baseline_config.json for git_commit at time of V0 audit",
+    "sanity_max_train_pairs": 512,
+    "_resolved": {
+      "n_train_pairs": 512,
+      "steps_per_epoch": 8,
+      "total_training_steps": 8,
+      "warmup_steps_resolved": 0
+    }
+  },
+  "train_runtime_sec": 21.557085037231445,
+  "best_metric": 0.92030886685778,
+  "best_metric_name": "dev_cosine_recall@100",
+  "best_model_checkpoint": "/Users/jaygao/WORKSPACE/projects/esci-search-ranking-system/experiments/two_tower_v2/phase1_correct_training/sanity_run/checkpoints/checkpoint-8",
+  "final_epoch": 1.0,
+  "global_step": 8
+}

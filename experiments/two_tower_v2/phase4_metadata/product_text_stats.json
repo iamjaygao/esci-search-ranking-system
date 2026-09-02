@@ -1,0 +1,49 @@
+{
+  "sample_size": 20000,
+  "locale": "us",
+  "max_seq_length": 510,
+  "seed": 42,
+  "fields": [
+    {
+      "field": "title",
+      "n": 20000,
+      "mean_tokens": 27.76695,
+      "median_tokens": 26.0,
+      "p90_tokens": 45.0,
+      "p99_tokens": 60.0,
+      "max_tokens": 106,
+      "pct_exceeding_max_seq_length": 0.0
+    },
+    {
+      "field": "description",
+      "n": 20000,
+      "mean_tokens": 123.35445,
+      "median_tokens": 17.0,
+      "p90_tokens": 405.0,
+      "p99_tokens": 622.0,
+      "max_tokens": 1366,
+      "pct_exceeding_max_seq_length": 3.9
+    },
+    {
+      "field": "bullet_point",
+      "n": 20000,
+      "mean_tokens": 130.6743,
+      "median_tokens": 104.0,
+      "p90_tokens": 293.0,
+      "p99_tokens": 457.0099999999984,
+      "max_tokens": 1282,
+      "pct_exceeding_max_seq_length": 0.35500000000000004
+    },
+    {
+      "field": "combined_current (title+description+bullets, current V0 construction)",
+      "n": 20000,
+      "mean_tokens": 277.7957,
+      "median_tokens": 199.0,
+      "p90_tokens": 669.0,
+      "p99_tokens": 977.0,
+      "max_tokens": 2378,
+      "pct_exceeding_max_seq_length": 18.709999999999997
+    }
+  ],
+  "truncation_risk_note": "Current item_text = title + ' ' + description + ' ' + bullet_point, concatenated with NO field prefixes/separators and NO field-priority ordering. Because 'title' is placed first, it is never itself truncated by max_seq_length -- but title tokens still count against the 510-token budget, and title/bullet content can be pushed out if description is long enough that combined length exceeds max_seq_length, since the tokenizer truncates from the END of the sequence by default. See pct_exceeding_max_seq_length for 'combined_current' for how often this actually happens."
+}

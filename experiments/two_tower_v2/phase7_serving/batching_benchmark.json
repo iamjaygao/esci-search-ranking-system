@@ -1,0 +1,23 @@
+{
+  "n_queries": 5000,
+  "offline_batched": {
+    "encode_time_sec": 1.6089789867401123,
+    "search_time_sec": 3.317711114883423,
+    "total_time_sec": 4.926690101623535,
+    "throughput_qps": 1014.8801521638851,
+    "effective_per_query_ms": 0.9853380203247071,
+    "method": "one model.encode(list_of_5000, batch_size=256) call + one faiss_index.search(all, k) call"
+  },
+  "online_single_query_loop_REFERENCE": {
+    "retriever": "two_tower",
+    "device": "mps",
+    "mean_ms": 54.43332498122472,
+    "p50_ms": 53.90389599779155,
+    "p95_ms": 55.04824170784559,
+    "p99_ms": 56.01473450224149,
+    "n_queries": 5000,
+    "throughput_qps_equiv": 18.37109896088329,
+    "method": "existing scripts/run_full_tt_retrieval.py: one model.encode([single_query]) + one faiss_index.search(1,k) call PER QUERY, sequential loop (unmodified)",
+    "note": "These two benchmarks measure different things and are not a strict apples-to-apples ratio: the online loop's per-call timing includes per-call encode+search for ONE query; the offline number amortizes encode+search cost across a batch of 5000. Reported side by side, not divided into a single 'speedup' number, to avoid overstating precision."
+  }
+}
