@@ -1,0 +1,49 @@
+{
+  "phase": "kdd_task1_benchmark (after) -- COMPLETED",
+  "timestamp_utc": "2026-09-02T21:28:06.291029+00:00",
+  "git_status_porcelain": [
+    "?? experiments/",
+    "?? retrieval/two_tower_training.py",
+    "?? scripts/analyze_product_text_stats.py",
+    "?? scripts/audit_false_negatives.py",
+    "?? scripts/benchmark_ann.py",
+    "?? scripts/benchmark_query_batching.py",
+    "?? scripts/evaluate_two_tower_v2_full_catalog.py",
+    "?? scripts/mine_hard_negatives.py",
+    "?? scripts/train_two_tower_v2.py"
+  ],
+  "git_diff_stat": "",
+  "git_rev_parse_HEAD": "9b173e95307b6af4335d46518f703265a9608d57",
+  "assert_no_tracked_file_modified": true,
+  "assert_head_unchanged": true,
+  "assert_status_identical_to_before": true,
+  "n_new_files": 57,
+  "assert_all_new_files_under_kdd_task1_benchmark": true,
+  "protected_paths_untouched": {
+    "experiments/ranking_v2/benchmark_repair": {
+      "latest_mtime_utc": "2026-09-02T18:59:43.031660+00:00",
+      "modified_during_this_phase": false
+    },
+    "experiments/ranking_v2/official_metric_final": {
+      "latest_mtime_utc": "2026-09-02T19:18:51.330918+00:00",
+      "modified_during_this_phase": false
+    },
+    "experiments/ranking_v2/audit": {
+      "latest_mtime_utc": "2026-09-02T18:24:27.143157+00:00",
+      "modified_during_this_phase": false
+    },
+    "output": {
+      "latest_mtime_utc": "2026-08-14T13:53:50.518636+00:00",
+      "modified_during_this_phase": false
+    },
+    "models": {
+      "latest_mtime_utc": "2026-08-10T14:33:22.150142+00:00",
+      "modified_during_this_phase": false
+    },
+    "esci-data": {
+      "latest_mtime_utc": "2026-08-11T01:43:10.642460+00:00",
+      "modified_during_this_phase": false
+    }
+  },
+  "benchmark_status": "READY (PARITY UNVERIFIED)"
+}

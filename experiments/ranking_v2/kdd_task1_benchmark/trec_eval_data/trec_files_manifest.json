@@ -1,0 +1,55 @@
+{
+  "trec_dir": "trec_eval_data",
+  "qrels_mapping": {
+    "I": 1,
+    "C": 2,
+    "S": 3,
+    "E": 4
+  },
+  "gain_spec": "ndcg.1=0,2=0.01,3=0.1,4=1",
+  "doc_id_format": "{product_locale}_{product_id}",
+  "run_score_materialization": "prepare_trec_eval_files.py line 78, verbatim",
+  "datasets": {
+    "synthetic": {
+      "qrels_rows": 11,
+      "run_rows": 11,
+      "queries": 3,
+      "synthetic_score_tie_failures": 0,
+      "python_ndcg_full_by_policy": {
+        "exclude": 1.0,
+        "zero": 0.6666666666666666,
+        "one": 1.0
+      },
+      "zero_idcg_query_count": 1,
+      "purpose": "verify the formula AND empirically determine Terrier's IDCG==0 behaviour"
+    },
+    "dev_random": {
+      "qrels_rows": 118231,
+      "run_rows": 118231,
+      "queries": 5071,
+      "synthetic_score_tie_failures": 0,
+      "score_col": "random_score",
+      "random_seed": 20240902,
+      "python_ndcg_full_by_policy": {
+        "exclude": 0.7467424030805648,
+        "zero": 0.7467424030805648,
+        "one": 0.7467424030805648
+      },
+      "zero_idcg_query_count": 0
+    },
+    "dev_bm25": {
+      "qrels_rows": 118231,
+      "run_rows": 118231,
+      "queries": 5071,
+      "synthetic_score_tie_failures": 0,
+      "score_col": "bm25_score",
+      "random_seed": null,
+      "python_ndcg_full_by_policy": {
+        "exclude": 0.8186828492143584,
+        "zero": 0.8186828492143584,
+        "one": 0.8186828492143584
+      },
+      "zero_idcg_query_count": 0
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "verified_locally": true,
+  "repo_path": "/Users/jaygao/WORKSPACE/projects/dataset/esci-data/ranking",
+  "prepare_trec_eval_files_path": "/Users/jaygao/WORKSPACE/projects/dataset/esci-data/ranking/prepare_trec_eval_files.py",
+  "launch_predictions_task1_path": "/Users/jaygao/WORKSPACE/projects/dataset/esci-data/ranking/launch-predictions-task1.sh",
+  "file_sha256": "688f9255e1b94ea2a55fa20e1e06cbb27257702c85c9f6460e980133b3067095",
+  "observed_mapping_source": "esci_label2relevance_pos = {\n        \"E\" : 4,\n        \"S\" : 2,\n        \"C\" : 3,\n        \"I\" : 1,\n    }",
+  "observed_esci_label2relevance_pos": {
+    "E": 4,
+    "S": 2,
+    "C": 3,
+    "I": 1
+  },
+  "qrels_keying_in_reference_helper": "product_id only (no product_locale)",
+  "terrier_command_from_launch_script": "$1/terrier trec_eval \"${TREC_EVAL_DATA_PATH}/test.qrels\" \"${TREC_EVAL_DATA_PATH}/hypothesis.results\" -c -J -m 'ndcg.1=0,2=0.01,3=0.1,4=1'",
+  "gain_spec": "ndcg.1=0,2=0.01,3=0.1,4=1",
+  "effective_gain_produced_by_reference_helper": {
+    "E": 1.0,
+    "S": 0.01,
+    "C": 0.1,
+    "I": 0.0
+  },
+  "competition_definition": {
+    "E": 1.0,
+    "S": 0.1,
+    "C": 0.01,
+    "I": 0.0
+  },
+  "conflict": "S and C are swapped",
+  "corrected_mapping_used_for_terrier_parity": {
+    "I": 1,
+    "C": 2,
+    "S": 3,
+    "E": 4
+  },
+  "attribution": "This is a KNOWN, previously documented issue: the SQID paper reports that the released esci-data code swaps the S/C label-to-relevance mapping (line 48 of ranking/prepare_trec_eval_files.py) and that correcting it changes the ESCI_baseline nDCG. It is NOT an original finding of this project. What this project contributes is an independent re-confirmation on the local repo HEAD recorded above."
+}

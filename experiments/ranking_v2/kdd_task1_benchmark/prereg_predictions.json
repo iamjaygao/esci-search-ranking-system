@@ -1,0 +1,82 @@
+{
+  "WRITTEN_BEFORE_ANY_TASK1_BASELINE_EVALUATION": true,
+  "purpose": "pin expectations down before observing results, to prevent post-hoc rationalisation",
+  "a_old_scorer_aggregation_validation": {
+    "large_test_locale_query_weights": {
+      "us": 0.7252,
+      "es": 0.1241,
+      "jp": 0.1507
+    },
+    "old_lambdamart_per_locale_full_pool_ndcg_at_10": {
+      "us": 0.8765,
+      "es": 0.8056,
+      "jp": 0.7727
+    },
+    "reconstructed_overall": 0.852059,
+    "recorded_overall": 0.852064,
+    "abs_diff": 5e-06,
+    "matches_to_4dp": true,
+    "conclusion": "CONFIRMED: the old scorer uses a query-level macro average with no hidden micro weighting."
+  },
+  "b_locale_reweight_prediction": {
+    "task1_test_locale_query_weights_official": {
+      "us": 0.6178,
+      "es": 0.1668,
+      "jp": 0.2154
+    },
+    "task1_test_locale_query_weights_observed": {
+      "us": 0.6178,
+      "es": 0.1667,
+      "jp": 0.2154
+    },
+    "predicted_ndcg_from_locale_reweight_alone": 0.842315,
+    "delta_vs_old_overall": -0.009749,
+    "note": "locale composition change alone predicts roughly -0.010"
+  },
+  "c_preregistered_band": {
+    "expected_range": [
+      0.76,
+      0.87
+    ],
+    "soft_outside": [
+      [
+        0.7,
+        0.76
+      ],
+      [
+        0.87,
+        0.9
+      ]
+    ],
+    "hard_stop_outside": "< 0.70 or > 0.90",
+    "factors": [
+      {
+        "factor": "locale reweighting (JP weight up)",
+        "direction": "down",
+        "magnitude": "approx -0.010 (computed above)"
+      },
+      {
+        "factor": "harder query subset (easy queries filtered out of the reduced version)",
+        "direction": "down",
+        "magnitude": "unknown, possibly large"
+      },
+      {
+        "factor": "full-list vs @10 truncation",
+        "direction": "uncertain",
+        "magnitude": "unknown"
+      }
+    ],
+    "decision_rule": {
+      "within": "proceed; decompose via the three factors in the REPORT",
+      "outside_soft": "record and explain in the REPORT, do not STOP",
+      "outside_hard": "STOP and investigate the pipeline (join / label mapping / pool alignment)"
+    },
+    "this_is_a_sanity_band_not_an_assert": true
+  },
+  "d_not_assert_targets": {
+    "esci_data_readme_baseline": 0.83,
+    "competition_published_baseline": 0.8503,
+    "winner_private_lb": 0.9043,
+    "note": "None of these is a reproduction target. Only band (c) governs."
+  }
+}

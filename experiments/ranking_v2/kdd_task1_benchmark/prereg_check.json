@@ -1,0 +1,22 @@
+{
+  "predicted_locale_reweight_only": 0.842315,
+  "observed_lambdamart_ndcg_full": 0.842878,
+  "delta_vs_prediction": 0.000563,
+  "band": "within",
+  "action": "proceed",
+  "preregistered_band": [
+    0.76,
+    0.87
+  ],
+  "hard_stop_outside": [
+    0.7,
+    0.9
+  ],
+  "three_factor_decomposition": {
+    "old_large_version_lambdamart_ndcg_at_10": 0.852064,
+    "locale_reweight_only_prediction": 0.842315,
+    "locale_reweight_effect": -0.009749,
+    "residual_after_locale_reweight": 0.000563,
+    "residual_attribution": "harder query subset (easy queries filtered from the reduced version) + full-list vs @10 truncation + a different metric gain convention + recomputed pool-dependent features; not separable from these artifacts alone"
+  }
+}

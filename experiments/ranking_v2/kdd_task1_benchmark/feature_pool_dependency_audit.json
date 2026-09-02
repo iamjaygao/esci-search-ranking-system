@@ -1,0 +1,135 @@
+{
+  "rule_applied": "resolution item 8: join raw per-pair scores only; recompute everything derived from the candidate pool; when in doubt, recompute; this is a RECORD, not a gate",
+  "downstream_path_from_gate_a": "REUSE (A1 TRUE) -- but see note",
+  "note_on_reuse": "Gate A established that small_version==1 rows are a strict subset of large_version==1, so per-row values COULD be joined by key. In practice nothing was joined from the large-version artifacts: the only two stored per-row scores (output/bm25_scores_*.csv, output/two_tower_scores_*.csv) are both per-query min-max normalised over the LARGE pool, which is exactly the pool-dependent case the rule says to recompute. The 'joined' features below are computed directly from (query, product) attributes rather than copied from a large-version file.",
+  "joined_pool_independent": [
+    {
+      "feature": "query_length",
+      "category": "joined",
+      "reason": "function of the query string alone; pool-independent"
+    },
+    {
+      "feature": "user_budget",
+      "category": "joined",
+      "reason": "regex on the query string; pool-independent"
+    },
+    {
+      "feature": "cheap_intent",
+      "category": "joined",
+      "reason": "regex on the query string; pool-independent"
+    },
+    {
+      "feature": "is_price_missing",
+      "category": "joined",
+      "reason": "null indicator on the raw attribute; pool-independent"
+    },
+    {
+      "feature": "is_rating_missing",
+      "category": "joined",
+      "reason": "null indicator on the raw attribute; pool-independent"
+    },
+    {
+      "feature": "word_overlap",
+      "category": "joined",
+      "reason": "stemmed overlap of query tokens with the product title; function of the (query, product) pair alone"
+    },
+    {
+      "feature": "brand_match",
+      "category": "joined",
+      "reason": "substring test on the (query, brand) pair; pool-independent"
+    },
+    {
+      "feature": "color_match",
+      "category": "joined",
+      "reason": "colour term shared by query and title; pool-independent"
+    }
+  ],
+  "recomputed_pool_dependent": [
+    {
+      "feature": "bm25_score",
+      "category": "recomputed",
+      "reason": "retrieval/bm25.py scores against a per-QUERY mini index, so IDF and avgdl are candidate-set statistics; additionally min-max normalised per query. Pool-dependent at every level. Recomputed on the Task 1 pool; raw score persisted as bm25_raw."
+    },
+    {
+      "feature": "semantic_score",
+      "category": "recomputed",
+      "reason": "per-query min-max over the candidate pool; the raw cosine was never persisted by retrieval/two_tower.py so the frozen column cannot be inverted or re-normalised. Re-encoded with the FROZEN checkpoint (inference only, not a retrieval re-run); raw cosine persisted as semantic_cosine_raw."
+    },
+    {
+      "feature": "query_mean_idf",
+      "category": "recomputed",
+      "reason": "IDF table rebuilt from the 33804 Task 1 TRAIN queries (the original was built from large-version train queries); train-set-dependent, so it must track the benchmark"
+    },
+    {
+      "feature": "query_max_idf",
+      "category": "recomputed",
+      "reason": "IDF table rebuilt from the 33804 Task 1 TRAIN queries (the original was built from large-version train queries); train-set-dependent, so it must track the benchmark"
+    },
+    {
+      "feature": "log_price",
+      "category": "recomputed",
+      "reason": "category-median then global-median imputation are IN-POOL statistics, so the value changes with the candidate population"
+    },
+    {
+      "feature": "stars_clean",
+      "category": "recomputed",
+      "reason": "category-median imputation is an in-pool statistic"
+    },
+    {
+      "feature": "log_review_count",
+      "category": "recomputed",
+      "reason": "category-median imputation is an in-pool statistic. NOTE: ESCI-S `ratings` is a string like '1,116 ratings', so pd.to_numeric yields NaN for every row and this feature collapses to log1p(0)=0 -- the Phase 0 P1-1 defect, reproduced faithfully here because constraint 4 forbids changing feature definitions in this phase."
+    },
+    {
+      "feature": "is_over_budget",
+      "category": "recomputed",
+      "reason": "derived from the in-pool imputed price"
+    },
+    {
+      "feature": "is_dominant_category",
+      "category": "recomputed",
+      "reason": "mode of the category among that query's top-20 BM25 candidates -- an explicit in-pool statistic that also depends on the recomputed BM25 ordering"
+    }
+  ],
+  "counts": {
+    "joined": 8,
+    "recomputed": 9,
+    "total": 17
+  },
+  "feature_list": [
+    "query_length",
+    "query_mean_idf",
+    "query_max_idf",
+    "user_budget",
+    "cheap_intent",
+    "log_price",
+    "is_price_missing",
+    "stars_clean",
+    "log_review_count",
+    "is_rating_missing",
+    "bm25_score",
+    "semantic_score",
+    "word_overlap",
+    "is_dominant_category",
+    "brand_match",
+    "color_match",
+    "is_over_budget"
+  ],
+  "raw_scores_persisted_for_the_first_time": {
+    "bm25_raw": "un-normalised BM25 from the per-query mini index",
+    "semantic_cosine_raw": "un-normalised cosine similarity from the frozen encoder"
+  },
+  "retrieval_rerun_required": false,
+  "stop_triggered": false,
+  "esci_s_join": {
+    "key": "product_id only (ESCI-S has no locale column)",
+    "rows_before_dedup": 1661908,
+    "rows_after_dedup": 1650599,
+    "consequence": "a product_id present in several locales receives the same price/stars/category; a limitation of ESCI-S, recorded not fixed"
+  },
+  "idf_map": {
+    "built_from": "Task 1 TRAIN queries",
+    "n_queries": 33804,
+    "vocab": 30393
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "status": "NOT_ATTEMPTED",
+  "reason": "No Terrier, no trec_eval and no Java runtime on this machine ('Unable to locate a Java Runtime'). Resolution item 6 forbids installing a JRE or any system-level dependency.",
+  "terrier_version": null,
+  "terrier_path": null,
+  "exact_command": "$1/terrier trec_eval \"${TREC_EVAL_DATA_PATH}/test.qrels\" \"${TREC_EVAL_DATA_PATH}/hypothesis.results\" -c -J -m 'ndcg.1=0,2=0.01,3=0.1,4=1'",
+  "command_source": "read_from_launch_script",
+  "launch_script_path": "/Users/jaygao/WORKSPACE/projects/dataset/esci-data/ranking/launch-predictions-task1.sh",
+  "qrels_mapping": {
+    "I": 1,
+    "C": 2,
+    "S": 3,
+    "E": 4
+  },
+  "qrels_mapping_note": "CORRECTED. The reference helper uses {E:4,S:2,C:3,I:1}, which with the same gain spec yields S=0.01 and C=0.1 -- the known S/C inversion. See gain_convention_conflict.json.",
+  "gain_spec": "ndcg.1=0,2=0.01,3=0.1,4=1",
+  "output_decimal_places": null,
+  "tolerance_used": null,
+  "tests": [
+    {
+      "name": "synthetic",
+      "python": null,
+      "terrier": null,
+      "delta": null,
+      "pass": null
+    },
+    {
+      "name": "dev_random",
+      "python": null,
+      "terrier": null,
+      "delta": null,
+      "pass": null
+    },
+    {
+      "name": "dev_bm25",
+      "python": null,
+      "terrier": null,
+      "delta": null,
+      "pass": null
+    }
+  ],
+  "zero_idcg_policy_observed": null,
+  "zero_idcg_policy_applied": "exclude",
+  "zero_idcg_policy_source": "fallback_pending_gate_b",
+  "input_files_generated": true,
+  "input_files_dir": "trec_eval_data/",
+  "how_to_complete": "scripts/run_terrier_parity.sh <path to terrier bin>",
+  "notes": {
+    "product_locale_multiplicity_check": {
+      "expression": "task1.groupby('product_id').product_locale.nunique().max()",
+      "value_on_test": 3,
+      "product_ids_in_multiple_locales_on_test": 790,
+      "locale_prefixed_doc_id_mandatory": true,
+      "doc_id_format_used": "{product_locale}_{product_id}",
+      "divergence_from_official_helper": "prepare_trec_eval_files.py writes qrels keyed on product_id alone (lines 121-126). With product_ids spanning up to 3 locales, that keying merges distinct judgements onto one doc_id. A locale-prefixed doc_id is therefore used in both the qrels and the run file, diverging from the reference helper deliberately."
+    },
+    "consequence_for_claims": "Benchmark status is READY (PARITY UNVERIFIED). The scorer is an independent implementation whose parity with Terrier has NOT been checked. Do not claim 'reproduced Terrier' or 'reproduced the official scorer'."
+  }
+}

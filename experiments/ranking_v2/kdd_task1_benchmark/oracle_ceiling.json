@@ -1,0 +1,9 @@
+{
+  "ndcg_full": 1.0,
+  "ndcg_at_10": 1.0,
+  "ndcg_at_20": 1.0,
+  "zero_idcg_policy": "exclude",
+  "zero_idcg_query_count": 0,
+  "assertion": "oracle ndcg_full == 1.0 after applying the IDCG==0 policy",
+  "PASS": true
+}

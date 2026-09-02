@@ -1,0 +1,6 @@
+model,ndcg_full_competition,ndcg_full_swapped,swapped_gain_delta,abs_delta,candidate_pool
+Random,0.750317,0.720282,-0.030035,0.030035,task1_small_v1
+BM25,0.819842,0.801352,-0.01849,0.01849,task1_small_v1
+Two-Tower,0.824499,0.802476,-0.022022,0.022022,task1_small_v1
+LambdaMART,0.842878,0.824276,-0.018603,0.018603,task1_small_v1
+Oracle,1.0,0.99819,-0.00181,0.00181,task1_small_v1

@@ -1,0 +1,288 @@
+{
+  "join_check": {
+    "rows_before": 1118011,
+    "rows_after": 1118011,
+    "no_fanout": true,
+    "join_keys": [
+      "product_id",
+      "product_locale"
+    ],
+    "product_title_null_rate": 0.0,
+    "product_title_nulls": 0,
+    "threshold": 0.001,
+    "PASS": true
+  },
+  "observed": {
+    "us": {
+      "total_q": 29844,
+      "total_j": 601354,
+      "train_q": 20888,
+      "train_j": 419653,
+      "test_q": 8956,
+      "test_j": 181701,
+      "test_depth": 20.29
+    },
+    "es": {
+      "total_q": 8049,
+      "total_j": 218774,
+      "train_q": 5632,
+      "train_j": 152891,
+      "test_q": 2417,
+      "test_j": 65883,
+      "test_depth": 27.26
+    },
+    "jp": {
+      "total_q": 10407,
+      "total_j": 297883,
+      "train_q": 7284,
+      "train_j": 209094,
+      "test_q": 3123,
+      "test_j": 88789,
+      "test_depth": 28.43
+    },
+    "overall": {
+      "total_q": 48300,
+      "total_j": 1118011,
+      "train_q": 33804,
+      "train_j": 781638,
+      "test_q": 14496,
+      "test_j": 336373,
+      "test_depth": 23.2
+    }
+  },
+  "official_table1": {
+    "us": {
+      "total_q": 29844,
+      "total_j": 601354,
+      "train_q": 20888,
+      "train_j": 419653,
+      "test_q": 8956,
+      "test_j": 181701,
+      "test_depth": 20.29
+    },
+    "es": {
+      "total_q": 8049,
+      "total_j": 218774,
+      "train_q": 5632,
+      "train_j": 152891,
+      "test_q": 2417,
+      "test_j": 65883,
+      "test_depth": 27.26
+    },
+    "jp": {
+      "total_q": 10407,
+      "total_j": 297883,
+      "train_q": 7284,
+      "train_j": 209094,
+      "test_q": 3123,
+      "test_j": 88789,
+      "test_depth": 28.43
+    },
+    "overall": {
+      "total_q": 48300,
+      "total_j": 1118011,
+      "train_q": 33804,
+      "train_j": 781638,
+      "test_q": 14496,
+      "test_j": 336373,
+      "test_depth": 23.2
+    }
+  },
+  "comparison": {
+    "us": {
+      "total_q": {
+        "official": 29844,
+        "observed": 29844,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "total_j": {
+        "official": 601354,
+        "observed": 601354,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "train_q": {
+        "official": 20888,
+        "observed": 20888,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "train_j": {
+        "official": 419653,
+        "observed": 419653,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_q": {
+        "official": 8956,
+        "observed": 8956,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_j": {
+        "official": 181701,
+        "observed": 181701,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_depth": {
+        "official": 20.29,
+        "observed": 20.29,
+        "delta": 0.0,
+        "pct_delta": 0.0
+      }
+    },
+    "es": {
+      "total_q": {
+        "official": 8049,
+        "observed": 8049,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "total_j": {
+        "official": 218774,
+        "observed": 218774,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "train_q": {
+        "official": 5632,
+        "observed": 5632,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "train_j": {
+        "official": 152891,
+        "observed": 152891,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_q": {
+        "official": 2417,
+        "observed": 2417,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_j": {
+        "official": 65883,
+        "observed": 65883,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_depth": {
+        "official": 27.26,
+        "observed": 27.26,
+        "delta": 0.0,
+        "pct_delta": 0.0
+      }
+    },
+    "jp": {
+      "total_q": {
+        "official": 10407,
+        "observed": 10407,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "total_j": {
+        "official": 297883,
+        "observed": 297883,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "train_q": {
+        "official": 7284,
+        "observed": 7284,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "train_j": {
+        "official": 209094,
+        "observed": 209094,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_q": {
+        "official": 3123,
+        "observed": 3123,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_j": {
+        "official": 88789,
+        "observed": 88789,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_depth": {
+        "official": 28.43,
+        "observed": 28.43,
+        "delta": 0.0,
+        "pct_delta": 0.0
+      }
+    },
+    "overall": {
+      "total_q": {
+        "official": 48300,
+        "observed": 48300,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "total_j": {
+        "official": 1118011,
+        "observed": 1118011,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "train_q": {
+        "official": 33804,
+        "observed": 33804,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "train_j": {
+        "official": 781638,
+        "observed": 781638,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_q": {
+        "official": 14496,
+        "observed": 14496,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_j": {
+        "official": 336373,
+        "observed": 336373,
+        "delta": 0,
+        "pct_delta": 0.0
+      },
+      "test_depth": {
+        "official": 23.2,
+        "observed": 23.2,
+        "delta": 0.0,
+        "pct_delta": 0.0
+      }
+    }
+  },
+  "exact_match_to_table1": true,
+  "test_depth_distribution": {
+    "mean": 23.2045,
+    "std": 11.2251,
+    "min": 8,
+    "p5": 15.0,
+    "p25": 16.0,
+    "median": 16.0,
+    "p75": 39.0,
+    "p95": 40.0,
+    "max": 95,
+    "official_overall_test_depth": 23.2
+  },
+  "test_locale_query_weights": {
+    "us": 0.6178,
+    "es": 0.1667,
+    "jp": 0.2154
+  },
+  "STOPS": []
+}

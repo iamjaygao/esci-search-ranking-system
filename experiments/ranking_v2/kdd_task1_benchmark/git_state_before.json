@@ -1,0 +1,17 @@
+{
+  "phase": "kdd_task1_benchmark (before)",
+  "timestamp_utc": "2026-09-02T20:00:55.636818+00:00",
+  "git_status_porcelain": [
+    "?? experiments/",
+    "?? retrieval/two_tower_training.py",
+    "?? scripts/analyze_product_text_stats.py",
+    "?? scripts/audit_false_negatives.py",
+    "?? scripts/benchmark_ann.py",
+    "?? scripts/benchmark_query_batching.py",
+    "?? scripts/evaluate_two_tower_v2_full_catalog.py",
+    "?? scripts/mine_hard_negatives.py",
+    "?? scripts/train_two_tower_v2.py"
+  ],
+  "git_diff_stat": "",
+  "git_rev_parse_HEAD": "9b173e95307b6af4335d46518f703265a9608d57"
+}

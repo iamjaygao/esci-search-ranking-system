@@ -1,0 +1,103 @@
+{
+  "train": {
+    "queries": 28733,
+    "degenerate_count": 0,
+    "degenerate_fraction": 0.0,
+    "all_I_count": 0,
+    "all_I_fraction": 0.0,
+    "note": "all_I is a subset of degenerate; all_I has IDCG == 0",
+    "by_locale": {
+      "us": {
+        "queries": 17755,
+        "degenerate_count": 0,
+        "degenerate_fraction": 0.0,
+        "all_I_count": 0,
+        "all_I_fraction": 0.0
+      },
+      "es": {
+        "queries": 4787,
+        "degenerate_count": 0,
+        "degenerate_fraction": 0.0,
+        "all_I_count": 0,
+        "all_I_fraction": 0.0
+      },
+      "jp": {
+        "queries": 6191,
+        "degenerate_count": 0,
+        "degenerate_fraction": 0.0,
+        "all_I_count": 0,
+        "all_I_fraction": 0.0
+      }
+    }
+  },
+  "dev": {
+    "queries": 5071,
+    "degenerate_count": 0,
+    "degenerate_fraction": 0.0,
+    "all_I_count": 0,
+    "all_I_fraction": 0.0,
+    "note": "all_I is a subset of degenerate; all_I has IDCG == 0",
+    "by_locale": {
+      "us": {
+        "queries": 3133,
+        "degenerate_count": 0,
+        "degenerate_fraction": 0.0,
+        "all_I_count": 0,
+        "all_I_fraction": 0.0
+      },
+      "es": {
+        "queries": 845,
+        "degenerate_count": 0,
+        "degenerate_fraction": 0.0,
+        "all_I_count": 0,
+        "all_I_fraction": 0.0
+      },
+      "jp": {
+        "queries": 1093,
+        "degenerate_count": 0,
+        "degenerate_fraction": 0.0,
+        "all_I_count": 0,
+        "all_I_fraction": 0.0
+      }
+    }
+  },
+  "test": {
+    "queries": 14496,
+    "degenerate_count": 1,
+    "degenerate_fraction": 6.9e-05,
+    "all_I_count": 0,
+    "all_I_fraction": 0.0,
+    "note": "all_I is a subset of degenerate; all_I has IDCG == 0",
+    "by_locale": {
+      "us": {
+        "queries": 8956,
+        "degenerate_count": 1,
+        "degenerate_fraction": 0.000112,
+        "all_I_count": 0,
+        "all_I_fraction": 0.0
+      },
+      "es": {
+        "queries": 2417,
+        "degenerate_count": 0,
+        "degenerate_fraction": 0.0,
+        "all_I_count": 0,
+        "all_I_fraction": 0.0
+      },
+      "jp": {
+        "queries": 3123,
+        "degenerate_count": 0,
+        "degenerate_fraction": 0.0,
+        "all_I_count": 0,
+        "all_I_fraction": 0.0
+      }
+    }
+  },
+  "large_version_comparison": {
+    "large_test_degenerate_count": 6523,
+    "large_test_queries": 30969,
+    "large_test_degenerate_fraction": 0.21063,
+    "task1_test_degenerate_fraction": 6.9e-05,
+    "expectation": "the reduced version filters out 'easy' queries, so the Task 1 degenerate share was expected to be LOWER than large-version's 21.06%",
+    "expectation_met": true
+  }
+}

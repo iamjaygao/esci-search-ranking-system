@@ -1,0 +1,62 @@
+{
+  "arm_A": {
+    "name": "task1_only",
+    "filter": "small_version==1 AND split=='train' AND query_id in train_task1 (shared exclusion applied, expected to be a no-op)",
+    "rows": 663407,
+    "queries": 28733,
+    "locale_dist": {
+      "us": 0.6179,
+      "es": 0.1666,
+      "jp": 0.2155
+    },
+    "label_dist": {
+      "E": 43.6631,
+      "S": 34.2324,
+      "C": 5.174,
+      "I": 16.9305
+    },
+    "exclusion_helper": "task1_common.exclude_task1_test_queries"
+  },
+  "arm_B": {
+    "name": "large_train_excl_task1_test",
+    "filter": "large_version==1 AND split=='train' AND query_id NOT IN task1_test_queries (applied via task1_common.exclude_task1_test_queries)",
+    "rows": 1983269,
+    "queries": 99683,
+    "locale_dist": {
+      "us": 0.7513,
+      "es": 0.1137,
+      "jp": 0.135
+    },
+    "label_dist": {
+      "E": 66.2942,
+      "S": 21.2253,
+      "C": 2.7629,
+      "I": 9.7175
+    },
+    "exclusion_helper": "task1_common.exclude_task1_test_queries",
+    "rows_removed_by_exclusion": 3,
+    "queries_removed_by_exclusion": 1,
+    "removed_query_ids": [
+      79706
+    ]
+  },
+  "eval_pool": "small_version==1 AND split=='test'",
+  "leakage_assert_passed": true,
+  "leakage_detail": {
+    "arm_A_intersection_with_task1_test": 0,
+    "arm_B_intersection_with_task1_test": 0
+  },
+  "distribution_difference_note": "arm B contains the 'easy' queries that the reduced version filters out, so its locale and label distributions necessarily differ from arm A. Recorded, not corrected.",
+  "locale_dist_delta_B_minus_A": {
+    "us": 0.1334,
+    "es": -0.0529,
+    "jp": -0.0805
+  },
+  "label_dist_delta_B_minus_A": {
+    "E": 22.6311,
+    "S": -13.0071,
+    "C": -2.4111,
+    "I": -7.213
+  },
+  "this_phase_trains_nothing": true
+}
