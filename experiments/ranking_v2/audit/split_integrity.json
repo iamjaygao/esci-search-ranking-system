@@ -1,0 +1,216 @@
+{
+  "examples_columns": [
+    "example_id",
+    "query",
+    "query_id",
+    "product_id",
+    "product_locale",
+    "esci_label",
+    "small_version",
+    "large_version",
+    "split"
+  ],
+  "examples_rows": 2621288,
+  "split_values": [
+    "test",
+    "train"
+  ],
+  "locale_values": [
+    "es",
+    "jp",
+    "us"
+  ],
+  "small_version_counts": {
+    "0": 1503277,
+    "1": 1118011
+  },
+  "note_no_dev_split": "ESCI ships only 'train' and 'test'. The ranking pipeline has no held-out dev split; scripts/train_lambdamart.py and scripts/train_adv_reranker.py carve a random 15% of TRAIN QUERIES (sklearn train_test_split, random_state=42) as an internal early-stopping validation set. That internal split is regenerated at train time and is not persisted anywhere.",
+  "query_id_with_multiple_texts": 0,
+  "query_id_in_multiple_splits": 1,
+  "B1_query_split_overlap": {
+    "query_id": {
+      "train_unique": 99684,
+      "test_unique": 30969,
+      "train_test_overlap": 1,
+      "train_test_overlap_pct_of_test": 0.0032,
+      "overlap_examples": [
+        "79706"
+      ]
+    },
+    "raw": {
+      "train_unique": 99408,
+      "test_unique": 30947,
+      "train_test_overlap": 162,
+      "train_test_overlap_pct_of_test": 0.5235,
+      "overlap_examples": [
+        "8k tv",
+        "adidas",
+        "agenda",
+        "airpods pro",
+        "alexa",
+        "amd",
+        "android",
+        "aorus z390",
+        "arlo",
+        "arteza",
+        "asics",
+        "asus zenbook",
+        "baby",
+        "barbie",
+        "batman",
+        "beyond the pill",
+        "bike accessories",
+        "boombox",
+        "bts",
+        "burton"
+      ]
+    },
+    "lower_strip": {
+      "train_unique": 99408,
+      "test_unique": 30947,
+      "train_test_overlap": 162,
+      "train_test_overlap_pct_of_test": 0.5235,
+      "overlap_examples": [
+        "8k tv",
+        "adidas",
+        "agenda",
+        "airpods pro",
+        "alexa",
+        "amd",
+        "android",
+        "aorus z390",
+        "arlo",
+        "arteza",
+        "asics",
+        "asus zenbook",
+        "baby",
+        "barbie",
+        "batman",
+        "beyond the pill",
+        "bike accessories",
+        "boombox",
+        "bts",
+        "burton"
+      ]
+    },
+    "pipeline_norm": {
+      "train_unique": 99408,
+      "test_unique": 30947,
+      "train_test_overlap": 162,
+      "train_test_overlap_pct_of_test": 0.5235,
+      "overlap_examples": [
+        "8k tv",
+        "adidas",
+        "agenda",
+        "airpods pro",
+        "alexa",
+        "amd",
+        "android",
+        "aorus z390",
+        "arlo",
+        "arteza",
+        "asics",
+        "asus zenbook",
+        "baby",
+        "barbie",
+        "batman",
+        "beyond the pill",
+        "bike accessories",
+        "boombox",
+        "bts",
+        "burton"
+      ]
+    },
+    "dev_split": "NOT AVAILABLE -- no persisted dev split exists for the ranking pipeline. train/dev overlap and dev/test overlap are therefore undefined for the official ranking benchmark. (An unrelated Two-Tower-v2 experiment does keep experiments/two_tower_v2/splits/{train,dev}_queries.txt; that split is NOT used by the ranking models audited here.)"
+  },
+  "B2_duplicates": {
+    "train": {
+      "rows": 1983272,
+      "unique_query_product_pairs": 1983272,
+      "duplicate_query_product_rows": 0,
+      "query_product_pairs_with_conflicting_label": 0
+    },
+    "test": {
+      "rows": 638016,
+      "unique_query_product_pairs": 638016,
+      "duplicate_query_product_rows": 0,
+      "query_product_pairs_with_conflicting_label": 0
+    },
+    "cross_split_same_normalized_query_and_product": {
+      "pairs": 83,
+      "pairs_with_same_label": 70,
+      "pairs_with_conflicting_label": 13
+    },
+    "product_id_overlap_train_test": {
+      "train_unique_products": 1436116,
+      "test_unique_products": 545818,
+      "overlap": 179162,
+      "overlap_pct_of_test_products": 32.8245,
+      "interpretation": "shared catalog items are expected and are NOT label leakage by themselves"
+    }
+  },
+  "products_rows": 1814924,
+  "products_unique_product_id": 1802772,
+  "products_product_id_appearing_in_multiple_locales": 11567,
+  "B3_B4_U2_pool_summary": {
+    "train": {
+      "bm25_score_rows": 1983161,
+      "tt_score_rows": 1983161,
+      "outer_join_rows": 1983220,
+      "rows_after_query_join": 1983220,
+      "rows_after_pipeline_product_join_on_product_id_only": 2027821,
+      "rows_if_joined_on_unique_product_id": 1983220,
+      "row_inflation_from_locale_unaware_product_join": 44601,
+      "row_inflation_pct": 2.2489,
+      "unique_queries_in_pool": 99684,
+      "unlabeled_rows_in_pool": 0,
+      "unlabeled_pct": 0.0,
+      "rows_scored_by_bm25_only": 60,
+      "rows_scored_by_tt_only": 61,
+      "queries_with_fewer_than_10_candidates": 585,
+      "queries_with_zero_ESC_relevant": 0,
+      "queries_with_all_same_label": 25961,
+      "candidate_cap_TOP_K": 150,
+      "queries_hitting_TOP_K_cap": 4
+    },
+    "test": {
+      "bm25_score_rows": 638016,
+      "tt_score_rows": 638016,
+      "outer_join_rows": 638016,
+      "rows_after_query_join": 638016,
+      "rows_after_pipeline_product_join_on_product_id_only": 652490,
+      "rows_if_joined_on_unique_product_id": 638016,
+      "row_inflation_from_locale_unaware_product_join": 14474,
+      "row_inflation_pct": 2.2686,
+      "unique_queries_in_pool": 30969,
+      "unlabeled_rows_in_pool": 0,
+      "unlabeled_pct": 0.0,
+      "rows_scored_by_bm25_only": 0,
+      "rows_scored_by_tt_only": 0,
+      "queries_with_fewer_than_10_candidates": 165,
+      "queries_with_zero_ESC_relevant": 0,
+      "queries_with_all_same_label": 6523,
+      "candidate_cap_TOP_K": 150,
+      "queries_hitting_TOP_K_cap": 0
+    }
+  },
+  "label_gain_consistency": {
+    "lambdamart_training_label_map": "E=3,S=2,C=1,I=0 (scripts/train_lambdamart.py LABEL_MAP_ORDINAL)",
+    "lambdamart_training_label_gain": [
+      0,
+      1,
+      3,
+      7
+    ],
+    "mlp_training_target_score_map": "E=1.0,S=0.1,C=0.01,I=0.0 (reranking/advanced_features.py)",
+    "evaluation_relevance_map": "E=1.0,S=0.1,C=0.01,I=0.0 (evaluation/metrics.apply_business_ndcg_labels)",
+    "evaluation_gain_formula": "2**relevance - 1 (evaluation/metrics.dcg)",
+    "effective_evaluation_gain_vector_E_S_C_I": [
+      1.0,
+      0.07177346253629313,
+      0.006955550056718884,
+      0.0
+    ],
+    "VERDICT": "INCONSISTENT. Training gain is [I=0,C=1,S=3,E=7]; the reported NDCG@10 gain is [I=0, C=0.00696, S=0.07177, E=1.0]. Relative S:E gain is 3/7=0.43 at train time vs 0.072 at eval time -- a ~6x difference in how much a Substitute is worth. The eval convention also differs from the standard ESCI convention (2**{3,2,1,0}-1 = [7,3,1,0]), so these NDCG@10 numbers are NOT comparable to published ESCI leaderboard numbers."
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "config": {
+    "random_seed": 42,
+    "train_split": "ESCI official 'train' split, all locales, 99684 unique query_ids",
+    "internal_train_subsplit": "85% of train-split queries (84731 queries, 1799751 rows)",
+    "internal_validation_subsplit": "15% of train-split queries (14953 queries, 319934 rows), used only for early stopping",
+    "test_split": "ESCI official 'test' split, all locales, 30969 unique query_ids, no overlap with train",
+    "learning_rate": 0.05,
+    "num_boost_round_cap": 1000,
+    "early_stopping": {"stopping_rounds": 50, "monitored_metric": "ndcg@10 on validation set"},
+    "label_mapping_ordinal": {"E": 3, "S": 2, "C": 1, "I": 0},
+    "label_gain": [0, 1, 3, 7],
+    "lgbm_ranker_params": {
+      "objective": "lambdarank", "metric": "ndcg", "num_leaves": 31,
+      "min_child_samples": 20, "subsample": 0.8, "colsample_bytree": 0.8,
+      "reg_lambda": 1.0, "random_state": 42
+    },
+    "note_on_prompt_assumed_hyperparameters": "The task brief assumed learning_rate=0.01; the actual scripts/train_lambdamart.py uses learning_rate=0.05. All experiments here reuse the value found in the actual training script (0.05), per the instruction to not alter existing hyperparameters.",
+    "17feature_best_iteration": 250,
+    "12feature_best_iteration": 230
+  },
+  "full_model": {
+    "ndcg10": 0.8464228320953767,
+    "best_iteration": 250,
+    "num_trees_in_saved_model": 250
+  },
+  "feature_importance": "see experiments/audit/feature_importance.csv (17 rows, sorted by gain desc)",
+  "model_12feature": {
+    "ndcg10": 0.8447242537282719,
+    "delta_vs_full": -0.0016985783671048527,
+    "best_iteration": 230,
+    "training_runtime_sec": 5.514905214309692
+  },
+  "significance": {
+    "bm25_ndcg10": 0.8155163705764451,
+    "model_ndcg10": 0.8464228320953767,
+    "mean_delta": 0.03090646151893159,
+    "ci_95_low": 0.029282042239767422,
+    "ci_95_high": 0.03245583839571582,
+    "p_value": 0.0,
+    "p_value_note": "0 of 10000 bootstrap resamples had mean delta <= 0; reported resolution is < 1/10000 = 0.0001, not exactly 0.",
+    "n_queries": 30969,
+    "n_bootstrap": 10000,
+    "bootstrap_seed": 42
+  },
+  "bm25_ndcg10_discrepancy_note": "BM25 NDCG@10 computed on the LambdaMART-matched candidate pool (extract_test_advanced_features) = 0.8155, which differs from the previously-recorded all-locale BM25 baseline of 0.8188 (scripts/build_query_slices.py, reproduced and verified against a 0.001 tolerance in that script). The two numbers come from different candidate-pool construction paths: build_query_slices.py merges bm25_scores_test.csv directly against ESCI labels with no locale filter; extract_test_advanced_features additionally joins the products table on product_id only (not product_id+locale, a pre-existing issue already documented in scripts/analyze_topk_overlap.py) and applies dropna(subset=feature_cols). Per Task 3 instructions, 0.8155 is the number used here because it is computed on the identical query/candidate set as the LambdaMART model.",
+  "win_loss_tie": {
+    "win": {"query_count": 12249, "percentage": 39.55245568148794, "mean_delta": 0.14187841618845093},
+    "loss": {"query_count": 7248, "percentage": 23.404049210500823, "mean_delta": -0.10771613039632219},
+    "tie": {"query_count": 11472, "percentage": 37.043495108011236, "mean_delta": 0.0}
+  },
+  "recall_at_100": {
+    "E": {"bm25": 0.5264553920804883, "two_tower": 0.5295086286583244, "rrf": 0.5978552944808442},
+    "ES": {"bm25": 0.45514752313024265, "two_tower": 0.4645432329710764, "rrf": 0.522241443032873},
+    "ESC": {"bm25": 0.45420246120371194, "two_tower": 0.4598025602625171, "rrf": 0.5193597943039363}
+  },
+  "retrieval_coverage": {
+    "k": 100, "relevance": "broad (E+S+C)", "n_queries": 5000,
+    "macro_recall": {"bm25": 0.45420246120371194, "two_tower": 0.4598025602625171, "rrf": 0.5194055226320332},
+    "micro_coverage_pct": {"both": 32.77207586435227, "bm25_only": 12.022891737217991, "tt_only": 13.074067067114411, "both_miss": 42.13096533131533, "union": 57.86903466868467}
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "ratings": {
+    "non_empty_frac": 0.9180496152614946,
+    "to_numeric_success_frac": 0.0,
+    "parsable_if_commas_dots_stripped": 0.9180496152614946,
+    "verdict": "pipeline yields ALL-NaN -> log_review_count == log1p(0) == 0 for 100% of rows"
+  },
+  "price": {
+    "non_empty_frac": 0.2694330853452778,
+    "pipeline_parse_success_frac": 0.26932838640887463,
+    "pipeline_median": 33.84,
+    "pipeline_p99": 25959.060000000056,
+    "pipeline_max": 52925293.0,
+    "rows_with_comma_decimal_format": 71246,
+    "pct_of_nonempty_with_comma_decimal": 15.911,
+    "comma_examples": [
+      "25,63\u20ac",
+      "22,99\u20ac",
+      "26,88\u20ac",
+      "32,49\u20ac",
+      "30,82\u20ac",
+      "200,13\u20ac"
+    ],
+    "comma_examples_parsed_by_pipeline": [
+      2563.0,
+      2299.0,
+      2688.0,
+      3249.0,
+      3082.0,
+      20013.0
+    ],
+    "median_parsed_comma_rows": 2299.0,
+    "median_parsed_noncomma_rows": 24.99
+  },
+  "stars": {
+    "non_empty_frac": 0.9159580434055314,
+    "pipeline_parse_success_frac": 0.9159580434055314,
+    "rows_with_comma_decimal_format": 208341,
+    "pct_of_nonempty_with_comma_decimal": 13.686,
+    "comma_examples": [
+      "3,9 de 5 estrellas",
+      "3,9 de 5 estrellas",
+      "4,8 de 5 estrellas",
+      "4,6 de 5 estrellas"
+    ],
+    "comma_examples_parsed": [
+      3.0,
+      3.0,
+      4.0,
+      4.0
+    ],
+    "mean_parsed_comma_rows": 3.8057415487110076,
+    "mean_parsed_noncomma_rows": 4.35404556064897,
+    "frac_of_comma_rows_that_are_whole_numbers": 1.0
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "D0_two_tower_training_set": {
+    "checkpoint": "models/two_tower_finetuned",
+    "base_model": "sentence-transformers/msmarco-distilbert-base-v3",
+    "training_script": "scripts/train_two_tower.py",
+    "loss": "MultipleNegativesRankingLoss (in-batch negatives), 1 epoch, batch 64",
+    "filter": "small_version==1 AND split=='train' AND product_locale=='us' AND esci_label in {E,S}",
+    "training_pairs": 329447,
+    "unique_queries_seen": 20888,
+    "unique_query_ids_seen": 20888,
+    "unique_products_seen": 285887,
+    "scoring_config_note": "config.USE_SMALL_VERSION is False, so scripts/generate_two_tower_scores.py scores the FULL dataset with an encoder fine-tuned only on the small_version subset -- a training/scoring population mismatch on top of the split question.",
+    "score_normalization": "retrieval.two_tower.compute_two_tower_scores min-max normalizes cosine similarity WITHIN each query's candidate set, so semantic_score is a per-query relative score in [0,1], not a calibrated absolute similarity."
+  },
+  "D1_D2_exposure": {
+    "train": {
+      "ranking_rows": 2119685,
+      "ranking_queries": 99684,
+      "A_same_query_text_seen_in_tt_training": {
+        "rows": 444956,
+        "row_pct": 20.992,
+        "queries": 20932,
+        "query_pct": 20.998
+      },
+      "A2_same_query_id_seen_in_tt_training": {
+        "rows": 444034,
+        "row_pct": 20.948
+      },
+      "B_same_product_seen_in_tt_training": {
+        "rows": 616774,
+        "row_pct": 29.097,
+        "unique_products": 285883
+      },
+      "C_same_query_product_POSITIVE_PAIR_seen_in_tt_training": {
+        "rows": 347733,
+        "row_pct": 16.405,
+        "rows_by_query_id_key": 347725,
+        "row_pct_by_query_id_key": 16.405
+      },
+      "C_pair_exposure_among_E_S_rows_only": {
+        "E_S_rows": 1852413,
+        "of_which_seen_as_tt_training_pair": 347733,
+        "pct": 18.772
+      },
+      "C_pair_exposure_among_US_E_S_rows_only": {
+        "us_E_S_rows": 1290256,
+        "of_which_seen_as_tt_training_pair": 335051,
+        "pct": 25.968
+      }
+    },
+    "test": {
+      "ranking_rows": 682233,
+      "ranking_queries": 30969,
+      "A_same_query_text_seen_in_tt_training": {
+        "rows": 321,
+        "row_pct": 0.047,
+        "queries": 7,
+        "query_pct": 0.023
+      },
+      "A2_same_query_id_seen_in_tt_training": {
+        "rows": 0,
+        "row_pct": 0.0
+      },
+      "B_same_product_seen_in_tt_training": {
+        "rows": 110340,
+        "row_pct": 16.173,
+        "unique_products": 53015
+      },
+      "C_same_query_product_POSITIVE_PAIR_seen_in_tt_training": {
+        "rows": 35,
+        "row_pct": 0.005,
+        "rows_by_query_id_key": 0,
+        "row_pct_by_query_id_key": 0.0
+      },
+      "C_pair_exposure_among_E_S_rows_only": {
+        "E_S_rows": 583635,
+        "of_which_seen_as_tt_training_pair": 35,
+        "pct": 0.006
+      },
+      "C_pair_exposure_among_US_E_S_rows_only": {
+        "us_E_S_rows": 387172,
+        "of_which_seen_as_tt_training_pair": 15,
+        "pct": 0.004
+      }
+    }
+  },
+  "D3_separation": {
+    "train": {
+      "cohens_d_E_vs_I": 0.7290123474046891,
+      "mean_gap_E_vs_I": 0.2061707437242452,
+      "cohens_d_E_vs_S": 0.41577845292235205,
+      "mean_gap_E_vs_S": 0.11819438236434826,
+      "cohens_d_S_vs_I": 0.3111485500136619,
+      "mean_gap_S_vs_I": 0.08797636135989695,
+      "pearson_semantic_vs_ordinal_label": 0.23618519262843216,
+      "spearman_semantic_vs_ordinal_label": 0.24539110972450556
+    },
+    "test": {
+      "cohens_d_E_vs_I": 0.6807851417227706,
+      "mean_gap_E_vs_I": 0.19174032520238304,
+      "cohens_d_E_vs_S": 0.3871511194009855,
+      "mean_gap_E_vs_S": 0.10897802885403451,
+      "cohens_d_S_vs_I": 0.29431745217332844,
+      "mean_gap_S_vs_I": 0.08276229634834853,
+      "pearson_semantic_vs_ordinal_label": 0.2284823150421925,
+      "spearman_semantic_vs_ordinal_label": 0.2379585772153245
+    }
+  },
+  "D4_classification": {
+    "A_true_label_leakage_into_test": {
+      "verdict": "NO",
+      "evidence": "The Two-Tower encoder is fine-tuned strictly on split=='train' rows. No ESCI test label, test query text (beyond the incidental overlaps recorded in split_integrity.json), or test query-product pair enters its training data. Test-row positive-pair exposure = 0.004% of us-locale E/S rows."
+    },
+    "B_upstream_model_saw_the_same_pair_at_ranking_TRAIN_time": {
+      "verdict": "YES, extensive",
+      "evidence": "25.968% of us-locale E/S rows in the LambdaMART/MLP TRAINING set were literal Two-Tower training positives, vs 0.004% for test. The ranker therefore learns semantic_score's reliability from a regime where the upstream encoder has memorised the positives.",
+      "correct_term": "upstream train-on-train exposure / non-out-of-fold feature, NOT label leakage"
+    },
+    "C_train_eval_feature_distribution_mismatch": null,
+    "D_normal_production_feature": {
+      "verdict": "PARTLY",
+      "evidence": "In production a fine-tuned encoder does score unseen queries, so the feature itself is legitimate. What is not production-like is generating the RANKER's training-set values of that feature with an encoder that was fit on the same rows -- an in-fold feature."
+    }
+  }
+}

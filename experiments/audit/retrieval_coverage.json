@@ -1,0 +1,34 @@
+{
+  "k": 100,
+  "relevance": "broad (E+S+C)",
+  "n_queries": 5000,
+  "macro_recall": {
+    "bm25": 0.45420246120371194,
+    "two_tower": 0.4598025602625171,
+    "rrf": 0.5194055226320332
+  },
+  "micro_coverage": {
+    "both": 27716,
+    "bm25_only": 10168,
+    "tt_only": 11057,
+    "both_miss": 35631,
+    "total_relevant_item_instances": 84572,
+    "pct_both": 32.77207586435227,
+    "pct_bm25_only": 12.022891737217991,
+    "pct_tt_only": 13.074067067114411,
+    "pct_both_miss": 42.13096533131533,
+    "pct_union": 57.86903466868467
+  },
+  "consistency_checks": {
+    "macro_bm25_recall_at_100": 0.45420246120371194,
+    "micro_bm25_recall_at_100 (both+bm25_only)/total": 0.44794967601570257,
+    "macro_vs_micro_bm25_diff": 0.006252785188009369,
+    "macro_tt_recall_at_100": 0.4598025602625171,
+    "micro_tt_recall_at_100 (both+tt_only)/total": 0.45846142931466677,
+    "macro_vs_micro_tt_diff": 0.001341130947850322,
+    "macro_rrf_recall_at_100": 0.5194055226320332,
+    "micro_union_recall (both+bm25_only+tt_only)/total": 0.5786903466868467,
+    "sum_bm25only_ttonly_both_bothmiss_pct": 100.0,
+    "note": "macro_* = mean of per-query recall (each query weighted equally, matching Recall@100 as reported elsewhere in this repo / Task 5). micro_* = counts of individual (query, relevant product) instances pooled across all queries, then divided by total instances (queries with many relevant items dominate). These are different averaging schemes and are not expected to be numerically identical; both are reported here rather than reconciled."
+  }
+}

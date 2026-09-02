@@ -1,0 +1,30 @@
+{
+  "feature_columns": [
+    "query_length",
+    "query_mean_idf",
+    "query_max_idf",
+    "user_budget",
+    "cheap_intent",
+    "bm25_score",
+    "semantic_score",
+    "word_overlap",
+    "is_dominant_category",
+    "brand_match",
+    "color_match",
+    "is_over_budget"
+  ],
+  "excluded_features": [
+    "log_price",
+    "is_price_missing",
+    "stars_clean",
+    "log_review_count",
+    "is_rating_missing"
+  ],
+  "train_rows": 1799751,
+  "train_queries": 84731,
+  "val_rows": 319934,
+  "val_queries": 14953,
+  "training_runtime_sec": 5.514905214309692,
+  "best_iteration": 230,
+  "num_trees_in_saved_model": 230
+}

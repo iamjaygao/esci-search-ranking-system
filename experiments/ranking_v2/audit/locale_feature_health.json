@@ -1,0 +1,50 @@
+{
+  "us": {
+    "rows": 443528,
+    "queries": 24630,
+    "mean_query_length_tokens": 3.513276492082826,
+    "pct_queries_single_token": 5.92,
+    "word_overlap_mean": 0.4984744842146493,
+    "word_overlap_zero_rate": 19.13,
+    "bm25_zero_rate": 15.57,
+    "semantic_mean": 0.5635638496760309,
+    "brand_match_rate": 11.09,
+    "color_match_rate": 2.9,
+    "query_mean_idf": 8.467992404187266,
+    "spearman_word_overlap_vs_label": 0.33950719756438874,
+    "spearman_bm25_vs_label": 0.28342910126063164,
+    "spearman_semantic_vs_label": 0.2683490993639032
+  },
+  "es": {
+    "rows": 109763,
+    "queries": 7458,
+    "mean_query_length_tokens": 3.307857334406007,
+    "pct_queries_single_token": 7.8,
+    "word_overlap_mean": 0.4093324144981615,
+    "word_overlap_zero_rate": 27.57,
+    "bm25_zero_rate": 19.07,
+    "semantic_mean": 0.5073577998990209,
+    "brand_match_rate": 10.92,
+    "color_match_rate": 0.23,
+    "query_mean_idf": 8.837897328496087,
+    "spearman_word_overlap_vs_label": 0.27879666214915133,
+    "spearman_bm25_vs_label": 0.2426988644588874,
+    "spearman_semantic_vs_label": 0.22907221485365828
+  },
+  "jp": {
+    "rows": 128942,
+    "queries": 6969,
+    "mean_query_length_tokens": 2.3583010474960537,
+    "pct_queries_single_token": 33.52,
+    "word_overlap_mean": 0.17353598061306408,
+    "word_overlap_zero_rate": 72.22,
+    "bm25_zero_rate": 61.88,
+    "semantic_mean": 0.5537241550872027,
+    "brand_match_rate": 3.07,
+    "color_match_rate": 0.06,
+    "query_mean_idf": 9.544167840799602,
+    "spearman_word_overlap_vs_label": 0.19395793209858125,
+    "spearman_bm25_vs_label": 0.22569251623213474,
+    "spearman_semantic_vs_label": 0.11471013389783352
+  }
+}

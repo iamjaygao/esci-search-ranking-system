@@ -1,0 +1,17 @@
+{
+  "win": {
+    "query_count": 12249,
+    "percentage": 39.55245568148794,
+    "mean_delta": 0.14187841618845093
+  },
+  "loss": {
+    "query_count": 7248,
+    "percentage": 23.404049210500823,
+    "mean_delta": -0.10771613039632219
+  },
+  "tie": {
+    "query_count": 11472,
+    "percentage": 37.043495108011236,
+    "mean_delta": 0.0
+  }
+}

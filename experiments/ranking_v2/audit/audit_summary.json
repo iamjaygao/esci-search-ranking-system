@@ -1,0 +1,1273 @@
+{
+  "audit_date": "2026-09-02",
+  "git_commit_at_audit_start": "9b173e95307b6af4335d46518f703265a9608d57",
+  "scope": "Phase 0 read-only audit of the ESCI ranking pipeline. No retraining, no tuning, no changes to any pre-existing file.",
+  "verified_baselines": {
+    "pool_official_inflated_682233_rows": {
+      "bm25": 0.8155,
+      "two_tower": 0.8247,
+      "mlp": 0.8458,
+      "lambdamart": 0.8464
+    },
+    "pool_clean_locale_matched_638016_rows": {
+      "bm25": 0.8181,
+      "two_tower": 0.8267,
+      "mlp": 0.8476,
+      "lambdamart": 0.848
+    },
+    "reproduction_status": {
+      "bm25_0.8188_clean_all_locale": "VERIFIED (exact)",
+      "two_tower_0.8267_clean_all_locale": "VERIFIED (exact)",
+      "mlp_0.8458": "VERIFIED (exact, on the inflated pool)",
+      "lambdamart_0.8464": "VERIFIED (exact, on the inflated pool)",
+      "lambdamart_without_semantic_0.832": "VERIFIED as an MLP ablation, NOT a LambdaMART one -- output/ablations/* were produced by scripts/run_feature_ablation.py which retrains the MLP (full=0.84578). No LambdaMART no-semantic_score artifact exists.",
+      "bm25_0.804_variant": "NOT VERIFIED -- no artifact in the repo produces 0.804. The closest recomputation is binary E-vs-rest BM25 = 0.8041."
+    },
+    "gain_convention_sensitivity": [
+      {
+        "gain_convention": "official_repo_fractional_2^r-1",
+        "model": "bm25",
+        "n_queries_scored": 30969,
+        "ndcg_at_10": 0.8155163705764451
+      },
+      {
+        "gain_convention": "official_repo_fractional_2^r-1",
+        "model": "two_tower",
+        "n_queries_scored": 30969,
+        "ndcg_at_10": 0.8246527802290216
+      },
+      {
+        "gain_convention": "official_repo_fractional_2^r-1",
+        "model": "mlp_17feature",
+        "n_queries_scored": 30969,
+        "ndcg_at_10": 0.8457793074574832
+      },
+      {
+        "gain_convention": "official_repo_fractional_2^r-1",
+        "model": "lambdamart_17feature",
+        "n_queries_scored": 30969,
+        "ndcg_at_10": 0.8464228320953767
+      },
+      {
+        "gain_convention": "esci_standard_ordinal_2^r-1_[0,1,3,7]",
+        "model": "bm25",
+        "n_queries_scored": 30969,
+        "ndcg_at_10": 0.8641268123532991
+      },
+      {
+        "gain_convention": "esci_standard_ordinal_2^r-1_[0,1,3,7]",
+        "model": "two_tower",
+        "n_queries_scored": 30969,
+        "ndcg_at_10": 0.8759773184580847
+      },
+      {
+        "gain_convention": "esci_standard_ordinal_2^r-1_[0,1,3,7]",
+        "model": "mlp_17feature",
+        "n_queries_scored": 30969,
+        "ndcg_at_10": 0.889008389067177
+      },
+      {
+        "gain_convention": "esci_standard_ordinal_2^r-1_[0,1,3,7]",
+        "model": "lambdamart_17feature",
+        "n_queries_scored": 30969,
+        "ndcg_at_10": 0.8900248099027279
+      },
+      {
+        "gain_convention": "binary_E_vs_rest",
+        "model": "bm25",
+        "n_queries_scored": 30968,
+        "ndcg_at_10": 0.8041148789676676
+      },
+      {
+        "gain_convention": "binary_E_vs_rest",
+        "model": "two_tower",
+        "n_queries_scored": 30968,
+        "ndcg_at_10": 0.8119594940415953
+      },
+      {
+        "gain_convention": "binary_E_vs_rest",
+        "model": "mlp_17feature",
+        "n_queries_scored": 30968,
+        "ndcg_at_10": 0.835373114978323
+      },
+      {
+        "gain_convention": "binary_E_vs_rest",
+        "model": "lambdamart_17feature",
+        "n_queries_scored": 30968,
+        "ndcg_at_10": 0.8358923214173553
+      }
+    ],
+    "non_degenerate_subset": [
+      {
+        "gain_convention": "official_repo_fractional_2^r-1",
+        "subset": "non_degenerate_queries_only",
+        "model": "bm25",
+        "n_queries_scored": 24446,
+        "ndcg_at_10": 0.7662900466490193
+      },
+      {
+        "gain_convention": "official_repo_fractional_2^r-1",
+        "subset": "non_degenerate_queries_only",
+        "model": "two_tower",
+        "n_queries_scored": 24446,
+        "ndcg_at_10": 0.7778643520785637
+      },
+      {
+        "gain_convention": "official_repo_fractional_2^r-1",
+        "subset": "non_degenerate_queries_only",
+        "model": "mlp_17feature",
+        "n_queries_scored": 24446,
+        "ndcg_at_10": 0.8046281343635278
+      },
+      {
+        "gain_convention": "official_repo_fractional_2^r-1",
+        "subset": "non_degenerate_queries_only",
+        "model": "lambdamart_17feature",
+        "n_queries_scored": 24446,
+        "ndcg_at_10": 0.8054433726238125
+      }
+    ]
+  },
+  "P0_findings": {
+    "P0-1_train_eval_gain_mismatch": {
+      "detail": {
+        "lambdamart_training_label_map": "E=3,S=2,C=1,I=0 (scripts/train_lambdamart.py LABEL_MAP_ORDINAL)",
+        "lambdamart_training_label_gain": [
+          0,
+          1,
+          3,
+          7
+        ],
+        "mlp_training_target_score_map": "E=1.0,S=0.1,C=0.01,I=0.0 (reranking/advanced_features.py)",
+        "evaluation_relevance_map": "E=1.0,S=0.1,C=0.01,I=0.0 (evaluation/metrics.apply_business_ndcg_labels)",
+        "evaluation_gain_formula": "2**relevance - 1 (evaluation/metrics.dcg)",
+        "effective_evaluation_gain_vector_E_S_C_I": [
+          1.0,
+          0.07177346253629313,
+          0.006955550056718884,
+          0.0
+        ],
+        "VERDICT": "INCONSISTENT. Training gain is [I=0,C=1,S=3,E=7]; the reported NDCG@10 gain is [I=0, C=0.00696, S=0.07177, E=1.0]. Relative S:E gain is 3/7=0.43 at train time vs 0.072 at eval time -- a ~6x difference in how much a Substitute is worth. The eval convention also differs from the standard ESCI convention (2**{3,2,1,0}-1 = [7,3,1,0]), so these NDCG@10 numbers are NOT comparable to published ESCI leaderboard numbers."
+      },
+      "impact": "LambdaMART optimises S:E = 3:7 (0.43); the reported metric scores S:E = 0.0718:1.0 (0.072). Objective and metric disagree by ~6x on how much a Substitute is worth.",
+      "corroborating_evidence": "88.3% of the total NDCG@10 shortfall comes from queries containing at least one S; 88.6% of the 7,282 queries where LambdaMART loses to BM25 contain an S vs 66.4% base rate."
+    },
+    "P0-2_candidate_pool_duplication": {
+      "official_test_pool_rows": 682233,
+      "unique_query_product_pairs_in_pool": 638016,
+      "true_judged_query_product_pairs_in_esci_test": 638016,
+      "duplicated_rows": 44217,
+      "duplication_rate_pct": 6.9304,
+      "max_copies_of_a_single_pair": 9,
+      "pairs_appearing_more_than_once": 12982,
+      "queries_containing_at_least_one_duplicated_pair": 6556,
+      "cause_1_products_table_joined_on_product_id_only": {
+        "product_ids_present_in_multiple_locales": 11567,
+        "code_ref": "evaluation/evaluate_advanced.py:62  pd.merge(df, df_pr, on='product_id')"
+      },
+      "cause_2_esci_s_table_joined_on_product_id_only": {
+        "esci_s_rows": 1661908,
+        "esci_s_unique_ids": 1650599,
+        "esci_s_duplicate_id_rows": 11309,
+        "code_ref": "evaluation/evaluate_advanced.py:42  pd.merge(df_pr, df_esci_s[...], on='product_id')"
+      },
+      "effect_on_ndcg": "A duplicated (query, product) row is counted twice in both the ranked list and the ideal list, so NDCG@10 is computed over a candidate set that does not match the ESCI judgment set. Affected queries get a distorted (usually inflated, because duplicated relevant items fill adjacent top-10 slots) score."
+    },
+    "P0-3_mixed_pool_baseline_comparison": {
+      "0.8188_all_locale_clean_pool": {
+        "value": 0.8188130279308162,
+        "n_queries": 30969,
+        "rows": 638016,
+        "definition": "bm25_scores_test.csv INNER JOIN ESCI test labels, no products-table join",
+        "matches_recorded_0.8188": "True"
+      },
+      "0.8155_inflated_pool_used_by_lambdamart_eval": {
+        "value": 0.8155163705764451,
+        "n_queries": 30969,
+        "rows": 682233,
+        "definition": "extract_test_advanced_features pool (duplicated rows from the two locale-unaware joins)"
+      },
+      "us_locale_only_clean_pool": {
+        "value": 0.8433611370662614,
+        "n_queries": 22458,
+        "matches_recorded_0.8434": "True"
+      },
+      "two_tower_all_locale_clean_pool": {
+        "value": 0.8267167793233932,
+        "n_queries": 30969,
+        "matches_recorded_0.8267": "True"
+      },
+      "root_cause": "The gap is entirely candidate-pool construction, not the metric. The 0.8188 number is on the clean judged pool; 0.8155 is on the duplicate-inflated pool that the LambdaMART/MLP evaluation uses. All headline model numbers (0.8458 MLP, 0.8464 LambdaMART) live on the inflated pool, so the commonly quoted 'LambdaMART 0.8464 vs BM25 0.8188' comparison mixes two pools."
+    }
+  },
+  "P1_findings": {
+    "P1-1_log_review_count_constant_zero": {
+      "ratings_parsing": {
+        "non_empty_frac": 0.9180496152614946,
+        "to_numeric_success_frac": 0.0,
+        "parsable_if_commas_dots_stripped": 0.9180496152614946,
+        "verdict": "pipeline yields ALL-NaN -> log_review_count == log1p(0) == 0 for 100% of rows"
+      },
+      "impact": "feature is identically 0 on 100% of train and test rows; it is not a weak feature, it is a dead one."
+    },
+    "P1-2_price_parsing_corruption": {
+      "non_empty_frac": 0.2694330853452778,
+      "pipeline_parse_success_frac": 0.26932838640887463,
+      "pipeline_median": 33.84,
+      "pipeline_p99": 25959.060000000056,
+      "pipeline_max": 52925293.0,
+      "rows_with_comma_decimal_format": 71246,
+      "pct_of_nonempty_with_comma_decimal": 15.911,
+      "comma_examples": [
+        "25,63\u20ac",
+        "22,99\u20ac",
+        "26,88\u20ac",
+        "32,49\u20ac",
+        "30,82\u20ac",
+        "200,13\u20ac"
+      ],
+      "comma_examples_parsed_by_pipeline": [
+        2563.0,
+        2299.0,
+        2688.0,
+        3249.0,
+        3082.0,
+        20013.0
+      ],
+      "median_parsed_comma_rows": 2299.0,
+      "median_parsed_noncomma_rows": 24.99
+    },
+    "P1-3_stars_parsing_truncation": {
+      "non_empty_frac": 0.9159580434055314,
+      "pipeline_parse_success_frac": 0.9159580434055314,
+      "rows_with_comma_decimal_format": 208341,
+      "pct_of_nonempty_with_comma_decimal": 13.686,
+      "comma_examples": [
+        "3,9 de 5 estrellas",
+        "3,9 de 5 estrellas",
+        "4,8 de 5 estrellas",
+        "4,6 de 5 estrellas"
+      ],
+      "comma_examples_parsed": [
+        3.0,
+        3.0,
+        4.0,
+        4.0
+      ],
+      "mean_parsed_comma_rows": 3.8057415487110076,
+      "mean_parsed_noncomma_rows": 4.35404556064897,
+      "frac_of_comma_rows_that_are_whole_numbers": 1.0
+    },
+    "P1-4_non_english_feature_collapse": {
+      "us": {
+        "rows": 443528,
+        "queries": 24630,
+        "mean_query_length_tokens": 3.513276492082826,
+        "pct_queries_single_token": 5.92,
+        "word_overlap_mean": 0.4984744842146493,
+        "word_overlap_zero_rate": 19.13,
+        "bm25_zero_rate": 15.57,
+        "semantic_mean": 0.5635638496760309,
+        "brand_match_rate": 11.09,
+        "color_match_rate": 2.9,
+        "query_mean_idf": 8.467992404187266,
+        "spearman_word_overlap_vs_label": 0.33950719756438874,
+        "spearman_bm25_vs_label": 0.28342910126063164,
+        "spearman_semantic_vs_label": 0.2683490993639032
+      },
+      "es": {
+        "rows": 109763,
+        "queries": 7458,
+        "mean_query_length_tokens": 3.307857334406007,
+        "pct_queries_single_token": 7.8,
+        "word_overlap_mean": 0.4093324144981615,
+        "word_overlap_zero_rate": 27.57,
+        "bm25_zero_rate": 19.07,
+        "semantic_mean": 0.5073577998990209,
+        "brand_match_rate": 10.92,
+        "color_match_rate": 0.23,
+        "query_mean_idf": 8.837897328496087,
+        "spearman_word_overlap_vs_label": 0.27879666214915133,
+        "spearman_bm25_vs_label": 0.2426988644588874,
+        "spearman_semantic_vs_label": 0.22907221485365828
+      },
+      "jp": {
+        "rows": 128942,
+        "queries": 6969,
+        "mean_query_length_tokens": 2.3583010474960537,
+        "pct_queries_single_token": 33.52,
+        "word_overlap_mean": 0.17353598061306408,
+        "word_overlap_zero_rate": 72.22,
+        "bm25_zero_rate": 61.88,
+        "semantic_mean": 0.5537241550872027,
+        "brand_match_rate": 3.07,
+        "color_match_rate": 0.06,
+        "query_mean_idf": 9.544167840799602,
+        "spearman_word_overlap_vs_label": 0.19395793209858125,
+        "spearman_bm25_vs_label": 0.22569251623213474,
+        "spearman_semantic_vs_label": 0.11471013389783352
+      }
+    },
+    "P1-5_degenerate_queries": {
+      "definition": "every candidate carries the same relevance value -> NDCG@10 == 1.0 for any ranking",
+      "count": 6523,
+      "pct_of_scored_queries": 21.063,
+      "impact": "These queries contribute a constant 1.0 to every model's mean NDCG@10 and carry zero discriminative signal, compressing all reported model gaps."
+    },
+    "P1-6_split_text_overlap": {
+      "query_ids_in_both_splits": 1,
+      "query_id": "79706 ('piano'), 3 train rows + 31 test rows, disjoint products",
+      "normalized_query_text_overlap": 162,
+      "pct_of_test_queries": 0.5235,
+      "cross_split_same_query_text_and_product": {
+        "pairs": 83,
+        "pairs_with_same_label": 70,
+        "pairs_with_conflicting_label": 13
+      }
+    },
+    "P1-7_transductive_imputation": {
+      "detail": "price/stars/ratings medians and the is_dominant_category top-20-BM25 mode are computed within whichever split's frame is being processed (reranking/advanced_features.py:118-134, evaluation/evaluate_advanced.py:105-121). Test-time imputation therefore uses test-set statistics.",
+      "severity_note": "Effect is small in practice because the imputed features carry <2.6% of total gain, but it is a genuine protocol defect."
+    }
+  },
+  "semantic_score": {
+    "lineage": {
+      "checkpoint": "models/two_tower_finetuned",
+      "base_model": "sentence-transformers/msmarco-distilbert-base-v3",
+      "training_script": "scripts/train_two_tower.py",
+      "loss": "MultipleNegativesRankingLoss (in-batch negatives), 1 epoch, batch 64",
+      "filter": "small_version==1 AND split=='train' AND product_locale=='us' AND esci_label in {E,S}",
+      "training_pairs": 329447,
+      "unique_queries_seen": 20888,
+      "unique_query_ids_seen": 20888,
+      "unique_products_seen": 285887,
+      "scoring_config_note": "config.USE_SMALL_VERSION is False, so scripts/generate_two_tower_scores.py scores the FULL dataset with an encoder fine-tuned only on the small_version subset -- a training/scoring population mismatch on top of the split question.",
+      "score_normalization": "retrieval.two_tower.compute_two_tower_scores min-max normalizes cosine similarity WITHIN each query's candidate set, so semantic_score is a per-query relative score in [0,1], not a calibrated absolute similarity."
+    },
+    "exposure": {
+      "train": {
+        "ranking_rows": 2119685,
+        "ranking_queries": 99684,
+        "A_same_query_text_seen_in_tt_training": {
+          "rows": 444956,
+          "row_pct": 20.992,
+          "queries": 20932,
+          "query_pct": 20.998
+        },
+        "A2_same_query_id_seen_in_tt_training": {
+          "rows": 444034,
+          "row_pct": 20.948
+        },
+        "B_same_product_seen_in_tt_training": {
+          "rows": 616774,
+          "row_pct": 29.097,
+          "unique_products": 285883
+        },
+        "C_same_query_product_POSITIVE_PAIR_seen_in_tt_training": {
+          "rows": 347733,
+          "row_pct": 16.405,
+          "rows_by_query_id_key": 347725,
+          "row_pct_by_query_id_key": 16.405
+        },
+        "C_pair_exposure_among_E_S_rows_only": {
+          "E_S_rows": 1852413,
+          "of_which_seen_as_tt_training_pair": 347733,
+          "pct": 18.772
+        },
+        "C_pair_exposure_among_US_E_S_rows_only": {
+          "us_E_S_rows": 1290256,
+          "of_which_seen_as_tt_training_pair": 335051,
+          "pct": 25.968
+        }
+      },
+      "test": {
+        "ranking_rows": 682233,
+        "ranking_queries": 30969,
+        "A_same_query_text_seen_in_tt_training": {
+          "rows": 321,
+          "row_pct": 0.047,
+          "queries": 7,
+          "query_pct": 0.023
+        },
+        "A2_same_query_id_seen_in_tt_training": {
+          "rows": 0,
+          "row_pct": 0.0
+        },
+        "B_same_product_seen_in_tt_training": {
+          "rows": 110340,
+          "row_pct": 16.173,
+          "unique_products": 53015
+        },
+        "C_same_query_product_POSITIVE_PAIR_seen_in_tt_training": {
+          "rows": 35,
+          "row_pct": 0.005,
+          "rows_by_query_id_key": 0,
+          "row_pct_by_query_id_key": 0.0
+        },
+        "C_pair_exposure_among_E_S_rows_only": {
+          "E_S_rows": 583635,
+          "of_which_seen_as_tt_training_pair": 35,
+          "pct": 0.006
+        },
+        "C_pair_exposure_among_US_E_S_rows_only": {
+          "us_E_S_rows": 387172,
+          "of_which_seen_as_tt_training_pair": 15,
+          "pct": 0.004
+        }
+      }
+    },
+    "separation": {
+      "train": {
+        "cohens_d_E_vs_I": 0.7290123474046891,
+        "mean_gap_E_vs_I": 0.2061707437242452,
+        "cohens_d_E_vs_S": 0.41577845292235205,
+        "mean_gap_E_vs_S": 0.11819438236434826,
+        "cohens_d_S_vs_I": 0.3111485500136619,
+        "mean_gap_S_vs_I": 0.08797636135989695,
+        "pearson_semantic_vs_ordinal_label": 0.23618519262843216,
+        "spearman_semantic_vs_ordinal_label": 0.24539110972450556
+      },
+      "test": {
+        "cohens_d_E_vs_I": 0.6807851417227706,
+        "mean_gap_E_vs_I": 0.19174032520238304,
+        "cohens_d_E_vs_S": 0.3871511194009855,
+        "mean_gap_E_vs_S": 0.10897802885403451,
+        "cohens_d_S_vs_I": 0.29431745217332844,
+        "mean_gap_S_vs_I": 0.08276229634834853,
+        "pearson_semantic_vs_ordinal_label": 0.2284823150421925,
+        "spearman_semantic_vs_ordinal_label": 0.2379585772153245
+      }
+    },
+    "classification": {
+      "A_true_label_leakage_into_test": {
+        "verdict": "NO",
+        "evidence": "The Two-Tower encoder is fine-tuned strictly on split=='train' rows. No ESCI test label, test query text (beyond the incidental overlaps recorded in split_integrity.json), or test query-product pair enters its training data. Test-row positive-pair exposure = 0.004% of us-locale E/S rows."
+      },
+      "B_upstream_model_saw_the_same_pair_at_ranking_TRAIN_time": {
+        "verdict": "YES, extensive",
+        "evidence": "25.968% of us-locale E/S rows in the LambdaMART/MLP TRAINING set were literal Two-Tower training positives, vs 0.004% for test. The ranker therefore learns semantic_score's reliability from a regime where the upstream encoder has memorised the positives.",
+        "correct_term": "upstream train-on-train exposure / non-out-of-fold feature, NOT label leakage"
+      },
+      "C_train_eval_feature_distribution_mismatch": null,
+      "D_normal_production_feature": {
+        "verdict": "PARTLY",
+        "evidence": "In production a fine-tuned encoder does score unseen queries, so the feature itself is legitimate. What is not production-like is generating the RANKER's training-set values of that feature with an encoder that was fit on the same rows -- an in-fold feature."
+      }
+    },
+    "verdict": "Upstream train-on-train exposure (category B) is real and large (25.97% of us-locale E/S ranking-TRAIN rows were literal Two-Tower training positives vs 0.004% for test), but the resulting feature distribution mismatch (category C) is negligible: train/test semantic_score means differ by 0.005, and Cohen's d for E-vs-I is 0.729 (train) vs 0.681 (test). There is NO label leakage (category A)."
+  },
+  "features": {
+    "official_17_features": [
+      "semantic_score",
+      "bm25_score",
+      "word_overlap",
+      "is_dominant_category",
+      "query_mean_idf",
+      "brand_match",
+      "log_price",
+      "stars_clean",
+      "query_length",
+      "query_max_idf",
+      "is_rating_missing",
+      "is_price_missing",
+      "color_match",
+      "user_budget",
+      "cheap_intent",
+      "log_review_count",
+      "is_over_budget"
+    ],
+    "importance_concentration": {
+      "total_gain": 713474.65893507,
+      "top1_features": [
+        "semantic_score"
+      ],
+      "top1_gain_pct": 54.994386126536256,
+      "top3_features": [
+        "semantic_score",
+        "bm25_score",
+        "word_overlap"
+      ],
+      "top3_gain_pct": 89.00913447009013,
+      "top5_features": [
+        "semantic_score",
+        "bm25_score",
+        "word_overlap",
+        "is_dominant_category",
+        "query_mean_idf"
+      ],
+      "top5_gain_pct": 94.43920855041827,
+      "semantic_plus_bm25_plus_word_overlap_gain_pct": 89.00913447009013,
+      "features_with_zero_gain": [
+        "log_review_count",
+        "is_over_budget"
+      ],
+      "features_with_lt_0p1pct_gain": [
+        "color_match",
+        "user_budget",
+        "cheap_intent",
+        "log_review_count",
+        "is_over_budget"
+      ],
+      "n_trees": 250
+    },
+    "flags": {
+      "query_mean_idf": "train/test mean shift = 0.145 SD",
+      "query_max_idf": "train/test mean shift = 0.231 SD",
+      "user_budget": "NEAR-CONSTANT (modal value -1 on 99.92% of rows)",
+      "cheap_intent": "NEAR-CONSTANT (modal value 0 on 99.87% of rows); zero on 99.87% of train rows",
+      "log_review_count": "CONSTANT; NEAR-CONSTANT (modal value 0 on 100.00% of rows); zero on 100.00% of train rows; ZERO GAIN in the official LambdaMART model (never used for a split)",
+      "semantic_score": "negative sentinel present (semantic_score missing -> -1.0 fill)",
+      "color_match": "highly imbalanced (modal value 0 on 98.15% of rows); zero on 98.15% of train rows",
+      "is_over_budget": "NEAR-CONSTANT (modal value 0 on 99.95% of rows); zero on 99.95% of train rows; ZERO GAIN in the official LambdaMART model (never used for a split)"
+    },
+    "redundancy_ge_0.90": [],
+    "redundancy_ge_0.70": [
+      {
+        "feature_a": "query_mean_idf",
+        "feature_b": "query_max_idf",
+        "pearson_train": 0.7504851424148468
+      }
+    ],
+    "marginal_value_vs_gain_share": {
+      "note": "output/ablations/* are MLP leave-one-out retrains (full = 0.84578).",
+      "no_semantic_score": -0.013847,
+      "no_bm25_score": -0.005556,
+      "no_word_overlap": -0.00315,
+      "no_brand_match": -0.001329,
+      "no_query_mean_idf": -0.000251,
+      "interpretation": "semantic_score holds 55.0% of LambdaMART split gain but removing it costs only 0.0138 NDCG -- gain share measures how often the tree splits on it, not how much unique information it carries."
+    }
+  },
+  "model_capacity": {
+    "top10_agreement": {
+      "n_queries": 30969,
+      "mean_top10_jaccard_lambdamart_vs_mlp": 0.8894817804790397,
+      "median_top10_jaccard_lambdamart_vs_mlp": 1.0,
+      "pct_queries_identical_top10_set": 50.292,
+      "pct_queries_identical_top10_ordering": 3.074,
+      "mean_top10_jaccard_lambdamart_vs_bm25": 0.6194153365219868,
+      "note": "Jaccard computed over top-10 product_id sets on POOL_CLEAN."
+    },
+    "lambdamart_minus_mlp_clean_pool": {
+      "comparison": "lambdamart - mlp",
+      "n_queries": 30969,
+      "lambdamart_mean_ndcg10": 0.8480070461390226,
+      "mlp_mean_ndcg10": 0.8475808249634852,
+      "mean_paired_delta": 0.0004262211755373499,
+      "median_paired_delta": 0.0,
+      "ci_95_low": -0.00012057579438407491,
+      "ci_95_high": 0.0009824583417078405,
+      "p_value_two_sided": 0.1264,
+      "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+      "win": 7198,
+      "loss": 6855,
+      "tie": 16916,
+      "win_pct": 23.243,
+      "loss_pct": 22.135,
+      "tie_pct": 54.622,
+      "n_bootstrap": 10000,
+      "bootstrap_seed": 42
+    },
+    "verdict": "On the clean pool LambdaMART and the MLP are statistically indistinguishable (mean delta +0.00043, 95% CI [-0.00012, +0.00098], p=0.126) despite very different inductive biases, and agree on 88.9% of top-10 slots. Evidence suggests the shared 17-feature representation, not ranker capacity, is the binding constraint."
+  },
+  "failure_modes": {
+    "n_queries": 30969,
+    "total_shortfall_from_perfect": 4707.0697881206115,
+    "by_locale": {
+      "us": {
+        "queries": 22458,
+        "pct_queries": 72.52,
+        "mean_lambdamart_ndcg": 0.8728990771574577,
+        "share_of_total_shortfall_pct": 60.64
+      },
+      "es": {
+        "queries": 3844,
+        "pct_queries": 12.41,
+        "mean_lambdamart_ndcg": 0.8013177201170529,
+        "share_of_total_shortfall_pct": 16.23
+      },
+      "jp": {
+        "queries": 4667,
+        "pct_queries": 15.07,
+        "mean_lambdamart_ndcg": 0.7666803987459294,
+        "share_of_total_shortfall_pct": 23.13
+      }
+    },
+    "queries_with_substitutes": {
+      "queries": 20566,
+      "pct_queries": 66.41,
+      "mean_lambdamart_ndcg": 0.7978461637002142,
+      "share_of_total_shortfall_pct": 88.32
+    },
+    "queries_without_substitutes": {
+      "queries": 10403,
+      "pct_queries": 33.59,
+      "mean_lambdamart_ndcg": 0.947171586006035,
+      "share_of_total_shortfall_pct": 11.68
+    },
+    "by_candidate_count": {
+      "<=10": {
+        "queries": 300,
+        "pct_queries": 0.97,
+        "mean_lambdamart_ndcg": 0.9094097621071402,
+        "share_of_total_shortfall_pct": 0.58
+      },
+      "11-16": {
+        "queries": 23697,
+        "pct_queries": 76.52,
+        "mean_lambdamart_ndcg": 0.8774585151436725,
+        "share_of_total_shortfall_pct": 61.69
+      },
+      "17-20": {
+        "queries": 321,
+        "pct_queries": 1.04,
+        "mean_lambdamart_ndcg": 0.8258968571619197,
+        "share_of_total_shortfall_pct": 1.19
+      },
+      "21-30": {
+        "queries": 947,
+        "pct_queries": 3.06,
+        "mean_lambdamart_ndcg": 0.8567225954421092,
+        "share_of_total_shortfall_pct": 2.88
+      },
+      "31-50": {
+        "queries": 5579,
+        "pct_queries": 18.01,
+        "mean_lambdamart_ndcg": 0.7186164832445382,
+        "share_of_total_shortfall_pct": 33.35
+      },
+      ">50": {
+        "queries": 125,
+        "pct_queries": 0.4,
+        "mean_lambdamart_ndcg": 0.8830584066696676,
+        "share_of_total_shortfall_pct": 0.31
+      }
+    },
+    "by_exact_fraction": {
+      "E<=25%": {
+        "queries": 5727,
+        "pct_queries": 18.49,
+        "mean_lambdamart_ndcg": 0.6838758238474,
+        "share_of_total_shortfall_pct": 38.46
+      },
+      "E 25-50%": {
+        "queries": 5628,
+        "pct_queries": 18.17,
+        "mean_lambdamart_ndcg": 0.7440367307568907,
+        "share_of_total_shortfall_pct": 30.6
+      },
+      "E 50-75%": {
+        "queries": 6220,
+        "pct_queries": 20.08,
+        "mean_lambdamart_ndcg": 0.8226536935394768,
+        "share_of_total_shortfall_pct": 23.43
+      },
+      "E 75-99%": {
+        "queries": 6872,
+        "pct_queries": 22.19,
+        "mean_lambdamart_ndcg": 0.948636302996217,
+        "share_of_total_shortfall_pct": 7.5
+      },
+      "E=100%": {
+        "queries": 6522,
+        "pct_queries": 21.06,
+        "mean_lambdamart_ndcg": 1.0,
+        "share_of_total_shortfall_pct": 0.0
+      }
+    },
+    "degenerate_single_label": {
+      "queries": 6523,
+      "pct_queries": 21.06,
+      "mean_lambdamart_ndcg": 1.0,
+      "share_of_total_shortfall_pct": 0.0
+    },
+    "non_degenerate": {
+      "queries": 24446,
+      "pct_queries": 78.94,
+      "mean_lambdamart_ndcg": 0.8074503072846023,
+      "share_of_total_shortfall_pct": 100.0
+    },
+    "loss_vs_bm25": {
+      "queries": 7282,
+      "mean_delta": -0.10439362617214638,
+      "mean_S_count": 7.436418566327932,
+      "all_mean_S_count": 4.951951951951952,
+      "mean_E_count": 10.691568250480637,
+      "all_mean_E_count": 12.701830863121186,
+      "mean_candidate_count": 22.159708871189235,
+      "all_mean_candidate_count": 20.601763053375958,
+      "pct_with_S": 88.63,
+      "all_pct_with_S": 66.41
+    }
+  },
+  "slices": [
+    {
+      "slice": "ALL (us locale)",
+      "definition": "all us-locale test queries with slice annotations",
+      "query_count": 22458,
+      "pct_of_us_test": 100.0,
+      "bm25_ndcg_at_10": 0.843368382827234,
+      "two_tower_ndcg_at_10": 0.8577649680984915,
+      "mlp_ndcg_at_10": 0.8726198615444621,
+      "lambdamart_ndcg_at_10": 0.8728990771574577,
+      "lambdamart_minus_bm25": 0.0295306943302237,
+      "lambdamart_minus_two_tower": 0.0151341090589664,
+      "lambdamart_minus_mlp": 0.0002792156129955,
+      "mean_candidate_count": 18.958144091192448,
+      "mean_query_length": 3.584157093240716,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Brand",
+      "definition": "pre-existing rule: brand_explicit == True (scripts/build_query_slices.py)",
+      "query_count": 4170,
+      "pct_of_us_test": 18.568,
+      "bm25_ndcg_at_10": 0.8445525234833763,
+      "two_tower_ndcg_at_10": 0.8577295068346638,
+      "mlp_ndcg_at_10": 0.8852615476772182,
+      "lambdamart_ndcg_at_10": 0.8852625237771131,
+      "lambdamart_minus_bm25": 0.0407100002937368,
+      "lambdamart_minus_two_tower": 0.0275330169424494,
+      "lambdamart_minus_mlp": 9.760998948868347e-07,
+      "mean_candidate_count": 18.99616306954437,
+      "mean_query_length": 3.5302158273381297,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Model/SKU",
+      "definition": "pre-existing rule: model_like == True (scripts/build_query_slices.py)",
+      "query_count": 865,
+      "pct_of_us_test": 3.852,
+      "bm25_ndcg_at_10": 0.7972689980274242,
+      "two_tower_ndcg_at_10": 0.7915349443123496,
+      "mlp_ndcg_at_10": 0.82993015046251,
+      "lambdamart_ndcg_at_10": 0.8296137531152876,
+      "lambdamart_minus_bm25": 0.0323447550878633,
+      "lambdamart_minus_two_tower": 0.038078808802938,
+      "lambdamart_minus_mlp": -0.0003163973472223,
+      "mean_candidate_count": 17.946820809248553,
+      "mean_query_length": 3.776878612716763,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Exact Attribute",
+      "definition": "pre-existing rule: has_exact_attribute == True (scripts/build_query_slices.py)",
+      "query_count": 2043,
+      "pct_of_us_test": 9.097,
+      "bm25_ndcg_at_10": 0.8037523724749795,
+      "two_tower_ndcg_at_10": 0.8040278887529968,
+      "mlp_ndcg_at_10": 0.8287477111095988,
+      "lambdamart_ndcg_at_10": 0.8291154554482261,
+      "lambdamart_minus_bm25": 0.0253630829732467,
+      "lambdamart_minus_two_tower": 0.0250875666952294,
+      "lambdamart_minus_mlp": 0.0003677443386274,
+      "mean_candidate_count": 19.674008810572687,
+      "mean_query_length": 4.551150269211943,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Size",
+      "definition": "pre-existing rule: has_size == True (scripts/build_query_slices.py)",
+      "query_count": 103,
+      "pct_of_us_test": 0.459,
+      "bm25_ndcg_at_10": 0.7773902809289184,
+      "two_tower_ndcg_at_10": 0.8316396537087126,
+      "mlp_ndcg_at_10": 0.8235334500679413,
+      "lambdamart_ndcg_at_10": 0.8293588880512432,
+      "lambdamart_minus_bm25": 0.0519686071223249,
+      "lambdamart_minus_two_tower": -0.0022807656574692,
+      "lambdamart_minus_mlp": 0.0058254379833018,
+      "mean_candidate_count": 17.553398058252426,
+      "mean_query_length": 4.970873786407767,
+      "low_sample_size_lt_300": true
+    },
+    {
+      "slice": "Color",
+      "definition": "pre-existing rule: has_color == True (scripts/build_query_slices.py)",
+      "query_count": 1399,
+      "pct_of_us_test": 6.229,
+      "bm25_ndcg_at_10": 0.8042750937542005,
+      "two_tower_ndcg_at_10": 0.8106411423800571,
+      "mlp_ndcg_at_10": 0.8320332439849494,
+      "lambdamart_ndcg_at_10": 0.8319138798043049,
+      "lambdamart_minus_bm25": 0.0276387860501044,
+      "lambdamart_minus_two_tower": 0.0212727374242477,
+      "lambdamart_minus_mlp": -0.0001193641806443,
+      "mean_candidate_count": 20.101501072194424,
+      "mean_query_length": 4.3481057898498925,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Capacity/Storage",
+      "definition": "pre-existing rule: has_capacity == True (scripts/build_query_slices.py)",
+      "query_count": 122,
+      "pct_of_us_test": 0.543,
+      "bm25_ndcg_at_10": 0.7949850266900799,
+      "two_tower_ndcg_at_10": 0.7245856573756936,
+      "mlp_ndcg_at_10": 0.7857273060429748,
+      "lambdamart_ndcg_at_10": 0.7849478216877396,
+      "lambdamart_minus_bm25": -0.0100372050023403,
+      "lambdamart_minus_two_tower": 0.0603621643120458,
+      "lambdamart_minus_mlp": -0.0007794843552352,
+      "mean_candidate_count": 19.172131147540984,
+      "mean_query_length": 5.065573770491803,
+      "low_sample_size_lt_300": true
+    },
+    {
+      "slice": "Quantity",
+      "definition": "pre-existing rule: has_quantity == True (scripts/build_query_slices.py)",
+      "query_count": 99,
+      "pct_of_us_test": 0.441,
+      "bm25_ndcg_at_10": 0.7783227143991057,
+      "two_tower_ndcg_at_10": 0.7674182839554494,
+      "mlp_ndcg_at_10": 0.7985833375233289,
+      "lambdamart_ndcg_at_10": 0.7992192980599611,
+      "lambdamart_minus_bm25": 0.0208965836608556,
+      "lambdamart_minus_two_tower": 0.0318010141045118,
+      "lambdamart_minus_mlp": 0.0006359605366321,
+      "mean_candidate_count": 20.181818181818183,
+      "mean_query_length": 5.838383838383838,
+      "low_sample_size_lt_300": true
+    },
+    {
+      "slice": "Dimensions",
+      "definition": "pre-existing rule: has_dimensions == True (scripts/build_query_slices.py)",
+      "query_count": 366,
+      "pct_of_us_test": 1.63,
+      "bm25_ndcg_at_10": 0.8092725947130646,
+      "two_tower_ndcg_at_10": 0.7978470056124469,
+      "mlp_ndcg_at_10": 0.8312462280820097,
+      "lambdamart_ndcg_at_10": 0.8317466002656982,
+      "lambdamart_minus_bm25": 0.0224740055526337,
+      "lambdamart_minus_two_tower": 0.0338995946532512,
+      "lambdamart_minus_mlp": 0.0005003721836886,
+      "mean_candidate_count": 18.65846994535519,
+      "mean_query_length": 4.882513661202186,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Lexical Specific (top-25% IDF)",
+      "definition": "pre-existing rule: lexical_specific == True (scripts/build_query_slices.py)",
+      "query_count": 5615,
+      "pct_of_us_test": 25.002,
+      "bm25_ndcg_at_10": 0.8504680587321791,
+      "two_tower_ndcg_at_10": 0.8601339090460244,
+      "mlp_ndcg_at_10": 0.8803160420460655,
+      "lambdamart_ndcg_at_10": 0.8805151789857305,
+      "lambdamart_minus_bm25": 0.0300471202535514,
+      "lambdamart_minus_two_tower": 0.0203812699397064,
+      "lambdamart_minus_mlp": 0.0001991369396652,
+      "mean_candidate_count": 18.050222617987533,
+      "mean_query_length": 2.5690115761353516,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Semantic Intent",
+      "definition": "pre-existing rule: semantic_intent == True (scripts/build_query_slices.py)",
+      "query_count": 6393,
+      "pct_of_us_test": 28.466,
+      "bm25_ndcg_at_10": 0.8256207038373126,
+      "two_tower_ndcg_at_10": 0.8408674736793764,
+      "mlp_ndcg_at_10": 0.8513908851949563,
+      "lambdamart_ndcg_at_10": 0.8522866992746823,
+      "lambdamart_minus_bm25": 0.0266659954373696,
+      "lambdamart_minus_two_tower": 0.0114192255953057,
+      "lambdamart_minus_mlp": 0.0008958140797257,
+      "mean_candidate_count": 19.547473799468168,
+      "mean_query_length": 4.9056780854059125,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Other",
+      "definition": "pre-existing rule: other == True (scripts/build_query_slices.py)",
+      "query_count": 5810,
+      "pct_of_us_test": 25.871,
+      "bm25_ndcg_at_10": 0.8754372144570927,
+      "two_tower_ndcg_at_10": 0.8929140909264154,
+      "mlp_ndcg_at_10": 0.9016923014007115,
+      "lambdamart_ndcg_at_10": 0.901792644803727,
+      "lambdamart_minus_bm25": 0.0263554303466343,
+      "lambdamart_minus_two_tower": 0.0088785538773118,
+      "lambdamart_minus_mlp": 0.0001003434030154,
+      "mean_candidate_count": 18.853528399311532,
+      "mean_query_length": 2.580895008605852,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Short query (1-2 tokens)",
+      "definition": "query_length <= 2",
+      "query_count": 5878,
+      "pct_of_us_test": 26.173,
+      "bm25_ndcg_at_10": 0.8769919631467037,
+      "two_tower_ndcg_at_10": 0.8958581504920908,
+      "mlp_ndcg_at_10": 0.9075927685505978,
+      "lambdamart_ndcg_at_10": 0.9076050841835364,
+      "lambdamart_minus_bm25": 0.0306131210368328,
+      "lambdamart_minus_two_tower": 0.0117469336914457,
+      "lambdamart_minus_mlp": 1.2315632938895553e-05,
+      "mean_candidate_count": 18.673018033344675,
+      "mean_query_length": 1.815583531813542,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Medium query (3-4 tokens)",
+      "definition": "3 <= query_length <= 4",
+      "query_count": 11299,
+      "pct_of_us_test": 50.312,
+      "bm25_ndcg_at_10": 0.8434554466730484,
+      "two_tower_ndcg_at_10": 0.85647374118523,
+      "mlp_ndcg_at_10": 0.8719509824498254,
+      "lambdamart_ndcg_at_10": 0.8723217787920647,
+      "lambdamart_minus_bm25": 0.0288663321190163,
+      "lambdamart_minus_two_tower": 0.0158480376068347,
+      "lambdamart_minus_mlp": 0.0003707963422393,
+      "mean_candidate_count": 18.611204531374455,
+      "mean_query_length": 3.447473227719267,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Long query (>=5 tokens)",
+      "definition": "query_length >= 5",
+      "query_count": 5281,
+      "pct_of_us_test": 23.515,
+      "bm25_ndcg_at_10": 0.8057574872559975,
+      "two_tower_ndcg_at_10": 0.8181281278756852,
+      "mlp_ndcg_at_10": 0.8351244851968455,
+      "lambdamart_ndcg_at_10": 0.8355048307895886,
+      "lambdamart_minus_bm25": 0.0297473435335911,
+      "lambdamart_minus_two_tower": 0.0173767029139033,
+      "lambdamart_minus_mlp": 0.0003803455927431,
+      "mean_candidate_count": 20.017799659155465,
+      "mean_query_length": 5.845105093732248,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Numeric-heavy query",
+      "definition": "query contains at least one digit",
+      "query_count": 3573,
+      "pct_of_us_test": 15.91,
+      "bm25_ndcg_at_10": 0.7752580448029952,
+      "two_tower_ndcg_at_10": 0.7677579589999289,
+      "mlp_ndcg_at_10": 0.8028884963525912,
+      "lambdamart_ndcg_at_10": 0.8025615365129283,
+      "lambdamart_minus_bm25": 0.0273034917099331,
+      "lambdamart_minus_two_tower": 0.0348035775129994,
+      "lambdamart_minus_mlp": -0.0003269598396626,
+      "mean_candidate_count": 18.98852504897845,
+      "mean_query_length": 4.494822278197593,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Non-degenerate (has >1 distinct label)",
+      "definition": "excludes all-E queries where NDCG@10 == 1.0 for any ranking",
+      "query_count": 17132,
+      "pct_of_us_test": 76.285,
+      "bm25_ndcg_at_10": 0.7946747105728474,
+      "two_tower_ndcg_at_10": 0.8135469095001119,
+      "mlp_ndcg_at_10": 0.833019895550171,
+      "lambdamart_ndcg_at_10": 0.8333859137755186,
+      "lambdamart_minus_bm25": 0.0387112032026712,
+      "lambdamart_minus_two_tower": 0.0198390042754067,
+      "lambdamart_minus_mlp": 0.0003660182253475,
+      "mean_candidate_count": 19.620301190754144,
+      "mean_query_length": 3.6901120709782864,
+      "low_sample_size_lt_300": false
+    },
+    {
+      "slice": "Small candidate set (<10)",
+      "definition": "candidate_count < 10",
+      "query_count": 128,
+      "pct_of_us_test": 0.57,
+      "bm25_ndcg_at_10": 0.9280953314853186,
+      "two_tower_ndcg_at_10": 0.9264252580053968,
+      "mlp_ndcg_at_10": 0.937073204584189,
+      "lambdamart_ndcg_at_10": 0.9349920176919948,
+      "lambdamart_minus_bm25": 0.0068966862066761,
+      "lambdamart_minus_two_tower": 0.0085667596865982,
+      "lambdamart_minus_mlp": -0.0020811868921941,
+      "mean_candidate_count": 8.46875,
+      "mean_query_length": 3.7265625,
+      "low_sample_size_lt_300": true
+    },
+    {
+      "slice": "Large candidate set (>=40)",
+      "definition": "candidate_count >= 40",
+      "query_count": 2092,
+      "pct_of_us_test": 9.315,
+      "bm25_ndcg_at_10": 0.7326998279049349,
+      "two_tower_ndcg_at_10": 0.7513223451164842,
+      "mlp_ndcg_at_10": 0.7723489018768339,
+      "lambdamart_ndcg_at_10": 0.7743032733085277,
+      "lambdamart_minus_bm25": 0.0416034454035926,
+      "lambdamart_minus_two_tower": 0.0229809281920435,
+      "lambdamart_minus_mlp": 0.0019543714316937,
+      "mean_candidate_count": 41.55497131931166,
+      "mean_query_length": 4.159177820267686,
+      "low_sample_size_lt_300": false
+    }
+  ],
+  "bootstrap": {
+    "official": [
+      {
+        "comparison": "lambdamart - bm25",
+        "n_queries": 30969,
+        "lambdamart_mean_ndcg10": 0.8464228320953767,
+        "bm25_mean_ndcg10": 0.8155163705764451,
+        "mean_paired_delta": 0.03090646151893159,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 0.029282042239767422,
+        "ci_95_high": 0.03245583839571582,
+        "p_value_two_sided": 0.0,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 12249,
+        "loss": 7248,
+        "tie": 11472,
+        "win_pct": 39.552,
+        "loss_pct": 23.404,
+        "tie_pct": 37.043,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      },
+      {
+        "comparison": "lambdamart - mlp",
+        "n_queries": 30969,
+        "lambdamart_mean_ndcg10": 0.8464228320953767,
+        "mlp_mean_ndcg10": 0.8457793074574832,
+        "mean_paired_delta": 0.0006435246378934137,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 8.023426810764967e-05,
+        "ci_95_high": 0.0012097661602872326,
+        "p_value_two_sided": 0.0236,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 7166,
+        "loss": 6777,
+        "tie": 17026,
+        "win_pct": 23.139,
+        "loss_pct": 21.883,
+        "tie_pct": 54.978,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      },
+      {
+        "comparison": "lambdamart - two_tower",
+        "n_queries": 30969,
+        "lambdamart_mean_ndcg10": 0.8464228320953767,
+        "two_tower_mean_ndcg10": 0.8246527802290216,
+        "mean_paired_delta": 0.021770051866355118,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 0.02051222627708066,
+        "ci_95_high": 0.02300073342949839,
+        "p_value_two_sided": 0.0,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 11209,
+        "loss": 6962,
+        "tie": 12798,
+        "win_pct": 36.194,
+        "loss_pct": 22.481,
+        "tie_pct": 41.325,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      },
+      {
+        "comparison": "mlp - bm25",
+        "n_queries": 30969,
+        "mlp_mean_ndcg10": 0.8457793074574832,
+        "bm25_mean_ndcg10": 0.8155163705764451,
+        "mean_paired_delta": 0.03026293688103818,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 0.028654136102000877,
+        "ci_95_high": 0.03179894841655609,
+        "p_value_two_sided": 0.0,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 12157,
+        "loss": 7331,
+        "tie": 11481,
+        "win_pct": 39.255,
+        "loss_pct": 23.672,
+        "tie_pct": 37.073,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      },
+      {
+        "comparison": "mlp - two_tower",
+        "n_queries": 30969,
+        "mlp_mean_ndcg10": 0.8457793074574832,
+        "two_tower_mean_ndcg10": 0.8246527802290216,
+        "mean_paired_delta": 0.021126527228461704,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 0.019868751592092972,
+        "ci_95_high": 0.02232943464005783,
+        "p_value_two_sided": 0.0,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 11111,
+        "loss": 7103,
+        "tie": 12755,
+        "win_pct": 35.878,
+        "loss_pct": 22.936,
+        "tie_pct": 41.186,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      },
+      {
+        "comparison": "two_tower - bm25",
+        "n_queries": 30969,
+        "two_tower_mean_ndcg10": 0.8246527802290216,
+        "bm25_mean_ndcg10": 0.8155163705764451,
+        "mean_paired_delta": 0.009136409652576474,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 0.007131286437597712,
+        "ci_95_high": 0.011106809829809683,
+        "p_value_two_sided": 0.0,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 10987,
+        "loss": 9614,
+        "tie": 10368,
+        "win_pct": 35.477,
+        "loss_pct": 31.044,
+        "tie_pct": 33.479,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      }
+    ],
+    "clean": [
+      {
+        "comparison": "lambdamart - bm25",
+        "n_queries": 30969,
+        "lambdamart_mean_ndcg10": 0.8480070461390226,
+        "bm25_mean_ndcg10": 0.8180508835997244,
+        "mean_paired_delta": 0.029956162539298115,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 0.028425720068816565,
+        "ci_95_high": 0.03147194432870396,
+        "p_value_two_sided": 0.0,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 12361,
+        "loss": 7282,
+        "tie": 11326,
+        "win_pct": 39.914,
+        "loss_pct": 23.514,
+        "tie_pct": 36.572,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      },
+      {
+        "comparison": "lambdamart - mlp",
+        "n_queries": 30969,
+        "lambdamart_mean_ndcg10": 0.8480070461390226,
+        "mlp_mean_ndcg10": 0.8475808249634852,
+        "mean_paired_delta": 0.0004262211755373499,
+        "median_paired_delta": 0.0,
+        "ci_95_low": -0.00012057579438407491,
+        "ci_95_high": 0.0009824583417078405,
+        "p_value_two_sided": 0.1264,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 7198,
+        "loss": 6855,
+        "tie": 16916,
+        "win_pct": 23.243,
+        "loss_pct": 22.135,
+        "tie_pct": 54.622,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      },
+      {
+        "comparison": "lambdamart - two_tower",
+        "n_queries": 30969,
+        "lambdamart_mean_ndcg10": 0.8480070461390226,
+        "two_tower_mean_ndcg10": 0.8267235311985397,
+        "mean_paired_delta": 0.021283514940482952,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 0.020084227947623386,
+        "ci_95_high": 0.022483816266006842,
+        "p_value_two_sided": 0.0,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 11321,
+        "loss": 7047,
+        "tie": 12601,
+        "win_pct": 36.556,
+        "loss_pct": 22.755,
+        "tie_pct": 40.689,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      },
+      {
+        "comparison": "mlp - bm25",
+        "n_queries": 30969,
+        "mlp_mean_ndcg10": 0.8475808249634852,
+        "bm25_mean_ndcg10": 0.8180508835997244,
+        "mean_paired_delta": 0.02952994136376076,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 0.027987374617192633,
+        "ci_95_high": 0.031030941437326376,
+        "p_value_two_sided": 0.0,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 12311,
+        "loss": 7354,
+        "tie": 11304,
+        "win_pct": 39.753,
+        "loss_pct": 23.746,
+        "tie_pct": 36.501,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      },
+      {
+        "comparison": "mlp - two_tower",
+        "n_queries": 30969,
+        "mlp_mean_ndcg10": 0.8475808249634852,
+        "two_tower_mean_ndcg10": 0.8267235311985397,
+        "mean_paired_delta": 0.020857293764945602,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 0.01965987887457193,
+        "ci_95_high": 0.02203115438483229,
+        "p_value_two_sided": 0.0,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 11265,
+        "loss": 7145,
+        "tie": 12559,
+        "win_pct": 36.375,
+        "loss_pct": 23.071,
+        "tie_pct": 40.553,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      },
+      {
+        "comparison": "two_tower - bm25",
+        "n_queries": 30969,
+        "two_tower_mean_ndcg10": 0.8267235311985397,
+        "bm25_mean_ndcg10": 0.8180508835997244,
+        "mean_paired_delta": 0.00867264759881516,
+        "median_paired_delta": 0.0,
+        "ci_95_low": 0.0067584319080946365,
+        "ci_95_high": 0.010590791364514573,
+        "p_value_two_sided": 0.0,
+        "p_value_note": "percentile bootstrap; resolution floor is 1/10000 = 0.0001",
+        "win": 11054,
+        "loss": 9731,
+        "tie": 10184,
+        "win_pct": 35.694,
+        "loss_pct": 31.422,
+        "tie_pct": 32.884,
+        "n_bootstrap": 10000,
+        "bootstrap_seed": 42
+      }
+    ]
+  },
+  "deliverable_status": {
+    "REPORT.md": "generated",
+    "repository_inventory.md": "generated",
+    "audit_summary.json": "generated",
+    "split_integrity.json": "generated",
+    "label_distribution.csv": "generated",
+    "candidate_distribution.csv": "generated",
+    "semantic_score_distribution.csv": "generated",
+    "feature_audit.csv": "generated",
+    "feature_correlation.csv": "generated",
+    "feature_importance.csv": "generated",
+    "model_comparison.csv": "generated",
+    "query_slice_results.csv": "generated (us-locale only -- the pre-existing slice rules in scripts/build_query_slices.py are English-token rules and are only defined for product_locale=='us')",
+    "worst_queries.csv": "generated",
+    "largest_losses_vs_bm25.csv": "generated",
+    "largest_gains_vs_bm25.csv": "generated",
+    "bootstrap_results.json": "generated"
+  }
+}

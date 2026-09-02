@@ -1,0 +1,15 @@
+{
+  "ndcg10_17feature": 0.8464228320953767,
+  "ndcg10_12feature": 0.8447242537282719,
+  "absolute_delta": -0.0016985783671048527,
+  "best_iteration_17feature": 250,
+  "best_iteration_12feature": 230,
+  "training_runtime_sec_12feature": 5.514905214309692,
+  "excluded_features": [
+    "log_price",
+    "is_price_missing",
+    "stars_clean",
+    "log_review_count",
+    "is_rating_missing"
+  ]
+}

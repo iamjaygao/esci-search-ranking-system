@@ -1,0 +1,86 @@
+{
+  "pool_info": {
+    "POOL_OFFICIAL_rows": 682233,
+    "POOL_OFFICIAL_queries": 30969,
+    "POOL_CLEAN_rows": 638016,
+    "POOL_CLEAN_queries": 30969,
+    "judged_pairs_in_esci_test": 638016,
+    "clean_pool_equals_judged_pairs": true,
+    "clean_pool_construction": "rows of the official pool whose products-table locale matches the ESCI judgment locale, de-duplicated on (query_id, product_id). Model scores are the ones the saved checkpoints actually produced -- no re-scoring."
+  },
+  "F1_top10_agreement": {
+    "n_queries": 30969,
+    "mean_top10_jaccard_lambdamart_vs_mlp": 0.8894817804790397,
+    "median_top10_jaccard_lambdamart_vs_mlp": 1.0,
+    "pct_queries_identical_top10_set": 50.292,
+    "pct_queries_identical_top10_ordering": 3.074,
+    "mean_top10_jaccard_lambdamart_vs_bm25": 0.6194153365219868,
+    "note": "Jaccard computed over top-10 product_id sets on POOL_CLEAN."
+  },
+  "headline": [
+    {
+      "pool": "official",
+      "model": "bm25",
+      "n_queries": 30969,
+      "ndcg_at_10": 0.8155163705764451,
+      "ndcg_at_10_median": 0.9162090969442952,
+      "ndcg_at_10_std": 0.22886657262963128
+    },
+    {
+      "pool": "official",
+      "model": "two_tower",
+      "n_queries": 30969,
+      "ndcg_at_10": 0.8246527802290216,
+      "ndcg_at_10_median": 0.9271463643331593,
+      "ndcg_at_10_std": 0.2234100498625745
+    },
+    {
+      "pool": "official",
+      "model": "mlp",
+      "n_queries": 30969,
+      "ndcg_at_10": 0.8457793074574832,
+      "ndcg_at_10_median": 0.9355520972697512,
+      "ndcg_at_10_std": 0.21008159733574094
+    },
+    {
+      "pool": "official",
+      "model": "lambdamart",
+      "n_queries": 30969,
+      "ndcg_at_10": 0.8464228320953767,
+      "ndcg_at_10_median": 0.9363513402843399,
+      "ndcg_at_10_std": 0.21021499200378516
+    },
+    {
+      "pool": "clean",
+      "model": "bm25",
+      "n_queries": 30969,
+      "ndcg_at_10": 0.8180508835997244,
+      "ndcg_at_10_median": 0.9148568823583791,
+      "ndcg_at_10_std": 0.22313170687685227
+    },
+    {
+      "pool": "clean",
+      "model": "two_tower",
+      "n_queries": 30969,
+      "ndcg_at_10": 0.8267235311985397,
+      "ndcg_at_10_median": 0.9266267958108394,
+      "ndcg_at_10_std": 0.2182556983863838
+    },
+    {
+      "pool": "clean",
+      "model": "mlp",
+      "n_queries": 30969,
+      "ndcg_at_10": 0.8475808249634852,
+      "ndcg_at_10_median": 0.9355520972697512,
+      "ndcg_at_10_std": 0.20597004237476366
+    },
+    {
+      "pool": "clean",
+      "model": "lambdamart",
+      "n_queries": 30969,
+      "ndcg_at_10": 0.8480070461390226,
+      "ndcg_at_10_median": 0.9355520972697512,
+      "ndcg_at_10_std": 0.20642856913534305
+    }
+  ]
+}

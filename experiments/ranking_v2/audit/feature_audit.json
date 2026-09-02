@@ -1,0 +1,239 @@
+{
+  "E3_importance_concentration": {
+    "total_gain": 713474.65893507,
+    "top1_features": [
+      "semantic_score"
+    ],
+    "top1_gain_pct": 54.994386126536256,
+    "top3_features": [
+      "semantic_score",
+      "bm25_score",
+      "word_overlap"
+    ],
+    "top3_gain_pct": 89.00913447009013,
+    "top5_features": [
+      "semantic_score",
+      "bm25_score",
+      "word_overlap",
+      "is_dominant_category",
+      "query_mean_idf"
+    ],
+    "top5_gain_pct": 94.43920855041827,
+    "semantic_plus_bm25_plus_word_overlap_gain_pct": 89.00913447009013,
+    "features_with_zero_gain": [
+      "log_review_count",
+      "is_over_budget"
+    ],
+    "features_with_lt_0p1pct_gain": [
+      "color_match",
+      "user_budget",
+      "cheap_intent",
+      "log_review_count",
+      "is_over_budget"
+    ],
+    "n_trees": 250
+  },
+  "E1_flags": {
+    "query_mean_idf": "train/test mean shift = 0.145 SD",
+    "query_max_idf": "train/test mean shift = 0.231 SD",
+    "user_budget": "NEAR-CONSTANT (modal value -1 on 99.92% of rows)",
+    "cheap_intent": "NEAR-CONSTANT (modal value 0 on 99.87% of rows); zero on 99.87% of train rows",
+    "log_review_count": "CONSTANT; NEAR-CONSTANT (modal value 0 on 100.00% of rows); zero on 100.00% of train rows; ZERO GAIN in the official LambdaMART model (never used for a split)",
+    "semantic_score": "negative sentinel present (semantic_score missing -> -1.0 fill)",
+    "color_match": "highly imbalanced (modal value 0 on 98.15% of rows); zero on 98.15% of train rows",
+    "is_over_budget": "NEAR-CONSTANT (modal value 0 on 99.95% of rows); zero on 99.95% of train rows; ZERO GAIN in the official LambdaMART model (never used for a split)"
+  },
+  "E2_redundancy": {
+    "pairs_abs_corr_ge_0.90": [],
+    "pairs_abs_corr_ge_0.70": [
+      {
+        "feature_a": "query_mean_idf",
+        "feature_b": "query_max_idf",
+        "pearson_train": 0.7504851424148468
+      }
+    ],
+    "top_10_by_abs_corr": [
+      {
+        "feature_a": "query_mean_idf",
+        "feature_b": "query_max_idf",
+        "pearson_train": 0.7504851424148468,
+        "pearson_test": 0.6338770291325512
+      },
+      {
+        "feature_a": "bm25_score",
+        "feature_b": "word_overlap",
+        "pearson_train": 0.5720426224472172,
+        "pearson_test": 0.5731555748740282
+      },
+      {
+        "feature_a": "query_length",
+        "feature_b": "query_mean_idf",
+        "pearson_train": -0.5221341585906684,
+        "pearson_test": -0.4747401970923296
+      },
+      {
+        "feature_a": "log_price",
+        "feature_b": "stars_clean",
+        "pearson_train": -0.41700461319880494,
+        "pearson_test": -0.40417253904687933
+      },
+      {
+        "feature_a": "bm25_score",
+        "feature_b": "semantic_score",
+        "pearson_train": 0.3668929589713168,
+        "pearson_test": 0.3688582017360564
+      },
+      {
+        "feature_a": "user_budget",
+        "feature_b": "is_over_budget",
+        "pearson_train": 0.3408988027462771,
+        "pearson_test": 0.35209666600542955
+      },
+      {
+        "feature_a": "query_mean_idf",
+        "feature_b": "log_price",
+        "pearson_train": 0.3090441938030536,
+        "pearson_test": 0.29623537417275014
+      },
+      {
+        "feature_a": "semantic_score",
+        "feature_b": "word_overlap",
+        "pearson_train": 0.30594333234483045,
+        "pearson_test": 0.30084020808755735
+      },
+      {
+        "feature_a": "query_mean_idf",
+        "feature_b": "word_overlap",
+        "pearson_train": -0.2795005890661672,
+        "pearson_test": -0.22116858025044536
+      },
+      {
+        "feature_a": "query_max_idf",
+        "feature_b": "word_overlap",
+        "pearson_train": -0.27099131315717123,
+        "pearson_test": -0.14553706571121727
+      }
+    ]
+  },
+  "E_label_correlation_ranked": [
+    {
+      "feature": "word_overlap",
+      "feature_group": "lexical",
+      "pearson_with_ordinal_label": 0.2929807999547709,
+      "spearman_with_ordinal_label": 0.3071340472651275,
+      "gain_pct": 11.2799780745817
+    },
+    {
+      "feature": "bm25_score",
+      "feature_group": "lexical",
+      "pearson_with_ordinal_label": 0.24338750948541804,
+      "spearman_with_ordinal_label": 0.274190263877181,
+      "gain_pct": 22.734770268972174
+    },
+    {
+      "feature": "semantic_score",
+      "feature_group": "semantic",
+      "pearson_with_ordinal_label": 0.2284823150421925,
+      "spearman_with_ordinal_label": 0.2379585772153245,
+      "gain_pct": 54.994386126536256
+    },
+    {
+      "feature": "is_dominant_category",
+      "feature_group": "interaction",
+      "pearson_with_ordinal_label": 0.16468133926687753,
+      "spearman_with_ordinal_label": 0.13617305986194994,
+      "gain_pct": 3.5600750427336156
+    },
+    {
+      "feature": "query_max_idf",
+      "feature_group": "query",
+      "pearson_with_ordinal_label": -0.09207115444194701,
+      "spearman_with_ordinal_label": -0.10584697319496189,
+      "gain_pct": 0.32932250264914736
+    },
+    {
+      "feature": "query_mean_idf",
+      "feature_group": "query",
+      "pearson_with_ordinal_label": -0.06670993255009064,
+      "spearman_with_ordinal_label": -0.08233562536583489,
+      "gain_pct": 1.8699990375945204
+    },
+    {
+      "feature": "log_price",
+      "feature_group": "popularity/business",
+      "pearson_with_ordinal_label": -0.04339540922465313,
+      "spearman_with_ordinal_label": -0.06381408583520683,
+      "gain_pct": 1.5442425033800407
+    },
+    {
+      "feature": "brand_match",
+      "feature_group": "interaction",
+      "pearson_with_ordinal_label": 0.06352316920101718,
+      "spearman_with_ordinal_label": 0.06257561385183302,
+      "gain_pct": 1.7160767910920116
+    },
+    {
+      "feature": "query_length",
+      "feature_group": "query",
+      "pearson_with_ordinal_label": -0.05918344599927672,
+      "spearman_with_ordinal_label": -0.05592489002938723,
+      "gain_pct": 0.6367457428306958
+    },
+    {
+      "feature": "stars_clean",
+      "feature_group": "popularity/business",
+      "pearson_with_ordinal_label": 0.01633690209689143,
+      "spearman_with_ordinal_label": 0.03490730205053587,
+      "gain_pct": 0.8822055191699352
+    },
+    {
+      "feature": "color_match",
+      "feature_group": "interaction",
+      "pearson_with_ordinal_label": 0.03156302736464065,
+      "spearman_with_ordinal_label": 0.029726959449645728,
+      "gain_pct": 0.045157021031089574
+    },
+    {
+      "feature": "is_rating_missing",
+      "feature_group": "product",
+      "pearson_with_ordinal_label": -0.04348890805367161,
+      "spearman_with_ordinal_label": -0.024990438360324434,
+      "gain_pct": 0.2897171760313376
+    },
+    {
+      "feature": "is_price_missing",
+      "feature_group": "product",
+      "pearson_with_ordinal_label": -0.010455184394202788,
+      "spearman_with_ordinal_label": -0.010427932451377511,
+      "gain_pct": 0.11145340889234125
+    },
+    {
+      "feature": "cheap_intent",
+      "feature_group": "query",
+      "pearson_with_ordinal_label": 0.0014643757128025338,
+      "spearman_with_ordinal_label": 0.004558761408797582,
+      "gain_pct": 0.0013127249866357394
+    },
+    {
+      "feature": "user_budget",
+      "feature_group": "query",
+      "pearson_with_ordinal_label": 0.004126182497828204,
+      "spearman_with_ordinal_label": 0.0017068752717590474,
+      "gain_pct": 0.004558059518496858
+    },
+    {
+      "feature": "is_over_budget",
+      "feature_group": "interaction",
+      "pearson_with_ordinal_label": -0.000601614861225077,
+      "spearman_with_ordinal_label": 0.0010251052044295363,
+      "gain_pct": 0.0
+    },
+    {
+      "feature": "log_review_count",
+      "feature_group": "popularity/business",
+      "pearson_with_ordinal_label": NaN,
+      "spearman_with_ordinal_label": NaN,
+      "gain_pct": 0.0
+    }
+  ]
+}

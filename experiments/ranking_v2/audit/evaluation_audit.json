@@ -1,0 +1,158 @@
+{
+  "C0_candidate_pool_integrity": {
+    "official_test_pool_rows": 682233,
+    "unique_query_product_pairs_in_pool": 638016,
+    "true_judged_query_product_pairs_in_esci_test": 638016,
+    "duplicated_rows": 44217,
+    "duplication_rate_pct": 6.9304,
+    "max_copies_of_a_single_pair": 9,
+    "pairs_appearing_more_than_once": 12982,
+    "queries_containing_at_least_one_duplicated_pair": 6556,
+    "cause_1_products_table_joined_on_product_id_only": {
+      "product_ids_present_in_multiple_locales": 11567,
+      "code_ref": "evaluation/evaluate_advanced.py:62  pd.merge(df, df_pr, on='product_id')"
+    },
+    "cause_2_esci_s_table_joined_on_product_id_only": {
+      "esci_s_rows": 1661908,
+      "esci_s_unique_ids": 1650599,
+      "esci_s_duplicate_id_rows": 11309,
+      "code_ref": "evaluation/evaluate_advanced.py:42  pd.merge(df_pr, df_esci_s[...], on='product_id')"
+    },
+    "effect_on_ndcg": "A duplicated (query, product) row is counted twice in both the ranked list and the ideal list, so NDCG@10 is computed over a candidate set that does not match the ESCI judgment set. Affected queries get a distorted (usually inflated, because duplicated relevant items fill adjacent top-10 slots) score."
+  },
+  "C_protocol_answers": {
+    "C1_grouped_by_query": "YES. evaluation/metrics.ndcg_at_k iterates df.groupby('query_id'), computes NDCG@10 per query and returns the unweighted arithmetic mean.",
+    "C2_relevance_gain": "The eval gain is 2**relevance - 1 with relevance = {E:1.0, S:0.1, C:0.01, I:0.0} -> effective gains [E=1.0, S=0.07177, C=0.00696, I=0.0]. This is NOT the ESCI standard [7,3,1,0], and NOT the [0,1,3,7] label_gain LambdaMART is trained on.",
+    "C3_fewer_than_10_candidates": {
+      "handling": "dcg() slices [:k]; shorter lists just use every candidate. Both DCG and IDCG use the same short list, so NDCG is well-defined and is frequently exactly 1.0.",
+      "test_queries_with_lt_10_candidates": 162,
+      "pct": 0.523
+    },
+    "C4_ties": {
+      "handling": "pandas sort_values(ascending=False) is a stable mergesort-free quicksort by default ('quicksort'); tied scores are therefore broken by an UNSPECIFIED order that depends on row order in the frame, not by label. No explicit tie-breaking rule and no expected-NDCG-over-ties correction.",
+      "per_scorer": {
+        "bm25_raw": {
+          "rows_total": 682233,
+          "rows_sharing_their_score_with_another_row_in_the_same_query": 233404,
+          "pct_rows_tied": 34.212,
+          "queries_where_all_scores_distinct": 9868,
+          "mean_distinct_scores_per_query": 15.754173528367076,
+          "mean_candidates_per_query": 22.029545674706966
+        },
+        "tt_raw": {
+          "rows_total": 682233,
+          "rows_sharing_their_score_with_another_row_in_the_same_query": 61533,
+          "pct_rows_tied": 9.019,
+          "queries_where_all_scores_distinct": 23346,
+          "mean_distinct_scores_per_query": 20.517808130711355,
+          "mean_candidates_per_query": 22.029545674706966
+        },
+        "lambdamart_score": {
+          "rows_total": 682233,
+          "rows_sharing_their_score_with_another_row_in_the_same_query": 50008,
+          "pct_rows_tied": 7.33,
+          "queries_where_all_scores_distinct": 22698,
+          "mean_distinct_scores_per_query": 21.13817042849301,
+          "mean_candidates_per_query": 22.029545674706966
+        },
+        "mlp_score": {
+          "rows_total": 682233,
+          "rows_sharing_their_score_with_another_row_in_the_same_query": 32757,
+          "pct_rows_tied": 4.801,
+          "queries_where_all_scores_distinct": 26471,
+          "mean_distinct_scores_per_query": 21.45109625754787,
+          "mean_candidates_per_query": 22.029545674706966
+        }
+      }
+    },
+    "C5_equal_query_weight": "YES -- np.mean over per-query NDCG, so every query counts equally.",
+    "C6_queries_filtered_out": {
+      "rule": "ndcg_at_k skips any query whose IDCG@10 == 0 (i.e. every candidate is I / relevance 0). Those queries are dropped from the mean entirely.",
+      "test_queries_in_pool": 30969,
+      "test_queries_with_idcg_zero_dropped": 0,
+      "test_queries_scored": 30969
+    },
+    "C7_same_query_set": {
+      "verdict": "YES on this recomputation",
+      "n_queries": {
+        "bm25": 30969,
+        "two_tower": 30969,
+        "mlp_17feature": 30969,
+        "lambdamart_17feature": 30969
+      },
+      "caveat": "In this audit all four scorers were evaluated on one shared frame, so they are trivially aligned. The REPO's own scripts are NOT aligned: evaluate_lambdamart.py / evaluate_advanced.py use the inflated extract_test_advanced_features pool (682,233 rows), while scripts/build_query_slices.py scores BM25/Two-Tower on the clean bm25_scores_test.csv x ESCI-labels pool (638,016 rows) and additionally filters to product_locale=='us'."
+    },
+    "C8_same_candidate_set": {
+      "verdict": "YES on this recomputation",
+      "n_queries": {
+        "bm25": 30969,
+        "two_tower": 30969,
+        "mlp_17feature": 30969,
+        "lambdamart_17feature": 30969
+      },
+      "caveat": "In this audit all four scorers were evaluated on one shared frame, so they are trivially aligned. The REPO's own scripts are NOT aligned: evaluate_lambdamart.py / evaluate_advanced.py use the inflated extract_test_advanced_features pool (682,233 rows), while scripts/build_query_slices.py scores BM25/Two-Tower on the clean bm25_scores_test.csv x ESCI-labels pool (638,016 rows) and additionally filters to product_locale=='us'."
+    }
+  },
+  "C_degenerate_queries": {
+    "definition": "every candidate carries the same relevance value -> NDCG@10 == 1.0 for any ranking",
+    "count": 6523,
+    "pct_of_scored_queries": 21.063,
+    "impact": "These queries contribute a constant 1.0 to every model's mean NDCG@10 and carry zero discriminative signal, compressing all reported model gaps."
+  },
+  "C_nondegenerate_subset": [
+    {
+      "gain_convention": "official_repo_fractional_2^r-1",
+      "subset": "non_degenerate_queries_only",
+      "model": "bm25",
+      "n_queries_scored": 24446,
+      "ndcg_at_10": 0.7662900466490193
+    },
+    {
+      "gain_convention": "official_repo_fractional_2^r-1",
+      "subset": "non_degenerate_queries_only",
+      "model": "two_tower",
+      "n_queries_scored": 24446,
+      "ndcg_at_10": 0.7778643520785637
+    },
+    {
+      "gain_convention": "official_repo_fractional_2^r-1",
+      "subset": "non_degenerate_queries_only",
+      "model": "mlp_17feature",
+      "n_queries_scored": 24446,
+      "ndcg_at_10": 0.8046281343635278
+    },
+    {
+      "gain_convention": "official_repo_fractional_2^r-1",
+      "subset": "non_degenerate_queries_only",
+      "model": "lambdamart_17feature",
+      "n_queries_scored": 24446,
+      "ndcg_at_10": 0.8054433726238125
+    }
+  ],
+  "C_bm25_baseline_reconciliation": {
+    "0.8188_all_locale_clean_pool": {
+      "value": 0.8188130279308162,
+      "n_queries": 30969,
+      "rows": 638016,
+      "definition": "bm25_scores_test.csv INNER JOIN ESCI test labels, no products-table join",
+      "matches_recorded_0.8188": "True"
+    },
+    "0.8155_inflated_pool_used_by_lambdamart_eval": {
+      "value": 0.8155163705764451,
+      "n_queries": 30969,
+      "rows": 682233,
+      "definition": "extract_test_advanced_features pool (duplicated rows from the two locale-unaware joins)"
+    },
+    "us_locale_only_clean_pool": {
+      "value": 0.8433611370662614,
+      "n_queries": 22458,
+      "matches_recorded_0.8434": "True"
+    },
+    "two_tower_all_locale_clean_pool": {
+      "value": 0.8267167793233932,
+      "n_queries": 30969,
+      "matches_recorded_0.8267": "True"
+    },
+    "root_cause": "The gap is entirely candidate-pool construction, not the metric. The 0.8188 number is on the clean judged pool; 0.8155 is on the duplicate-inflated pool that the LambdaMART/MLP evaluation uses. All headline model numbers (0.8458 MLP, 0.8464 LambdaMART) live on the inflated pool, so the commonly quoted 'LambdaMART 0.8464 vs BM25 0.8188' comparison mixes two pools."
+  }
+}

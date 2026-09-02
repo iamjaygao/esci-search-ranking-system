@@ -1,0 +1,130 @@
+{
+  "n_queries": 30969,
+  "total_shortfall_from_perfect": 4707.0697881206115,
+  "by_locale": {
+    "us": {
+      "queries": 22458,
+      "pct_queries": 72.52,
+      "mean_lambdamart_ndcg": 0.8728990771574577,
+      "share_of_total_shortfall_pct": 60.64
+    },
+    "es": {
+      "queries": 3844,
+      "pct_queries": 12.41,
+      "mean_lambdamart_ndcg": 0.8013177201170529,
+      "share_of_total_shortfall_pct": 16.23
+    },
+    "jp": {
+      "queries": 4667,
+      "pct_queries": 15.07,
+      "mean_lambdamart_ndcg": 0.7666803987459294,
+      "share_of_total_shortfall_pct": 23.13
+    }
+  },
+  "queries_with_substitutes": {
+    "queries": 20566,
+    "pct_queries": 66.41,
+    "mean_lambdamart_ndcg": 0.7978461637002142,
+    "share_of_total_shortfall_pct": 88.32
+  },
+  "queries_without_substitutes": {
+    "queries": 10403,
+    "pct_queries": 33.59,
+    "mean_lambdamart_ndcg": 0.947171586006035,
+    "share_of_total_shortfall_pct": 11.68
+  },
+  "by_candidate_count": {
+    "<=10": {
+      "queries": 300,
+      "pct_queries": 0.97,
+      "mean_lambdamart_ndcg": 0.9094097621071402,
+      "share_of_total_shortfall_pct": 0.58
+    },
+    "11-16": {
+      "queries": 23697,
+      "pct_queries": 76.52,
+      "mean_lambdamart_ndcg": 0.8774585151436725,
+      "share_of_total_shortfall_pct": 61.69
+    },
+    "17-20": {
+      "queries": 321,
+      "pct_queries": 1.04,
+      "mean_lambdamart_ndcg": 0.8258968571619197,
+      "share_of_total_shortfall_pct": 1.19
+    },
+    "21-30": {
+      "queries": 947,
+      "pct_queries": 3.06,
+      "mean_lambdamart_ndcg": 0.8567225954421092,
+      "share_of_total_shortfall_pct": 2.88
+    },
+    "31-50": {
+      "queries": 5579,
+      "pct_queries": 18.01,
+      "mean_lambdamart_ndcg": 0.7186164832445382,
+      "share_of_total_shortfall_pct": 33.35
+    },
+    ">50": {
+      "queries": 125,
+      "pct_queries": 0.4,
+      "mean_lambdamart_ndcg": 0.8830584066696676,
+      "share_of_total_shortfall_pct": 0.31
+    }
+  },
+  "by_exact_fraction": {
+    "E<=25%": {
+      "queries": 5727,
+      "pct_queries": 18.49,
+      "mean_lambdamart_ndcg": 0.6838758238474,
+      "share_of_total_shortfall_pct": 38.46
+    },
+    "E 25-50%": {
+      "queries": 5628,
+      "pct_queries": 18.17,
+      "mean_lambdamart_ndcg": 0.7440367307568907,
+      "share_of_total_shortfall_pct": 30.6
+    },
+    "E 50-75%": {
+      "queries": 6220,
+      "pct_queries": 20.08,
+      "mean_lambdamart_ndcg": 0.8226536935394768,
+      "share_of_total_shortfall_pct": 23.43
+    },
+    "E 75-99%": {
+      "queries": 6872,
+      "pct_queries": 22.19,
+      "mean_lambdamart_ndcg": 0.948636302996217,
+      "share_of_total_shortfall_pct": 7.5
+    },
+    "E=100%": {
+      "queries": 6522,
+      "pct_queries": 21.06,
+      "mean_lambdamart_ndcg": 1.0,
+      "share_of_total_shortfall_pct": 0.0
+    }
+  },
+  "degenerate_single_label": {
+    "queries": 6523,
+    "pct_queries": 21.06,
+    "mean_lambdamart_ndcg": 1.0,
+    "share_of_total_shortfall_pct": 0.0
+  },
+  "non_degenerate": {
+    "queries": 24446,
+    "pct_queries": 78.94,
+    "mean_lambdamart_ndcg": 0.8074503072846023,
+    "share_of_total_shortfall_pct": 100.0
+  },
+  "loss_vs_bm25": {
+    "queries": 7282,
+    "mean_delta": -0.10439362617214638,
+    "mean_S_count": 7.436418566327932,
+    "all_mean_S_count": 4.951951951951952,
+    "mean_E_count": 10.691568250480637,
+    "all_mean_E_count": 12.701830863121186,
+    "mean_candidate_count": 22.159708871189235,
+    "all_mean_candidate_count": 20.601763053375958,
+    "pct_with_S": 88.63,
+    "all_pct_with_S": 66.41
+  }
+}

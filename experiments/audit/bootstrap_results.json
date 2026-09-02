@@ -1,0 +1,11 @@
+{
+  "n_queries": 30969,
+  "bm25_mean_ndcg10": 0.8155163705764451,
+  "lambdamart_mean_ndcg10": 0.8464228320953767,
+  "mean_delta": 0.03090646151893159,
+  "n_bootstrap": 10000,
+  "bootstrap_seed": 42,
+  "ci_95_low": 0.029282042239767422,
+  "ci_95_high": 0.03245583839571582,
+  "p_value_two_sided": 0.0
+}

@@ -1,0 +1,10 @@
+{
+  "num_features": 17,
+  "num_trees_in_saved_model": 250,
+  "n_estimators_cap": 1000,
+  "early_stopping_rounds": 50,
+  "early_stopping_triggered": true,
+  "best_iteration_from_reloaded_booster": -1,
+  "best_iteration_note": "LightGBM's text model format (Booster.save_model / lgb.Booster(model_file=...)) does not persist the sklearn-wrapper best_iteration_ value directly -- the reloaded Booster reports best_iteration=-1 (unset) via that attribute. num_trees()=250 < n_estimators cap of 1000 confirms early stopping DID trigger during training (otherwise the model would contain 1000 trees). Separately, in Task 2 (experiments/audit/task2_train_12feature.py), the identical training procedure was run in-process and log_evaluation printed evaluation scores through iteration 280, but model.best_iteration_ == model.booster_.num_trees() == 230 after fit() returned -- confirming empirically that LightGBM's sklearn API rolls the booster back to the best iteration when early stopping triggers (the trees added after the best iteration are discarded from the returned/saved booster, not merely ignored at prediction time). Applying that same, now-confirmed mechanism to the reloaded 17-feature booster: since save_model() persists whatever booster state existed immediately after fit(), and that state is already pruned to the best iteration, best_iteration = num_trees_in_saved_model = 250 exactly (not a guess or an approximation -- it follows from the confirmed truncation behavior). No training log for the original scripts/train_lambdamart.py run exists in the repo to cross-check this independently.",
+  "best_iteration_inferred": 250
+}
