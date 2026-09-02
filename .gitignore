@@ -22,3 +22,36 @@ esci-data/
 
 .vscode/
 screenshots/
+
+# Experiment caches / datasets
+experiments/**/_cache/
+experiments/**/_cache*/
+experiments/**/*.parquet
+
+# Model checkpoints / weights
+experiments/**/checkpoints/
+experiments/**/final_model/
+experiments/**/*.safetensors
+experiments/**/*.pt
+experiments/**/*.bin
+
+# Retrieval indexes
+experiments/**/*.faiss
+
+# Generated logs
+experiments/**/*.log
+experiments/**/*_stdout.log
+
+# Generated TREC files
+experiments/**/trec_eval_data/*.qrels
+experiments/**/trec_eval_data/*.results
+
+# Local generated images
+experiments/**/*.png
+
+# Legacy model / generated feature artifacts
+experiments/audit/model_12feature.txt
+experiments/audit/model_12feature_features.json
+
+# Full-catalog generated ID maps
+experiments/two_tower_v2/**/full_catalog_eval/tt_ids_*.json
