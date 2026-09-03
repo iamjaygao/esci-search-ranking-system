@@ -1,0 +1,46 @@
+{
+  "model_name": "FacebookAI/xlm-roberta-base",
+  "device": "mps",
+  "max_length": 256,
+  "batch_size": 16,
+  "gradient_accumulation_steps": 1,
+  "learning_rate": 2e-05,
+  "epochs": 1,
+  "warmup_ratio": 0.1,
+  "weight_decay": 0.01,
+  "seed": 42,
+  "max_train_queries": 200,
+  "max_dev_queries": 50,
+  "num_labels": 4,
+  "label_order": [
+    "E",
+    "S",
+    "C",
+    "I"
+  ],
+  "id2label": {
+    "0": "E",
+    "1": "S",
+    "2": "C",
+    "3": "I"
+  },
+  "label2id": {
+    "E": 0,
+    "S": 1,
+    "C": 2,
+    "I": 3
+  },
+  "loss": "CrossEntropyLoss (unweighted)",
+  "ranking_score": "expected ESCI gain = P(E)*1.0 + P(S)*0.1 + P(C)*0.01 + P(I)*0.0",
+  "early_stopping": false,
+  "class_weights": false,
+  "train_rows": 4701,
+  "train_queries": 200,
+  "dev_rows": 1167,
+  "dev_queries": 50,
+  "optimizer_steps": 294,
+  "wall_time_seconds": 103.8,
+  "peak_device_memory_mb": 12795.0,
+  "process_rss_mb": 3426.8,
+  "test_split_touched": false
+}

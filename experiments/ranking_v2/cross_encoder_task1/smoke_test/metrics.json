@@ -1,0 +1,7 @@
+{
+  "ndcg_full": 0.740115,
+  "ndcg_at_10": 0.546899,
+  "ndcg_at_20": 0.663842,
+  "query_count": 50,
+  "row_count": 1167
+}

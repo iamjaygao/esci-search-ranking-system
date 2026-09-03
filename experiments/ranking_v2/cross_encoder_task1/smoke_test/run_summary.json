@@ -1,0 +1,122 @@
+{
+  "phase": "2A cross-encoder baseline -- SMOKE TEST ONLY",
+  "purpose": "verify dataset build / forward / backward / checkpoint save+reload / inference / expected-gain score / authoritative NDCG scorer / locale slicing",
+  "NOT_A_BENCHMARK_RESULT": true,
+  "do_not_compare_to": {
+    "LambdaMART_task1_full_ndcg": 0.842878,
+    "reason": "200 train queries, 1 epoch, 50 dev queries -- no business meaning"
+  },
+  "official_test_run": false,
+  "test_split_touched": false,
+  "model": "FacebookAI/xlm-roberta-base",
+  "device": "mps",
+  "data": {
+    "train_rows": 4701,
+    "train_queries": 200,
+    "dev_rows": 1167,
+    "dev_queries": 50,
+    "eval_rows": 1167,
+    "eval_queries": 50
+  },
+  "hyperparameters": {
+    "max_length": 256,
+    "batch_size": 16,
+    "gradient_accumulation_steps": 1,
+    "learning_rate": 2e-05,
+    "epochs": 1,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "seed": 42
+  },
+  "training": [
+    {
+      "epoch": 1,
+      "train_loss": 1.191923,
+      "dev_loss": 1.161311,
+      "dev_argmax_accuracy": 0.440446,
+      "seconds": 100.3
+    }
+  ],
+  "token_stats": {
+    "train": {
+      "truncation_fraction": 0.478834,
+      "query_overflow_fraction": 0.0,
+      "pair_tokens_mean": 329.772,
+      "pair_tokens_p95": 926.0,
+      "by_locale_truncation": {
+        "us": 0.5004,
+        "es": 0.498324,
+        "jp": 0.424312
+      }
+    },
+    "dev": {
+      "truncation_fraction": 0.456727,
+      "query_overflow_fraction": 0.0,
+      "pair_tokens_mean": 317.57,
+      "pair_tokens_p95": 892.7,
+      "by_locale_truncation": {
+        "us": 0.467742,
+        "es": 0.483871,
+        "jp": 0.404682
+      }
+    }
+  },
+  "dev_metrics": {
+    "ndcg_full": 0.740115,
+    "ndcg_at_10": 0.546899,
+    "ndcg_at_20": 0.663842
+  },
+  "dev_locale_metrics": {
+    "us": {
+      "query_count": 27,
+      "ndcg_full": 0.730791,
+      "ndcg_at_10": 0.577538,
+      "ndcg_at_20": 0.702406
+    },
+    "es": {
+      "query_count": 13,
+      "ndcg_full": 0.748096,
+      "ndcg_at_10": 0.523362,
+      "ndcg_at_20": 0.62989
+    },
+    "jp": {
+      "query_count": 10,
+      "ndcg_full": 0.754913,
+      "ndcg_at_10": 0.494772,
+      "ndcg_at_20": 0.603857
+    },
+    "overall": {
+      "query_count": 50,
+      "ndcg_full": 0.740115,
+      "ndcg_at_10": 0.546899,
+      "ndcg_at_20": 0.663842
+    }
+  },
+  "score_diagnostics": {
+    "score_min": 0.4427810588104294,
+    "score_max": 0.6094579946155503,
+    "score_mean": 0.5367024673151011,
+    "mean_predicted_prob": {
+      "E": 0.504402,
+      "S": 0.318491,
+      "C": 0.045181,
+      "I": 0.131927
+    },
+    "argmax_label_distribution": {
+      "E": 1167,
+      "S": 0,
+      "C": 0,
+      "I": 0
+    }
+  },
+  "candidate_pool": "task1_small_v1",
+  "metric_version": "kdd_task1_ndcg@6946489c8c09dc37|gain=competition_E1_S0.1_C0.01_I0|idcg0=exclude|tie=deterministic",
+  "scorer": "experiments/ranking_v2/kdd_task1_benchmark/scripts/kdd_task1_ndcg.py",
+  "wall_time_seconds": {
+    "train": 103.8,
+    "eval": 8.5
+  },
+  "peak_device_memory_mb": 12795.0,
+  "process_rss_mb": 3426.8,
+  "max_rss_mb_from_time_l": 5066.2
+}
