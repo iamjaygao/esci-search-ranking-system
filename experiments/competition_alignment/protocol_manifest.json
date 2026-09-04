@@ -1,0 +1,47 @@
+{
+  "protocol": "Amazon KDD Cup 2022 ESCI Task 1 -- Query-Product Ranking",
+  "dataset_filter": "examples[small_version == 1]",
+  "raw_source_sha256": {
+    "examples": "4a735b693b4a424a6fc67f5be6e4c811495c488bbf66d02a602d308b2744263a",
+    "products": "25124442d064d64b26f74082d6fa09438d679efc0c183cf28d19064a2b65a265"
+  },
+  "task1_totals": {
+    "rows": 1118011,
+    "queries": 48300
+  },
+  "official_gain": {
+    "E": 1.0,
+    "S": 0.1,
+    "C": 0.01,
+    "I": 0.0
+  },
+  "official_gain_source": "ranking/train.py lines 49-53",
+  "gain_applied_as": "directly as the DCG numerator; 2**gain-1 NOT applied",
+  "scorer": "experiments/ranking_v2/kdd_task1_benchmark/scripts/kdd_task1_ndcg.py",
+  "scorer_sha256": "6946489c8c09dc37cdb91b905dd5108e46e4070dbd1494b4ac4f972d20f41bc7",
+  "metric_version": "kdd_task1_ndcg@6946489c8c09dc37|gain=competition_E1_S0.1_C0.01_I0|idcg0=exclude|tie=deterministic",
+  "metric_parity": "PASS",
+  "metric_parity_max_abs_delta": 1.1102230246251565e-16,
+  "terrier_status": "NOT_RUN (no JRE; out of scope)",
+  "grouping_key": "query_id (verified: never spans locales)",
+  "tie_rule": "score desc, product_id asc, product_locale asc",
+  "idcg_zero_policy": "exclude",
+  "eval_pool": "frozen DEV: 5,071 queries / 118,231 rows, carved from official Task1 TRAIN",
+  "eval_pool_is_official_pairs": true,
+  "released_test_split": "public LB union private LB, merged; private partition UNRECOVERABLE",
+  "leaderboard_comparability": "YELLOW overall; RED specifically vs 0.9043",
+  "test_split_touched": false,
+  "gate0": {
+    "raw_source": "PASS",
+    "small_version_filter": "PASS",
+    "candidate_pool": "PASS",
+    "max_candidate_anomaly_explained": "PASS",
+    "query_grouping": "PASS",
+    "duplicates": "PASS",
+    "split_provenance": "PASS",
+    "gain": "PASS",
+    "ndcg_parity": "PASS",
+    "test_relationship_understood": "PASS"
+  },
+  "gate0_overall": "PASS"
+}

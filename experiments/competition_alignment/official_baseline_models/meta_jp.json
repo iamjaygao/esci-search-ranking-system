@@ -1,0 +1,28 @@
+{
+  "locale": "jp",
+  "device": "mps",
+  "train_rows": 171396,
+  "train_queries": 5991,
+  "internal_dev_rows": 5907,
+  "internal_dev_queries": 200,
+  "our_dev_rows_removed": 31791,
+  "batch_size": 32,
+  "seed": 42,
+  "epochs": 1,
+  "gain_map": {
+    "E": 1.0,
+    "S": 0.1,
+    "C": 0.01,
+    "I": 0.0
+  },
+  "input": "query + product_title only",
+  "model_name": "sentence-transformers/multi-qa-mpnet-base-dot-v1",
+  "arch": "SentenceTransformer (bi-encoder)",
+  "loss": "CosineSimilarityLoss",
+  "evaluation_steps": 1000,
+  "lr": "library default",
+  "max_length": 512,
+  "train_seconds": 1784.0,
+  "saved_to": "experiments/competition_alignment/official_baseline_models/task_1_ranking_model_jp",
+  "test_split_touched": false
+}

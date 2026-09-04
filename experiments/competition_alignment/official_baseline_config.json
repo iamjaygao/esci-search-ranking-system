@@ -1,0 +1,124 @@
+{
+  "official_baseline_recipe_source": "amazon-science/esci-data HEAD 7916cdf6ab75a462e77f20ab40428a10923998d5, ranking/train.py + launch-experiments-task1.sh",
+  "one_model_per_locale": true,
+  "input": "query + product_title ONLY",
+  "epochs": 1,
+  "batch_size": 32,
+  "seed": 42,
+  "gain_map": {
+    "E": 1.0,
+    "S": 0.1,
+    "C": 0.01,
+    "I": 0.0
+  },
+  "target": "the gain itself, as a REGRESSION target",
+  "filter": "small_version==1 AND split=='train' AND product_locale==<locale>",
+  "per_locale": {
+    "us": {
+      "locale": "us",
+      "device": "mps",
+      "train_rows": 348209,
+      "train_queries": 17355,
+      "internal_dev_rows": 8164,
+      "internal_dev_queries": 400,
+      "our_dev_rows_removed": 63280,
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 1,
+      "gain_map": {
+        "E": 1.0,
+        "S": 0.1,
+        "C": 0.01,
+        "I": 0.0
+      },
+      "input": "query + product_title only",
+      "model_name": "cross-encoder/ms-marco-MiniLM-L-12-v2",
+      "arch": "CrossEncoder",
+      "num_labels": 1,
+      "max_length": 512,
+      "loss": "MSELoss",
+      "lr": 7e-06,
+      "warmup_steps": 5000,
+      "evaluation_steps": 5000,
+      "activation": "Identity",
+      "train_seconds": 747.4,
+      "saved_to": "experiments/competition_alignment/official_baseline_models/task_1_ranking_model_us",
+      "test_split_touched": false
+    },
+    "es": {
+      "locale": "es",
+      "device": "mps",
+      "train_rows": 123993,
+      "train_queries": 4587,
+      "internal_dev_rows": 5738,
+      "internal_dev_queries": 200,
+      "our_dev_rows_removed": 23160,
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 1,
+      "gain_map": {
+        "E": 1.0,
+        "S": 0.1,
+        "C": 0.01,
+        "I": 0.0
+      },
+      "input": "query + product_title only",
+      "model_name": "sentence-transformers/multi-qa-mpnet-base-dot-v1",
+      "arch": "SentenceTransformer (bi-encoder)",
+      "loss": "CosineSimilarityLoss",
+      "evaluation_steps": 1000,
+      "lr": "library default",
+      "max_length": 512,
+      "train_seconds": 873.1,
+      "saved_to": "experiments/competition_alignment/official_baseline_models/task_1_ranking_model_es",
+      "test_split_touched": false
+    },
+    "jp": {
+      "locale": "jp",
+      "device": "mps",
+      "train_rows": 171396,
+      "train_queries": 5991,
+      "internal_dev_rows": 5907,
+      "internal_dev_queries": 200,
+      "our_dev_rows_removed": 31791,
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 1,
+      "gain_map": {
+        "E": 1.0,
+        "S": 0.1,
+        "C": 0.01,
+        "I": 0.0
+      },
+      "input": "query + product_title only",
+      "model_name": "sentence-transformers/multi-qa-mpnet-base-dot-v1",
+      "arch": "SentenceTransformer (bi-encoder)",
+      "loss": "CosineSimilarityLoss",
+      "evaluation_steps": 1000,
+      "lr": "library default",
+      "max_length": 512,
+      "train_seconds": 1784.0,
+      "saved_to": "experiments/competition_alignment/official_baseline_models/task_1_ranking_model_jp",
+      "test_split_touched": false
+    }
+  },
+  "deviations": [
+    {
+      "id": "train-pool",
+      "what": "our 5,071 frozen DEV queries removed before training",
+      "why": "official train.py trains on ALL official Task1 TRAIN; our DEV is carved from that same pool, so the verbatim recipe would train on our DEV. Removed 63,280+23,160+31,791 = 118,231 rows.",
+      "effect": "official baseline and V2 now see the SAME 28,733 train queries -> strictly fairer"
+    },
+    {
+      "id": "api-activation",
+      "what": "default_activation_function -> activation_fn",
+      "why": "sentence-transformers 5.2.3 rename; fit(), MSELoss, CosineSimilarityLoss, both evaluators unchanged"
+    },
+    {
+      "id": "api-evaluator",
+      "what": "CERerankingEvaluator dev_samples positive/negative sets -> sorted lists",
+      "why": "ST 5.2.3 concatenates with `+`; official used sets (valid in ST 2.x). Monitoring-only; US saves end-of-training weights via model.save(), as official does."
+    }
+  ],
+  "test_split_touched": false
+}
