@@ -1,0 +1,17 @@
+{
+  "tag": "smoke_qwen",
+  "hardware": "Apple M4 Max, 68.7 GB unified",
+  "device": "mps",
+  "dtype": "auto (bf16 for qwen3-family, fp32 for xlm-r)",
+  "batch_size": 8,
+  "peak_device_memory_gb": 9.88,
+  "text_build_seconds": 0.2,
+  "inference_seconds": 39.9,
+  "rows": 492,
+  "queries": 20,
+  "rows_per_sec": 12.32,
+  "queries_per_sec": 0.501,
+  "unit": "pairs",
+  "n_units": 492,
+  "formulation": "P(yes) via log_softmax over [no, yes] final-token logits"
+}

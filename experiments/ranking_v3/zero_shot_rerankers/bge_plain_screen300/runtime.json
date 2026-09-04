@@ -1,0 +1,16 @@
+{
+  "tag": "bge_plain_screen300",
+  "hardware": "Apple M4 Max, 68.7 GB unified",
+  "device": "mps",
+  "dtype": "auto (bf16 for qwen3-family, fp32 for xlm-r)",
+  "batch_size": 8,
+  "peak_device_memory_gb": 3.74,
+  "text_build_seconds": 2.1,
+  "inference_seconds": 237.3,
+  "rows": 7342,
+  "queries": 300,
+  "rows_per_sec": 30.94,
+  "queries_per_sec": 1.264,
+  "unit": "pairs",
+  "n_units": 7342
+}

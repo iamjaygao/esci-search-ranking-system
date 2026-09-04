@@ -1,0 +1,88 @@
+{
+  "tag": "bge_plain_screen300",
+  "model_key": "bge",
+  "model_id": "BAAI/bge-reranker-v2-m3",
+  "params": "568M",
+  "architecture": "XLMRobertaForSequenceClassification (cross-encoder)",
+  "kind": "pointwise",
+  "input": "plain",
+  "budget_tokens": 512,
+  "zero_shot": true,
+  "trained_in_this_phase": false,
+  "split": "dev",
+  "test_split_touched": false,
+  "is_smoke": false,
+  "funnel": {
+    "subset": "screen300",
+    "subset_file": "experiments/ranking_v3/zero_shot_rerankers/subset_screen300.json",
+    "sha256_of_ids": "91be88470db4afc861dd114267ce8a393987c835c0e2701b71f80161067860e7",
+    "n_queries": 300,
+    "n_rows": 7342,
+    "locale_counts": {
+      "us": 185,
+      "es": 50,
+      "jp": 65
+    }
+  },
+  "rows": 7342,
+  "queries": 300,
+  "ndcg_full": 0.870402,
+  "ndcg_at_20": 0.822284,
+  "ndcg_at_10": 0.761529,
+  "candidate_pool": "task1_small_v1",
+  "metric_version": "kdd_task1_ndcg@6946489c8c09dc37|gain=competition_E1_S0.1_C0.01_I0|idcg0=exclude|tie=deterministic",
+  "zero_idcg_policy": "exclude",
+  "zero_idcg_query_count": 0,
+  "scorer": "experiments/ranking_v2/kdd_task1_benchmark/scripts/kdd_task1_ndcg.py",
+  "locale": {
+    "us": {
+      "query_count": 185,
+      "ndcg_full": 0.877258,
+      "ndcg_at_20": 0.847386,
+      "ndcg_at_10": 0.779195
+    },
+    "es": {
+      "query_count": 50,
+      "ndcg_full": 0.853888,
+      "ndcg_at_20": 0.786476,
+      "ndcg_at_10": 0.754959
+    },
+    "jp": {
+      "query_count": 65,
+      "ndcg_full": 0.863593,
+      "ndcg_at_20": 0.778387,
+      "ndcg_at_10": 0.716303
+    },
+    "overall": {
+      "query_count": 300,
+      "ndcg_full": 0.870402,
+      "ndcg_at_20": 0.822284,
+      "ndcg_at_10": 0.761529
+    }
+  },
+  "truncation": {
+    "budget": 512,
+    "rows": 7342,
+    "truncated_rows": 1807,
+    "truncation_fraction": 0.246118,
+    "full_len_mean": 331.03,
+    "full_len_p95": 908.0,
+    "full_len_max": 1546,
+    "policy": "keep query>title>brand>color whole; remaining budget to bullet then description",
+    "priority_skeleton_len_mean": 60.31,
+    "priority_skeleton_overflow_rows": 0
+  },
+  "score_stats": {
+    "min": -11.046464920043945,
+    "max": 8.384600639343262,
+    "mean": -1.9947287742392514,
+    "std": 4.246559245086466
+  },
+  "candidates_per_query": {
+    "mean": 24.47,
+    "p50": 16.0,
+    "p90": 40.0,
+    "p95": 40.0,
+    "max": 48
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "tag": "smoke_bge",
+  "model_key": "bge",
+  "model_id": "BAAI/bge-reranker-v2-m3",
+  "params": "568M",
+  "architecture": "XLMRobertaForSequenceClassification (cross-encoder)",
+  "kind": "pointwise",
+  "input": "plain",
+  "budget_tokens": 512,
+  "zero_shot": true,
+  "trained_in_this_phase": false,
+  "split": "dev",
+  "test_split_touched": false,
+  "is_smoke": true,
+  "funnel": {
+    "subset": "screen300",
+    "subset_file": "experiments/ranking_v3/zero_shot_rerankers/subset_screen300.json",
+    "sha256_of_ids": "91be88470db4afc861dd114267ce8a393987c835c0e2701b71f80161067860e7",
+    "n_queries": 300,
+    "n_rows": 7342,
+    "locale_counts": {
+      "us": 185,
+      "es": 50,
+      "jp": 65
+    }
+  },
+  "rows": 492,
+  "queries": 20,
+  "ndcg_full": 0.801413,
+  "ndcg_at_20": 0.741891,
+  "ndcg_at_10": 0.671013,
+  "candidate_pool": "task1_small_v1",
+  "metric_version": "kdd_task1_ndcg@6946489c8c09dc37|gain=competition_E1_S0.1_C0.01_I0|idcg0=exclude|tie=deterministic",
+  "zero_idcg_policy": "exclude",
+  "zero_idcg_query_count": 0,
+  "scorer": "experiments/ranking_v2/kdd_task1_benchmark/scripts/kdd_task1_ndcg.py",
+  "locale": {
+    "us": {
+      "query_count": 19,
+      "ndcg_full": 0.805706,
+      "ndcg_at_20": 0.743051,
+      "ndcg_at_10": 0.675315
+    },
+    "es": {
+      "query_count": 1,
+      "ndcg_full": 0.719845,
+      "ndcg_at_20": 0.719845,
+      "ndcg_at_10": 0.58928
+    },
+    "jp": {
+      "query_count": 0,
+      "ndcg_full": null,
+      "ndcg_at_20": null,
+      "ndcg_at_10": null
+    },
+    "overall": {
+      "query_count": 20,
+      "ndcg_full": 0.801413,
+      "ndcg_at_20": 0.741891,
+      "ndcg_at_10": 0.671013
+    }
+  },
+  "truncation": {
+    "budget": 512,
+    "rows": 492,
+    "truncated_rows": 152,
+    "truncation_fraction": 0.308943,
+    "full_len_mean": 399.51,
+    "full_len_p95": 970.0999999999998,
+    "full_len_max": 1296,
+    "policy": "keep query>title>brand>color whole; remaining budget to bullet then description",
+    "priority_skeleton_len_mean": 54.07,
+    "priority_skeleton_overflow_rows": 0
+  },
+  "score_stats": {
+    "min": -10.571102142333984,
+    "max": 6.24082088470459,
+    "mean": -1.999857201627115,
+    "std": 3.54669229419708
+  },
+  "candidates_per_query": {
+    "mean": 24.6,
+    "p50": 16.0,
+    "p90": 40.0,
+    "p95": 40.0,
+    "max": 40
+  }
+}

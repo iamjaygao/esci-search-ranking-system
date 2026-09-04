@@ -1,0 +1,48 @@
+{
+  "frozen_before_round1": true,
+  "frozen_at": "2026-09-03",
+  "plan": "successive-halving funnel: 300 screen -> 1000 confirm (top 2) -> 5071 full DEV (top 1-2)",
+  "round1": {
+    "subset": "screen300",
+    "queries": 300,
+    "rows": 7342,
+    "configs": [
+      "jina/plain",
+      "jina/structured",
+      "bge/plain",
+      "bge/structured",
+      "qwen/plain",
+      "qwen/structured"
+    ]
+  },
+  "token_budget": 512,
+  "token_budget_rationale": "Frozen on COST grounds before any NDCG was observed, never tuned on results. 512 = 2x V2's 256. Measured truncation: ~30% of DEV pairs at 512 vs V2's 48.1% at 256, so every modern config sees strictly MORE text than the frozen baseline did. 1024 would cut truncation to ~8% but roughly doubles inference cost, which would put the eventual full-DEV Jina listwise run near 14 h; 512 keeps it near 7 h. The budget is held constant across all three funnel rounds so numbers stay comparable.",
+  "truncation_policy": "priority query>title>brand>color kept whole (139 tokens even at p99); remaining budget to bullet then description; never a blind tail cut",
+  "primary_metric": "DEV NDCG@20",
+  "baseline_to_beat": {
+    "model": "V2 Cross-Encoder epoch_2",
+    "ndcg_at_20": 0.845605,
+    "ndcg_full": 0.883443,
+    "ndcg_at_10": 0.792383
+  },
+  "known_confound": "V2 was trained AND evaluated at max_length=256 (48.1% truncation); the zero-shot models are evaluated at 512 (~30%). Part of any gap is context, not architecture. Disclosed, not corrected -- crippling long-context models to 256 would be the worse distortion.",
+  "no_training": true,
+  "test_split_touched": false,
+  "smoke_throughput_492rows_incl_model_load": {
+    "bge": {
+      "rows_per_s": 13.5,
+      "peak_gb": 3.78
+    },
+    "qwen": {
+      "rows_per_s": 12.3,
+      "peak_gb": 9.88
+    },
+    "jina": {
+      "rows_per_s": 2.7,
+      "peak_gb": 38.85,
+      "note": "listwise: 1 forward pass per query"
+    }
+  },
+  "qwen_formulation_note": "model card's sentence_transformers.CrossEncoder path raises 'Cannot handle batch sizes > 1 if no padding token is defined' on transformers 5.2.0 / ST 5.2.3; used the card's canonical transformers path instead (chat prefix/suffix + P(yes) over [no,yes] final-token logits).",
+  "jina_license_note": "jina-reranker-v3.5 is CC BY-NC 4.0 (non-commercial). Flagged for downstream use."
+}

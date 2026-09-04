@@ -1,0 +1,16 @@
+{
+  "tag": "smoke_bge",
+  "hardware": "Apple M4 Max, 68.7 GB unified",
+  "device": "mps",
+  "dtype": "auto (bf16 for qwen3-family, fp32 for xlm-r)",
+  "batch_size": 8,
+  "peak_device_memory_gb": 3.78,
+  "text_build_seconds": 0.2,
+  "inference_seconds": 36.5,
+  "rows": 492,
+  "queries": 20,
+  "rows_per_sec": 13.46,
+  "queries_per_sec": 0.547,
+  "unit": "pairs",
+  "n_units": 492
+}

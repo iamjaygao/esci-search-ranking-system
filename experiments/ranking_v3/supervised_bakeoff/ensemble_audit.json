@@ -1,0 +1,162 @@
+{
+  "method": "query-level linear normalised rank fusion, fixed weights, 0.1 grid",
+  "weight_selection_subset": {
+    "name": "screen300",
+    "n_queries": 300
+  },
+  "confirmation_subset": {
+    "name": "confirm1000_minus_screen300",
+    "n_queries": 700,
+    "query_ids_sha256_note": "disjoint from the selection subset"
+  },
+  "no_inference_rerun": true,
+  "test_split_touched": false,
+  "single_models": {
+    "V2": {
+      "sel300": 0.833634,
+      "holdout700": 0.846857
+    },
+    "Jina": {
+      "sel300": 0.834099,
+      "holdout700": 0.826583
+    },
+    "Qwen": {
+      "sel300": 0.824668,
+      "holdout700": 0.811224
+    }
+  },
+  "combinations": {
+    "V2+Jina": {
+      "members": [
+        "V2",
+        "Jina"
+      ],
+      "grid_step": 0.1,
+      "n_grid_points": 9,
+      "selected_weights": {
+        "V2": 0.5,
+        "Jina": 0.5
+      },
+      "sel300_ndcg_at_20": 0.84711,
+      "sel300_delta_vs_V2": 0.013476,
+      "holdout700_ndcg_at_20": 0.847349,
+      "holdout700_V2_ndcg_at_20": 0.846857,
+      "holdout700_delta_vs_V2": 0.000492,
+      "top3_on_sel300": [
+        {
+          "w": {
+            "V2": 0.5,
+            "Jina": 0.5
+          },
+          "ndcg_at_20": 0.84711
+        },
+        {
+          "w": {
+            "V2": 0.6,
+            "Jina": 0.4
+          },
+          "ndcg_at_20": 0.845259
+        },
+        {
+          "w": {
+            "V2": 0.4,
+            "Jina": 0.6
+          },
+          "ndcg_at_20": 0.844542
+        }
+      ]
+    },
+    "V2+Qwen": {
+      "members": [
+        "V2",
+        "Qwen"
+      ],
+      "grid_step": 0.1,
+      "n_grid_points": 9,
+      "selected_weights": {
+        "V2": 0.5,
+        "Qwen": 0.5
+      },
+      "sel300_ndcg_at_20": 0.841906,
+      "sel300_delta_vs_V2": 0.008272,
+      "holdout700_ndcg_at_20": 0.843825,
+      "holdout700_V2_ndcg_at_20": 0.846857,
+      "holdout700_delta_vs_V2": -0.003032,
+      "top3_on_sel300": [
+        {
+          "w": {
+            "V2": 0.5,
+            "Qwen": 0.5
+          },
+          "ndcg_at_20": 0.841906
+        },
+        {
+          "w": {
+            "V2": 0.4,
+            "Qwen": 0.6
+          },
+          "ndcg_at_20": 0.841867
+        },
+        {
+          "w": {
+            "V2": 0.6,
+            "Qwen": 0.4
+          },
+          "ndcg_at_20": 0.841384
+        }
+      ]
+    },
+    "V2+Jina+Qwen": {
+      "members": [
+        "V2",
+        "Jina",
+        "Qwen"
+      ],
+      "grid_step": 0.1,
+      "n_grid_points": 36,
+      "selected_weights": {
+        "V2": 0.4,
+        "Jina": 0.4,
+        "Qwen": 0.2
+      },
+      "sel300_ndcg_at_20": 0.848817,
+      "sel300_delta_vs_V2": 0.015183,
+      "holdout700_ndcg_at_20": 0.844205,
+      "holdout700_V2_ndcg_at_20": 0.846857,
+      "holdout700_delta_vs_V2": -0.002652,
+      "top3_on_sel300": [
+        {
+          "w": {
+            "V2": 0.4,
+            "Jina": 0.4,
+            "Qwen": 0.2
+          },
+          "ndcg_at_20": 0.848817
+        },
+        {
+          "w": {
+            "V2": 0.5,
+            "Jina": 0.3,
+            "Qwen": 0.2
+          },
+          "ndcg_at_20": 0.848442
+        },
+        {
+          "w": {
+            "V2": 0.4,
+            "Jina": 0.3,
+            "Qwen": 0.3
+          },
+          "ndcg_at_20": 0.84823
+        }
+      ]
+    }
+  },
+  "best_combination": "V2+Jina",
+  "best_holdout700_delta": 0.000492,
+  "verdict": "STOP pursuing simple ensembles (< +0.002)",
+  "decision_rule": {
+    "stop_below": 0.002,
+    "keep_at_or_above": 0.005
+  }
+}

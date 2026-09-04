@@ -1,0 +1,22 @@
+{
+  "tag": "jina_plain_confirm1000",
+  "hardware": "Apple M4 Max, 68.7 GB unified",
+  "device": "mps",
+  "dtype": "auto (bf16 for qwen3-family, fp32 for xlm-r)",
+  "batch_size": 8,
+  "peak_device_memory_gb": 52.87,
+  "text_build_seconds": 8.7,
+  "inference_seconds": 1488.2,
+  "rows": 23711,
+  "queries": 1000,
+  "rows_per_sec": 15.93,
+  "queries_per_sec": 0.672,
+  "unit": "queries",
+  "n_units": 1000,
+  "avg_candidates_per_query": 23.71,
+  "max_candidates_in_one_call": 56,
+  "chunking_used": false,
+  "chunking_note": "no chunking: MLX handles the full candidate set (largest 94 docs) in a single listwise pass",
+  "implementation": "official MLX build (jina-reranker-v3.5-mlx)",
+  "implementation_reason": "transformers/MPS OOMs above 32 candidates"
+}

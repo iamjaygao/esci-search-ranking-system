@@ -1,0 +1,80 @@
+{
+  "bootstrap": {
+    "jina_vs_v2": {
+      "delta": -0.014052771300687354,
+      "ci": [
+        -0.021512443601447793,
+        -0.0064760258511002665
+      ],
+      "p": 0.0,
+      "win": 432,
+      "loss": 531,
+      "tie": 37,
+      "n": 1000
+    },
+    "qwen_vs_v2": {
+      "delta": -0.02763325325923367,
+      "ci": [
+        -0.035942194097377575,
+        -0.019404608917073796
+      ],
+      "p": 0.0,
+      "win": 384,
+      "loss": 577,
+      "tie": 39,
+      "n": 1000
+    },
+    "jina_vs_qwen": {
+      "delta": 0.013580481958546319,
+      "ci": [
+        0.0080222462083514,
+        0.019117338475779677
+      ],
+      "p": 0.0,
+      "win": 536,
+      "loss": 409,
+      "tie": 55,
+      "n": 1000
+    }
+  },
+  "complementarity": {
+    "jina_wins_vs_V2": 432,
+    "jina_loses_vs_V2": 531,
+    "qwen_wins_vs_V2": 384,
+    "qwen_loses_vs_V2": 577,
+    "jina_wins_and_qwen_loses": 130,
+    "qwen_wins_and_jina_loses": 85,
+    "both_win": 298,
+    "both_lose": 439,
+    "oracle_jina_qwen": 0.8513191256805395,
+    "oracle_jina_qwen_v2": 0.8847208869455883
+  },
+  "v2_baseline": {
+    "subset": "confirm1000",
+    "rows": 23711,
+    "queries": 1000,
+    "ndcg_full": 0.881181,
+    "ndcg_at_20": 0.84289,
+    "ndcg_at_10": 0.788843,
+    "locale": {
+      "us": {
+        "n": 618,
+        "ndcg_full": 0.874474,
+        "ndcg_at_20": 0.850233,
+        "ndcg_at_10": 0.783983
+      },
+      "es": {
+        "n": 167,
+        "ndcg_full": 0.887879,
+        "ndcg_at_20": 0.834422,
+        "ndcg_at_10": 0.80136
+      },
+      "jp": {
+        "n": 215,
+        "ndcg_full": 0.895258,
+        "ndcg_at_20": 0.828362,
+        "ndcg_at_10": 0.793091
+      }
+    }
+  }
+}

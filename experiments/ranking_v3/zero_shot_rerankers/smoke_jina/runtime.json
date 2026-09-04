@@ -1,0 +1,20 @@
+{
+  "tag": "smoke_jina",
+  "hardware": "Apple M4 Max, 68.7 GB unified",
+  "device": "mps",
+  "dtype": "auto (bf16 for qwen3-family, fp32 for xlm-r)",
+  "batch_size": 8,
+  "peak_device_memory_gb": 38.85,
+  "text_build_seconds": 0.3,
+  "inference_seconds": 183.4,
+  "rows": 492,
+  "queries": 20,
+  "rows_per_sec": 2.68,
+  "queries_per_sec": 0.109,
+  "unit": "queries",
+  "n_units": 20,
+  "avg_candidates_per_query": 24.6,
+  "max_candidates_in_one_call": 40,
+  "chunking_used": false,
+  "chunking_note": "no chunking: the largest candidate set (94 docs) fits comfortably in the 131K context"
+}

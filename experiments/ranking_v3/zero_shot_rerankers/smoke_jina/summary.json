@@ -1,0 +1,88 @@
+{
+  "tag": "smoke_jina",
+  "model_key": "jina",
+  "model_id": "jinaai/jina-reranker-v3.5",
+  "params": "0.6B",
+  "architecture": "JinaForRanking (Qwen3-0.6B backbone, LBNL listwise)",
+  "kind": "listwise",
+  "input": "plain",
+  "budget_tokens": 512,
+  "zero_shot": true,
+  "trained_in_this_phase": false,
+  "split": "dev",
+  "test_split_touched": false,
+  "is_smoke": true,
+  "funnel": {
+    "subset": "screen300",
+    "subset_file": "experiments/ranking_v3/zero_shot_rerankers/subset_screen300.json",
+    "sha256_of_ids": "91be88470db4afc861dd114267ce8a393987c835c0e2701b71f80161067860e7",
+    "n_queries": 300,
+    "n_rows": 7342,
+    "locale_counts": {
+      "us": 185,
+      "es": 50,
+      "jp": 65
+    }
+  },
+  "rows": 492,
+  "queries": 20,
+  "ndcg_full": 0.783347,
+  "ndcg_at_20": 0.732346,
+  "ndcg_at_10": 0.628999,
+  "candidate_pool": "task1_small_v1",
+  "metric_version": "kdd_task1_ndcg@6946489c8c09dc37|gain=competition_E1_S0.1_C0.01_I0|idcg0=exclude|tie=deterministic",
+  "zero_idcg_policy": "exclude",
+  "zero_idcg_query_count": 0,
+  "scorer": "experiments/ranking_v2/kdd_task1_benchmark/scripts/kdd_task1_ndcg.py",
+  "locale": {
+    "us": {
+      "query_count": 19,
+      "ndcg_full": 0.786325,
+      "ndcg_at_20": 0.73264,
+      "ndcg_at_10": 0.631039
+    },
+    "es": {
+      "query_count": 1,
+      "ndcg_full": 0.726754,
+      "ndcg_at_20": 0.726754,
+      "ndcg_at_10": 0.590245
+    },
+    "jp": {
+      "query_count": 0,
+      "ndcg_full": null,
+      "ndcg_at_20": null,
+      "ndcg_at_10": null
+    },
+    "overall": {
+      "query_count": 20,
+      "ndcg_full": 0.783347,
+      "ndcg_at_20": 0.732346,
+      "ndcg_at_10": 0.628999
+    }
+  },
+  "truncation": {
+    "budget": 512,
+    "rows": 492,
+    "truncated_rows": 144,
+    "truncation_fraction": 0.292683,
+    "full_len_mean": 377.02,
+    "full_len_p95": 922.6999999999999,
+    "full_len_max": 1258,
+    "policy": "keep query>title>brand>color whole; remaining budget to bullet then description",
+    "priority_skeleton_len_mean": 56.69,
+    "priority_skeleton_overflow_rows": 0
+  },
+  "score_stats": {
+    "min": -0.17068034410476685,
+    "max": 0.6861230134963989,
+    "mean": 0.06879131905429303,
+    "std": 0.1477644845274837
+  },
+  "candidates_per_query": {
+    "mean": 24.6,
+    "p50": 16.0,
+    "p90": 40.0,
+    "p95": 40.0,
+    "max": 40
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "tag": "qwen_plain_confirm1000",
+  "hardware": "Apple M4 Max, 68.7 GB unified",
+  "device": "mps",
+  "dtype": "auto (bf16 for qwen3-family, fp32 for xlm-r)",
+  "batch_size": 8,
+  "peak_device_memory_gb": 49.93,
+  "text_build_seconds": 9.4,
+  "inference_seconds": 1752.8,
+  "rows": 23711,
+  "queries": 1000,
+  "rows_per_sec": 13.53,
+  "queries_per_sec": 0.571,
+  "unit": "pairs",
+  "n_units": 23711,
+  "formulation": "P(yes) via log_softmax over [no, yes] final-token logits"
+}
