@@ -1,0 +1,153 @@
+{
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.945544,
+      "dev_loss": 0.930025,
+      "dev_argmax_accuracy": 0.598955,
+      "seconds": 14099.0
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.779745,
+      "dev_loss": 0.942912,
+      "dev_argmax_accuracy": 0.608208,
+      "seconds": 13679.4
+    }
+  ],
+  "token_stats": {
+    "train": {
+      "max_length": 256,
+      "num_special_tokens_pair": 3,
+      "overall": {
+        "rows": 663407,
+        "query_tokens_mean": 6.512,
+        "query_tokens_p95": 11.0,
+        "query_tokens_max": 44,
+        "product_tokens_mean": 323.083,
+        "product_tokens_p50": 235.0,
+        "product_tokens_p95": 897.0,
+        "product_tokens_max": 2713,
+        "pair_tokens_mean": 332.594,
+        "pair_tokens_p95": 907.0,
+        "pair_tokens_max": 2732,
+        "truncation_fraction": 0.48397,
+        "query_overflow_fraction": 0.0
+      },
+      "by_locale": {
+        "us": {
+          "rows": 356373,
+          "query_tokens_mean": 6.114,
+          "query_tokens_p95": 11.0,
+          "query_tokens_max": 40,
+          "product_tokens_mean": 333.36,
+          "product_tokens_p50": 255.0,
+          "product_tokens_p95": 892.0,
+          "product_tokens_max": 2200,
+          "pair_tokens_mean": 342.474,
+          "pair_tokens_p95": 902.0,
+          "pair_tokens_max": 2210,
+          "truncation_fraction": 0.511916,
+          "query_overflow_fraction": 0.0
+        },
+        "es": {
+          "rows": 129731,
+          "query_tokens_mean": 5.817,
+          "query_tokens_p95": 10.0,
+          "query_tokens_max": 19,
+          "product_tokens_mean": 365.37,
+          "product_tokens_p50": 275.0,
+          "product_tokens_p95": 956.0,
+          "product_tokens_max": 2097,
+          "pair_tokens_mean": 374.187,
+          "pair_tokens_p95": 966.0,
+          "pair_tokens_max": 2104,
+          "truncation_fraction": 0.529835,
+          "query_overflow_fraction": 0.0
+        },
+        "jp": {
+          "rows": 177303,
+          "query_tokens_mean": 7.82,
+          "query_tokens_p95": 13.0,
+          "query_tokens_max": 44,
+          "product_tokens_mean": 271.484,
+          "product_tokens_p50": 168.0,
+          "product_tokens_p95": 813.0,
+          "product_tokens_max": 2713,
+          "pair_tokens_mean": 282.303,
+          "pair_tokens_p95": 824.0,
+          "pair_tokens_max": 2732,
+          "truncation_fraction": 0.39424,
+          "query_overflow_fraction": 0.0
+        }
+      }
+    },
+    "dev": {
+      "max_length": 256,
+      "num_special_tokens_pair": 3,
+      "overall": {
+        "rows": 118231,
+        "query_tokens_mean": 6.418,
+        "query_tokens_p95": 11.0,
+        "query_tokens_max": 35,
+        "product_tokens_mean": 322.338,
+        "product_tokens_p50": 232.0,
+        "product_tokens_p95": 897.0,
+        "product_tokens_max": 2301,
+        "pair_tokens_mean": 331.757,
+        "pair_tokens_p95": 907.0,
+        "pair_tokens_max": 2310,
+        "truncation_fraction": 0.480965,
+        "query_overflow_fraction": 0.0
+      },
+      "by_locale": {
+        "us": {
+          "rows": 63280,
+          "query_tokens_mean": 5.969,
+          "query_tokens_p95": 11.0,
+          "query_tokens_max": 31,
+          "product_tokens_mean": 331.174,
+          "product_tokens_p50": 252.0,
+          "product_tokens_p95": 892.0,
+          "product_tokens_max": 2301,
+          "pair_tokens_mean": 340.143,
+          "pair_tokens_p95": 901.0,
+          "pair_tokens_max": 2310,
+          "truncation_fraction": 0.506179,
+          "query_overflow_fraction": 0.0
+        },
+        "es": {
+          "rows": 23160,
+          "query_tokens_mean": 5.883,
+          "query_tokens_p95": 10.0,
+          "query_tokens_max": 19,
+          "product_tokens_mean": 363.875,
+          "product_tokens_p50": 273.0,
+          "product_tokens_p95": 955.0,
+          "product_tokens_max": 1697,
+          "pair_tokens_mean": 372.758,
+          "pair_tokens_p95": 964.0,
+          "pair_tokens_max": 1705,
+          "truncation_fraction": 0.5269,
+          "query_overflow_fraction": 0.0
+        },
+        "jp": {
+          "rows": 31791,
+          "query_tokens_mean": 7.703,
+          "query_tokens_p95": 13.0,
+          "query_tokens_max": 35,
+          "product_tokens_mean": 274.491,
+          "product_tokens_p50": 171.0,
+          "product_tokens_p95": 824.0,
+          "product_tokens_max": 1976,
+          "pair_tokens_mean": 285.195,
+          "pair_tokens_p95": 836.0,
+          "pair_tokens_max": 1990,
+          "truncation_fraction": 0.397314,
+          "query_overflow_fraction": 0.0
+        }
+      }
+    },
+    "note": "reported for the record only; max_length was NOT tuned in response to these numbers (this round is a baseline)"
+  }
+}
