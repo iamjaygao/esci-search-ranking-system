@@ -1,0 +1,26 @@
+{
+  "us": {
+    "query_count": 3133,
+    "ndcg_full": 0.859096,
+    "ndcg_at_10": 0.758093,
+    "ndcg_at_20": 0.832416
+  },
+  "es": {
+    "query_count": 845,
+    "ndcg_full": 0.859433,
+    "ndcg_at_10": 0.751169,
+    "ndcg_at_20": 0.801553
+  },
+  "jp": {
+    "query_count": 1093,
+    "ndcg_full": 0.866079,
+    "ndcg_at_10": 0.733872,
+    "ndcg_at_20": 0.782641
+  },
+  "overall": {
+    "query_count": 5071,
+    "ndcg_full": 0.860657,
+    "ndcg_at_10": 0.751719,
+    "ndcg_at_20": 0.816545
+  }
+}
