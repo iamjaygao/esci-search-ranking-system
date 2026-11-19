@@ -200,7 +200,7 @@ This controlled setting measures ranking quality conditional on candidate availa
 
 ### Why there is a second benchmark
 
-ESCI ships **two** candidate pools: a reduced one for Task 1 (ranking) and a larger one for Tasks 2/3 (classification). Setting 1 above ran on the larger one. The two share a dataset name and a metric name, but they are different tasks — and the Tasks 2/3 pool is substantially easier to score well on, because **21.06%** of its test queries are *degenerate*: every candidate carries the same relevance label, so any ordering whatsoever scores a perfect 1.0. On the Task 1 pool that share is **0.007%** (1 query in 14,496).
+ESCI ships **two** candidate pools: a reduced one for Task 1 (ranking) and a larger one for Tasks 2/3 (classification). Setting 1 above ran on the larger one. The two share a dataset name and a metric name, but they are different tasks — and the Tasks 2/3 pool is substantially easier to score well on, because **21.06%** of its test queries (6,523 / 30,969) are *degenerate*: every candidate carries the same relevance label, so any ordering whatsoever scores a perfect 1.0. On the Task 1 pool that share is **0.007%** (1 query in 14,496).
 
 The benchmark was therefore rebuilt on the Task 1 pool. Scores on the two pools are much further apart than any model difference, but they are different populations, so the gap between them should not be read as a single "drop" number.
 
@@ -226,6 +226,8 @@ Full-list is the headline cutoff here: Task 1 averages 23.2 candidates per query
 The 0.83 published in the upstream esci-data README is **not** a usable comparison target: it is produced through a helper that swaps the S and C gain weights, and it is reported on the competition's *public test* split — which cannot be recovered from the public release, because the released `test` split is public ∪ private concatenated with the boundary erased (30.01% of queries, matching 15% + 15%).
 
 So the baseline was retrained locally from the official recipe, with our evaluation queries (**118,231 rows**) removed from its training pool first, leaving both models trained on the same **28,733** Task 1 training queries and scored on the same **5,071** DEV queries by the same scorer.
+
+The cross-encoder is `FacebookAI/xlm-roberta-base` fine-tuned with a 4-class E/S/C/I head on **663,407** query–product pairs (**28,733** queries) from Task 1 train, with the DEV queries held out. Its ranking score is P(E)·1.0 + P(S)·0.1 + P(C)·0.01, and the checkpoint was selected on dev NDCG@20, not on loss (`experiments/ranking_v2/cross_encoder_task1/FROZEN_V2.json`).
 
 `candidate_pool`: Task 1 DEV, 5,071 queries / 118,231 rows. Same `metric_version` as above.
 
@@ -257,7 +259,7 @@ On the 3,133 US-locale DEV queries alone, the cross-encoder scores NDCG@20 0.855
 ### Caveats that travel with these numbers
 
 - **No leaderboard comparison is possible.** The KDD Cup 2022 private test split is unrecoverable from the public release, so no number here can be compared to the 0.9043 winning score. This is a permanent limitation, not pending work.
-- **The official scorer was never executed.** Parity was established against an independent pure-Python reimplementation (13/13 unit tests, max |Δ| = 1.1e-16). That is self-consistency, not external validation — Terrier was never run.
+- **The official scorer was never executed.** Parity was established against an independent pure-Python reimplementation (13/13 cases, including 300 random queries × {@10, @20, full}; max |Δ| = 1.1e-16). That is self-consistency, not external validation — Terrier was never run.
 - **LambdaMART carries an upstream exposure.** Its `semantic_score` feature comes from a Two-Tower trained on the Task 1 training split, which includes 100% of the US DEV queries (61.8% of DEV). This is train-on-train exposure, not label leakage; its magnitude was not measured and is perfectly confounded with locale.
 - Full artifacts: `experiments/ranking_v2/kdd_task1_benchmark/` and `experiments/competition_alignment/`.
 
